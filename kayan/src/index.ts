@@ -1,18 +1,57 @@
-/**
- * Welcome to Cloudflare Workers! This is your first worker.
- *
- * - Run `npm run dev` in your terminal to start a development server
- * - Open a browser tab at http://localhost:8787/ to see your worker in action
- * - Run `npm run deploy` to publish your worker
- *
- * Bind resources to your worker in `wrangler.jsonc`. After adding bindings, a type definition for the
- * `Env` object can be regenerated with `npm run cf-typegen`.
- *
- * Learn more at https://developers.cloudflare.com/workers/
- */
+import { Router } from './router';
+import { registerLocationRoutes } from './routes/locations';
+import { registerSupplierRoutes } from './routes/suppliers';
+import { registerShipmentRoutes } from './routes/shipments';
+import { registerItemRoutes } from './routes/items';
+import { registerCustomerRoutes } from './routes/customers';
+import { registerOrderRoutes } from './routes/orders';
+import { registerPeopleRoutes } from './routes/people';
+import { registerExpenseRoutes } from './routes/expenses';
+import { registerFinanceRoutes } from './routes/finance';
+
+const router = new Router();
+
+// Register all route modules
+router.get('/', async () => {
+	return Response.json({
+		name: 'Kayan Furniture Gallery API',
+		version: '1.0',
+		status: 'running',
+		base_url: '/api/v1',
+	});
+});
+
+registerLocationRoutes(router);
+registerSupplierRoutes(router);
+registerShipmentRoutes(router);
+registerItemRoutes(router);
+registerCustomerRoutes(router);
+registerOrderRoutes(router);
+registerPeopleRoutes(router);
+registerExpenseRoutes(router);
+registerFinanceRoutes(router);
 
 export default {
-	async fetch(request, env, ctx): Promise<Response> {
-		return new Response('Hello World!');
+	async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+		// Handle CORS preflight
+		if (request.method === 'OPTIONS') {
+			return new Response(null, {
+				status: 204,
+				headers: {
+					'Access-Control-Allow-Origin': '*',
+					'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
+					'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+					'Access-Control-Max-Age': '86400',
+				},
+			});
+		}
+
+		const response = await router.handle(request, env);
+
+		// Add CORS headers to all responses
+		response.headers.set('Access-Control-Allow-Origin', '*');
+		response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
+
+		return response;
 	},
 } satisfies ExportedHandler<Env>;
