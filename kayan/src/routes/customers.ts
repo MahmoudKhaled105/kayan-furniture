@@ -88,4 +88,34 @@ export function registerCustomerRoutes(router: Router) {
 
 		return jsonResponse(results);
 	});
+
+	// DELETE /api/v1/customers/:id
+	router.delete('api/v1/customers/:id', async (_req, env, params) => {
+		const id = parseId(params.id);
+		if (!id) return errorResponse('validation_error', 'Invalid customer ID', 400);
+
+		const order = await env.DB.prepare('SELECT id FROM sales_order WHERE customer_id = ? LIMIT 1').bind(id).first();
+		if (order) return errorResponse('conflict', 'Cannot delete customer with existing orders', 409);
+
+		const result = await env.DB.prepare('DELETE FROM customer WHERE id = ?').bind(id).run();
+		if (result.meta.changes === 0) return errorResponse('not_found', `Customer with id ${id} was not found.`, 404);
+
+		return jsonResponse({ success: true });
+	});
+
+	// GET /api/v1/customers/:id/payments
+	router.get('api/v1/customers/:id/payments', async (_req, env, params) => {
+		const id = parseId(params.id);
+		if (!id) return errorResponse('validation_error', 'Invalid customer ID', 400);
+
+		const { results } = await env.DB.prepare(`
+			SELECT op.*, o.order_date
+			FROM order_payment op
+			JOIN sales_order o ON o.id = op.order_id
+			WHERE o.customer_id = ?
+			ORDER BY op.payment_date DESC
+		`).bind(id).all();
+
+		return jsonResponse(results);
+	});
 }

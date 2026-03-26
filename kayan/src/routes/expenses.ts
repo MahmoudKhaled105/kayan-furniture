@@ -111,4 +111,52 @@ export function registerExpenseRoutes(router: Router) {
 
 		return jsonResponse({ message: 'Expense deleted' });
 	});
+
+	// PATCH /api/v1/expenses/:id
+	router.patch('api/v1/expenses/:id', async (req, env, params) => {
+		const id = parseId(params.id);
+		if (!id) return errorResponse('validation_error', 'Invalid expense ID', 400);
+
+		const existing = await env.DB.prepare('SELECT * FROM expense WHERE id = ?').bind(id).first<any>();
+		if (!existing) return errorResponse('not_found', `Expense with id ${id} was not found.`, 404);
+
+		const body = await readBody(req) as any;
+		const fields: string[] = [];
+		const values: unknown[] = [];
+		const allowed = ['description', 'amount', 'expense_date', 'category', 'location_id', 'paid_by_person_id', 'notes'];
+
+		for (const key of allowed) {
+			if (key in body) {
+				fields.push(`${key} = ?`);
+				values.push(body[key]);
+			}
+		}
+
+		if (fields.length > 0) {
+			values.push(id);
+			await env.DB.prepare(`UPDATE expense SET ${fields.join(', ')} WHERE id = ?`).bind(...values).run();
+
+			if ('amount' in body || 'expense_date' in body || 'description' in body || 'location_id' in body) {
+				const uAmount = 'amount' in body ? body.amount : existing.amount;
+				const uDate = 'expense_date' in body ? body.expense_date : existing.expense_date;
+				const uDesc = 'description' in body ? body.description : existing.description;
+				const uLoc = 'location_id' in body ? body.location_id : existing.location_id;
+
+				await env.DB.prepare(`
+					UPDATE transaction_log 
+					SET amount = ?, transaction_date = ?, notes = ?, location_id = ?
+					WHERE source_table = 'EXPENSE' AND source_id = ?
+				`).bind(uAmount, uDate, uDesc, uLoc, id).run();
+			}
+		}
+
+		const updated = await env.DB.prepare('SELECT * FROM expense WHERE id = ?').bind(id).first();
+		return jsonResponse(updated);
+	});
+
+	// GET /api/v1/expenses/categories
+	router.get('api/v1/expenses/categories', async (_req, env) => {
+		const { results } = await env.DB.prepare('SELECT DISTINCT category FROM expense WHERE category IS NOT NULL').all();
+		return jsonResponse(results.map((r: any) => r.category));
+	});
 }

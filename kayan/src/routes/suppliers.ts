@@ -146,4 +146,72 @@ export function registerSupplierRoutes(router: Router) {
 
 		return jsonResponse(results);
 	});
+
+	// GET /api/v1/suppliers/:id/summary
+	router.get('api/v1/suppliers/:id/summary', async (_req, env, params) => {
+		const id = parseId(params.id);
+		if (!id) return errorResponse('validation_error', 'Invalid supplier ID', 400);
+
+		const supplier = await env.DB.prepare('SELECT name FROM supplier WHERE id = ?').bind(id).first<any>();
+		if (!supplier) return errorResponse('not_found', `Supplier with id ${id} was not found.`, 404);
+
+		const stats = await env.DB.prepare(`
+			SELECT 
+				COUNT(sh.id) AS total_shipments,
+				SUM(sh.declared_value) AS total_value,
+				COALESCE(SUM(paid.total_amount), 0) AS amount_paid,
+				MAX(sh.date_received) AS last_shipment_date
+			FROM shipment sh
+			LEFT JOIN (
+				SELECT shipment_id, SUM(amount) AS total_amount 
+				FROM shipment_installment 
+				WHERE is_paid = 1 
+				GROUP BY shipment_id
+			) paid ON paid.shipment_id = sh.id
+			WHERE sh.supplier_id = ?
+		`).bind(id).first<any>();
+
+		const amountPaid = stats?.amount_paid || 0;
+		const totalValue = stats?.total_value || 0;
+
+		return jsonResponse({
+			supplier_id: id,
+			name: supplier.name,
+			total_shipments: stats?.total_shipments || 0,
+			total_value: Math.round(totalValue * 100) / 100,
+			amount_paid: Math.round(amountPaid * 100) / 100,
+			outstanding_balance: Math.round((totalValue - amountPaid) * 100) / 100,
+			last_shipment_date: stats?.last_shipment_date
+		});
+	});
+
+	// GET /api/v1/suppliers/:id/history
+	router.get('api/v1/suppliers/:id/history', async (_req, env, params) => {
+		const id = parseId(params.id);
+		if (!id) return errorResponse('validation_error', 'Invalid supplier ID', 400);
+
+		const supplier = await env.DB.prepare('SELECT id FROM supplier WHERE id = ?').bind(id).first();
+		if (!supplier) return errorResponse('not_found', `Supplier with id ${id} was not found.`, 404);
+
+		// Get all shipments
+		const { results: shipments } = await env.DB.prepare(`
+			SELECT id, date_received AS date, 'shipment' AS type, declared_value AS amount, notes
+			FROM shipment
+			WHERE supplier_id = ?
+		`).bind(id).all();
+
+		// Get all payments (paid installments)
+		const { results: payments } = await env.DB.prepare(`
+			SELECT si.id, si.paid_date AS date, 'payment' AS type, si.amount, 
+				   'For shipment #' || si.shipment_id AS notes
+			FROM shipment_installment si
+			JOIN shipment sh ON sh.id = si.shipment_id
+			WHERE sh.supplier_id = ? AND si.is_paid = 1
+		`).bind(id).all();
+
+		const history = [...(shipments as any[]), ...(payments as any[])]
+			.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+		return jsonResponse(history);
+	});
 }

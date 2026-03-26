@@ -18,7 +18,7 @@
 			"binding": "DB",
 			"database_name": "kayan-gallery-db",
 			"database_id": "de3937ba-a9a8-4651-af49-72a06cfb1903",
-			"remote": true
+			"remote": false
 		}
 	],
 	/**

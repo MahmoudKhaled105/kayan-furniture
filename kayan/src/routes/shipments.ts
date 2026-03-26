@@ -75,13 +75,15 @@ export function registerShipmentRoutes(router: Router) {
 		if (!supplier) return errorResponse('not_found', `Supplier with id ${body.supplier_id} was not found.`, 404);
 
 		const result = await env.DB.prepare(
-			'INSERT INTO shipment (supplier_id, date_received, declared_value, partial_delivery, notes) VALUES (?, ?, ?, ?, ?)'
+			'INSERT INTO shipment (supplier_id, date_received, declared_value, partial_delivery, notes, container_number, estimated_arrival) VALUES (?, ?, ?, ?, ?, ?, ?)'
 		).bind(
 			body.supplier_id,
 			body.date_received,
 			body.declared_value,
 			body.partial_delivery ? 1 : 0,
-			body.notes || null
+			body.notes || null,
+			body.container_number || null,
+			body.estimated_arrival || null
 		).run();
 
 		const shipmentId = result.meta.last_row_id;
@@ -142,7 +144,7 @@ export function registerShipmentRoutes(router: Router) {
 		const body = await readBody(req) as any;
 		const fields: string[] = [];
 		const values: unknown[] = [];
-		const allowed = ['date_received', 'declared_value', 'partial_delivery', 'notes'];
+		const allowed = ['date_received', 'declared_value', 'partial_delivery', 'notes', 'container_number', 'estimated_arrival'];
 
 		for (const key of allowed) {
 			if (key in body) {
@@ -225,6 +227,22 @@ export function registerShipmentRoutes(router: Router) {
 			'UPDATE shipment_installment SET is_paid = ?, paid_date = ? WHERE id = ?'
 		).bind(isPaid, paidDate, instId).run();
 
+		// Create/Update transaction_log outflow
+		if (isPaid) {
+			// Get shipment info for location_id
+			const shipInfo = await env.DB.prepare('SELECT location_id FROM item WHERE shipment_id = ? LIMIT 1').bind(shipmentId).first<any>();
+			
+			await env.DB.prepare(`
+				INSERT INTO transaction_log (transaction_date, type, direction, amount, location_id, source_table, source_id, notes)
+				VALUES (?, 'supplier', 'outflow', ?, ?, 'SHIPMENT_INSTALLMENT', ?, ?)
+			`).bind(paidDate, installment.amount, shipInfo?.location_id || null, instId, `Payment for shipment #${shipmentId}`).run();
+		} else {
+			// If payment reversed, delete from log
+			await env.DB.prepare(
+				"DELETE FROM transaction_log WHERE source_table = 'SHIPMENT_INSTALLMENT' AND source_id = ?"
+			).bind(instId).run();
+		}
+
 		await recalcPaymentStatus(env.DB, shipmentId);
 
 		const updated = await env.DB.prepare('SELECT * FROM shipment_installment WHERE id = ?').bind(instId).first();
@@ -251,5 +269,37 @@ export function registerShipmentRoutes(router: Router) {
 		`).bind(id).all();
 
 		return jsonResponse(results);
+	});
+
+	// GET /api/v1/shipments/:id/stats
+	router.get('api/v1/shipments/:id/stats', async (_req, env, params) => {
+		const id = parseId(params.id);
+		if (!id) return errorResponse('validation_error', 'Invalid shipment ID', 400);
+
+		const shipment = await env.DB.prepare('SELECT id FROM shipment WHERE id = ?').bind(id).first();
+		if (!shipment) return errorResponse('not_found', `Shipment with id ${id} was not found.`, 404);
+
+		const { results: statusStats } = await env.DB.prepare(`
+			SELECT status, COUNT(*) AS count
+			FROM item
+			WHERE shipment_id = ?
+			GROUP BY status
+		`).bind(id).all();
+
+		const financials = await env.DB.prepare(`
+			SELECT SUM(purchase_value) AS total_purchase,
+				   SUM(sale_price) AS total_sale
+			FROM item
+			WHERE shipment_id = ?
+		`).bind(id).first<any>();
+
+		return jsonResponse({
+			shipment_id: id,
+			status_distribution: statusStats,
+			financials: {
+				total_purchase: Math.round((financials?.total_purchase || 0) * 100) / 100,
+				total_sale: Math.round((financials?.total_sale || 0) * 100) / 100
+			}
+		});
 	});
 }

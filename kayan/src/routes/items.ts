@@ -266,4 +266,21 @@ export function registerItemRoutes(router: Router) {
 			by_location: results,
 		});
 	});
+
+	// DELETE /api/v1/items/:id
+	router.delete('api/v1/items/:id', async (_req, env, params) => {
+		const id = parseId(params.id);
+		if (!id) return errorResponse('validation_error', 'Invalid item ID', 400);
+
+		// Check if item is sold or reserved
+		const item = await env.DB.prepare('SELECT status FROM item WHERE id = ?').bind(id).first<any>();
+		if (!item) return errorResponse('not_found', `Item with id ${id} was not found.`, 404);
+		
+		if (item.status === 'sold') {
+			return errorResponse('conflict', 'Cannot delete a sold item.', 409);
+		}
+
+		await env.DB.prepare('DELETE FROM item WHERE id = ?').bind(id).run();
+		return jsonResponse({ success: true });
+	});
 }
