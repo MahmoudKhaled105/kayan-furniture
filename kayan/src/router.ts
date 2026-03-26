@@ -3,7 +3,7 @@
 export type RouteHandler = (
 	req: Request,
 	env: Env,
-	params: Record<string, string>,
+	params: Record<string, string> & { auth_user?: string },
 	query: Record<string, string>
 ) => Promise<Response>;
 

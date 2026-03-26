@@ -8,6 +8,7 @@ import { registerOrderRoutes } from './routes/orders';
 import { registerPeopleRoutes } from './routes/people';
 import { registerExpenseRoutes } from './routes/expenses';
 import { registerFinanceRoutes } from './routes/finance';
+import { registerAuthRoutes } from './routes/auth';
 
 const router = new Router();
 
@@ -30,6 +31,8 @@ registerOrderRoutes(router);
 registerPeopleRoutes(router);
 registerExpenseRoutes(router);
 registerFinanceRoutes(router);
+registerAuthRoutes(router);
+
 
 export default {
 	async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
