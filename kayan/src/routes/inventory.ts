@@ -60,6 +60,35 @@ export function registerInventoryRoutes(router: Router) {
 		return jsonResponse(item, 201);
 	});
 
+	// GET /api/v1/inventory/locations
+	router.get('api/v1/inventory/locations', async (_req, env) => {
+		const { results } = await env.DB.prepare('SELECT id, name, type FROM location ORDER BY id').all();
+		return jsonResponse(results);
+	});
+
+	// GET /api/v1/inventory/stock-value
+	router.get('api/v1/inventory/stock-value', async (_req, env, _params, query) => {
+		let sql = `
+			SELECT l.id, l.name,
+				   COALESCE(SUM(i.total_value), 0) as bulk_value,
+				   (SELECT COALESCE(SUM(sale_price), 0) FROM item WHERE location_id = l.id) as product_value
+			FROM location l
+			LEFT JOIN inventory i ON i.location_id = l.id
+		`;
+		
+		if (query.location_id) {
+			sql += ' WHERE l.id = ?';
+		}
+		
+		sql += ' GROUP BY l.id';
+		
+		const { results } = await env.DB.prepare(sql).bind(...(query.location_id ? [parseInt(query.location_id)] : [])).all();
+		return jsonResponse({
+			per_location: results,
+			total: results.reduce((acc: number, curr: any) => acc + curr.bulk_value + curr.product_value, 0)
+		});
+	});
+
 	// GET /api/v1/inventory/:id
 	router.get('api/v1/inventory/:id', async (_req, env, params) => {
 		const id = parseId(params.id);
@@ -120,11 +149,5 @@ export function registerInventoryRoutes(router: Router) {
 		if (result.meta.changes === 0) return errorResponse('not_found', `Inventory item with id ${id} was not found.`, 404);
 
 		return jsonResponse({ success: true });
-	});
-
-	// GET /api/v1/inventory/locations
-	router.get('api/v1/inventory/locations', async (_req, env) => {
-		const { results } = await env.DB.prepare('SELECT id, name, type FROM location ORDER BY id').all();
-		return jsonResponse(results);
 	});
 }
