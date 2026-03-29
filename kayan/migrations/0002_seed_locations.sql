@@ -1,5 +1,5 @@
 -- Seed the 4 fixed locations
-INSERT OR IGNORE INTO location (id, name, type) VALUES (1, 'Gallery A',   'gallery');
-INSERT OR IGNORE INTO location (id, name, type) VALUES (2, 'Gallery B',   'gallery');
-INSERT OR IGNORE INTO location (id, name, type) VALUES (3, 'Warehouse A', 'warehouse');
-INSERT OR IGNORE INTO location (id, name, type) VALUES (4, 'Warehouse B', 'warehouse');
+INSERT OR IGNORE INTO location (id, name, type) VALUES (1, 'معرض اباهيم سلامة',   'gallery');
+INSERT OR IGNORE INTO location (id, name, type) VALUES (2, 'معرض الجامعة القديمة',   'gallery');
+INSERT OR IGNORE INTO location (id, name, type) VALUES (3, 'مخزن اباهيم سلامة', 'warehouse');
+INSERT OR IGNORE INTO location (id, name, type) VALUES (4, 'مخزن الجامعة القديمة', 'warehouse');
