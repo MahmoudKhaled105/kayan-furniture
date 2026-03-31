@@ -6,7 +6,8 @@ export function registerItemRoutes(router: Router) {
 	router.get('api/v1/items', async (_req, env, _params, query) => {
 		let sql = `
 			SELECT i.id, i.name, i.category, i.status, i.location_id,
-				   l.name AS location_name, i.purchase_value, i.sale_price, i.shipment_id
+				   l.name AS location_name, i.purchase_value, i.sale_price, i.shipment_id,
+				   (SELECT url FROM item_image WHERE item_id = i.id ORDER BY id LIMIT 1) as thumbnail_url
 			FROM item i
 			JOIN location l ON l.id = i.location_id
 		`;
@@ -80,10 +81,26 @@ export function registerItemRoutes(router: Router) {
 			}
 		}
 
+		// Handle images
+		if (Array.isArray(body.images)) {
+			for (const url of body.images) {
+				if (typeof url === 'string' && url.trim()) {
+					await env.DB.prepare(
+						'INSERT INTO item_image (item_id, url) VALUES (?, ?)'
+					).bind(itemId, url.trim()).run();
+				}
+			}
+		}
+
 		const item = await env.DB.prepare(`
 			SELECT i.*, l.name AS location_name FROM item i
 			JOIN location l ON l.id = i.location_id WHERE i.id = ?
-		`).bind(itemId).first();
+		`).bind(itemId).first<any>();
+
+		if (item) {
+			const { results: imgs } = await env.DB.prepare('SELECT url FROM item_image WHERE item_id = ?').bind(itemId).all();
+			item.images = imgs.map((img: any) => img.url);
+		}
 
 		return jsonResponse(item, 201);
 	});
@@ -104,7 +121,15 @@ export function registerItemRoutes(router: Router) {
 			'SELECT part_item_id FROM item_part WHERE parent_item_id = ?'
 		).bind(id).all();
 
-		return jsonResponse({ ...item, part_ids: parts.map((p: any) => p.part_item_id) });
+		const { results: images } = await env.DB.prepare(
+			'SELECT url FROM item_image WHERE item_id = ?'
+		).bind(id).all();
+
+		return jsonResponse({
+			...item,
+			part_ids: parts.map((p: any) => p.part_item_id),
+			images: images.map((img: any) => img.url)
+		});
 	});
 
 	// PATCH /api/v1/items/:id
@@ -132,10 +157,29 @@ export function registerItemRoutes(router: Router) {
 			await env.DB.prepare(`UPDATE item SET ${fields.join(', ')} WHERE id = ?`).bind(...values).run();
 		}
 
+		// Update images if provided
+		if (Array.isArray(body.images)) {
+			// Simple approach: delete all and re-insert
+			await env.DB.prepare('DELETE FROM item_image WHERE item_id = ?').bind(id).run();
+			for (const url of body.images) {
+				if (typeof url === 'string' && url.trim()) {
+					await env.DB.prepare(
+						'INSERT INTO item_image (item_id, url) VALUES (?, ?)'
+					).bind(id, url.trim()).run();
+				}
+			}
+		}
+
 		const updated = await env.DB.prepare(`
 			SELECT i.*, l.name AS location_name FROM item i
 			JOIN location l ON l.id = i.location_id WHERE i.id = ?
-		`).bind(id).first();
+		`).bind(id).first<any>();
+
+		if (updated) {
+			const { results: imgs } = await env.DB.prepare('SELECT url FROM item_image WHERE item_id = ?').bind(id).all();
+			updated.images = imgs.map((img: any) => img.url);
+		}
+
 		return jsonResponse(updated);
 	});
 
