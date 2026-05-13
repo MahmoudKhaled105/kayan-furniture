@@ -3,9 +3,9 @@ import { jsonResponse, errorResponse, parseId, readBody, today } from '../utils'
 
 export function registerOrderRoutes(router: Router) {
 	// GET /api/v1/orders
-	router.get('api/v1/orders', async (_req, env) => {
-		const { results } = await env.DB.prepare(`
-			SELECT o.*, c.name AS customer_name, l.name AS location_name,
+	router.get('api/v1/orders', async (_req, env, _params, query) => {
+		let sql = `
+			SELECT o.*, c.name AS customer_name, c.phone AS customer_phone, l.name AS location_name,
 				   COALESCE(p.total_paid, 0) AS total_paid,
 				   o.agreed_price - COALESCE(p.total_paid, 0) AS remaining_balance
 			FROM sales_order o
@@ -14,8 +14,18 @@ export function registerOrderRoutes(router: Router) {
 			LEFT JOIN (
 				SELECT order_id, SUM(amount) AS total_paid FROM order_payment GROUP BY order_id
 			) p ON p.order_id = o.id
-			ORDER BY o.order_date DESC
-		`).all();
+		`;
+		
+		const bindings: any[] = [];
+		if (query?.q) {
+			sql += ` WHERE c.name LIKE ? OR c.phone LIKE ?`;
+			bindings.push(`%${query.q}%`, `%${query.q}%`);
+		}
+		
+		sql += ` ORDER BY o.order_date DESC`;
+		
+		const stmt = env.DB.prepare(sql);
+		const { results } = bindings.length > 0 ? await stmt.bind(...bindings).all() : await stmt.all();
 		return jsonResponse(results);
 	});
 
@@ -58,8 +68,8 @@ export function registerOrderRoutes(router: Router) {
 		}
 
 		const result = await env.DB.prepare(`
-			INSERT INTO sales_order (customer_id, item_id, location_id, agreed_price, status, is_backorder, backorder_description, expected_arrival, fulfillment_trigger, order_date)
-			VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+			INSERT INTO sales_order (customer_id, item_id, location_id, agreed_price, status, is_backorder, backorder_description, expected_arrival, fulfillment_trigger, order_date, discount, delivery_status)
+			VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 		`).bind(
 			body.customer_id,
 			body.item_id || null,
@@ -70,7 +80,9 @@ export function registerOrderRoutes(router: Router) {
 			body.backorder_description || null,
 			body.expected_arrival || null,
 			body.fulfillment_trigger || null,
-			orderDate
+			orderDate,
+			body.discount || 0,
+			body.delivery_status || 'not_received'
 		).run();
 
 		const orderId = result.meta.last_row_id;
@@ -85,8 +97,8 @@ export function registerOrderRoutes(router: Router) {
 		let totalPaid = 0;
 		if (body.initial_payment && body.initial_payment > 0) {
 			await env.DB.prepare(
-				'INSERT INTO order_payment (order_id, amount, payment_date) VALUES (?, ?, ?)'
-			).bind(orderId, body.initial_payment, orderDate).run();
+				'INSERT INTO order_payment (order_id, amount, payment_date, method) VALUES (?, ?, ?, ?)'
+			).bind(orderId, body.initial_payment, orderDate, body.payment_method || null).run();
 
 			totalPaid = body.initial_payment;
 
@@ -145,7 +157,7 @@ export function registerOrderRoutes(router: Router) {
 		const body = await readBody(req) as any;
 		const fields: string[] = [];
 		const values: unknown[] = [];
-		const allowed = ['status', 'agreed_price', 'backorder_description', 'expected_arrival', 'fulfillment_trigger'];
+		const allowed = ['status', 'agreed_price', 'backorder_description', 'expected_arrival', 'fulfillment_trigger', 'discount', 'delivery_status'];
 
 		for (const key of allowed) {
 			if (key in body) {
@@ -157,6 +169,10 @@ export function registerOrderRoutes(router: Router) {
 		if (fields.length > 0) {
 			values.push(id);
 			await env.DB.prepare(`UPDATE sales_order SET ${fields.join(', ')} WHERE id = ?`).bind(...values).run();
+		}
+
+		if (body.delivery_status === 'received' && existing.item_id) {
+			await env.DB.prepare('UPDATE item SET status = ? WHERE id = ?').bind('sold', existing.item_id).run();
 		}
 
 		const updated = await env.DB.prepare(`
@@ -182,8 +198,8 @@ export function registerOrderRoutes(router: Router) {
 		if (!body.payment_date) return errorResponse('validation_error', 'payment_date is required', 400);
 
 		const payResult = await env.DB.prepare(
-			'INSERT INTO order_payment (order_id, amount, payment_date, notes) VALUES (?, ?, ?, ?)'
-		).bind(id, body.amount, body.payment_date, body.notes || null).run();
+			'INSERT INTO order_payment (order_id, amount, payment_date, notes, method) VALUES (?, ?, ?, ?, ?)'
+		).bind(id, body.amount, body.payment_date, body.notes || null, body.method || null).run();
 
 		// Create transaction_log inflow
 		await env.DB.prepare(`

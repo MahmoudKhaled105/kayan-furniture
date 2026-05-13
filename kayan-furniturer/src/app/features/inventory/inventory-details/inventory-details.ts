@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { InventoryService, ProductItem } from '../../../shared/services/inventory.service';
+import { ToastService } from '../../../shared/services/toast.service';
 
 @Component({
   selector: 'app-inventory-details',
@@ -16,6 +17,7 @@ export class InventoryDetails implements OnInit {
   private router = inject(Router);
   private inventoryService = inject(InventoryService);
   private fb = inject(FormBuilder);
+  private toast = inject(ToastService);
 
   isLoading = signal(true);
   item = signal<ProductItem | null>(null);
@@ -79,7 +81,7 @@ export class InventoryDetails implements OnInit {
         error: (err: any) => {
           console.error('Transfer failed:', err);
           this.isLoading.set(false);
-          alert('فشل في نقل القطعة');
+          this.toast.error('فشل في نقل القطعة', err);
         }
       });
     }

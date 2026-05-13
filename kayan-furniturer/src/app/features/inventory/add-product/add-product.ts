@@ -5,6 +5,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormArray } from '@angular/forms';
 import { InventoryService, InventoryItem, ProductItem } from '../../../shared/services/inventory.service';
 import { ShipmentService, Shipment } from '../../../shared/services/shipment.service';
+import { ToastService } from '../../../shared/services/toast.service';
 
 @Component({
   selector: 'app-add-product',
@@ -19,6 +20,7 @@ export class AddProduct implements OnInit {
   private router = inject(Router);
   private inventoryService = inject(InventoryService);
   private shipmentService = inject(ShipmentService);
+  private toast = inject(ToastService);
 
   isLoading = signal(false);
   itemType = signal<'product' | 'bulk'>('product');
@@ -269,7 +271,7 @@ export class AddProduct implements OnInit {
         error: (err: any) => {
           console.error('Failed to save item:', err);
           this.isLoading.set(false);
-          alert('فشل في حفظ البيانات');
+          this.toast.error('فشل في حفظ البيانات', err);
         }
       });
     } else {

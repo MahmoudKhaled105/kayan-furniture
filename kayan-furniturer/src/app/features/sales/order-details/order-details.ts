@@ -4,6 +4,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { OrderService, Order } from '../../../shared/services/order.service';
 import { InventoryService, ProductItem } from '../../../shared/services/inventory.service';
+import { ToastService } from '../../../shared/services/toast.service';
 
 @Component({
   selector: 'app-order-details',
@@ -17,6 +18,7 @@ export class OrderDetails implements OnInit {
   private orderService = inject(OrderService);
   private inventoryService = inject(InventoryService);
   private fb = inject(FormBuilder);
+  private toast = inject(ToastService);
 
   isLoading = signal(true);
   order = signal<Order | null>(null);
@@ -78,7 +80,7 @@ export class OrderDetails implements OnInit {
         error: (err: any) => {
           console.error('Payment failed:', err);
           this.isLoading.set(false);
-          alert('فشل في تسجيل السداد');
+          this.toast.error('فشل في تسجيل السداد', err);
         }
       });
     }
@@ -95,7 +97,25 @@ export class OrderDetails implements OnInit {
         error: (err: any) => {
           console.error('Fulfillment failed:', err);
           this.isLoading.set(false);
-          alert('فشل في تسليم الطلب');
+          this.toast.error('فشل في تسليم الطلب', err);
+        }
+      });
+    }
+  }
+
+  onToggleDeliveryStatus() {
+    if (this.order()) {
+      const currentStatus = this.order()?.delivery_status || 'not_received';
+      const newStatus = currentStatus === 'not_received' ? 'received' : 'not_received';
+      this.isLoading.set(true);
+      this.orderService.updateDeliveryStatus(this.order()!.id, newStatus).subscribe({
+        next: () => {
+          this.loadData(this.order()!.id);
+        },
+        error: (err: any) => {
+          console.error('Failed to update delivery status:', err);
+          this.isLoading.set(false);
+          this.toast.error('فشل في تحديث حالة الاستلام', err);
         }
       });
     }

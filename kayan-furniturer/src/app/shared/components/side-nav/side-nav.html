@@ -8,24 +8,28 @@
       <p class="text-[10px] text-gray-500">إدارة الحسابات الفاخرة</p>
     </div>
   </div>
-  <div class="treasury-card">
-    <div class="card-header">
-      <span class="material-symbols-outlined">account_balance_wallet</span>
-      <span class="text-xs">رصيد الخزنة الحالي</span>
+  @if (isAdmin()) {
+    <div class="treasury-card">
+      <div class="card-header">
+        <span class="material-symbols-outlined">account_balance_wallet</span>
+        <span class="text-xs">رصيد الخزنة الحالي</span>
+      </div>
+      <div class="balance-value">٤٥٠,٢٣٠ <span class="text-sm opacity-60">ج.م</span></div>
     </div>
-    <div class="balance-value">٤٥٠,٢٣٠ <span class="text-sm opacity-60">ج.م</span></div>
-  </div>
+  }
 
   <div class="nav-items">
-    <a
-      class="nav-item"
-      routerLink="/dashboard"
-      routerLinkActive="active"
-      [routerLinkActiveOptions]="{ exact: true }"
-    >
-      <span class="material-symbols-outlined">dashboard</span>
-      <span>الزتونة</span>
-    </a>
+    @if (isAdmin()) {
+      <a
+        class="nav-item"
+        routerLink="/dashboard"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        <span class="material-symbols-outlined">dashboard</span>
+        <span>الزتونة</span>
+      </a>
+    }
     <a class="nav-item" routerLink="/suppliers" routerLinkActive="active">
       <span class="material-symbols-outlined">local_shipping</span>
       <span>الموردين</span>
@@ -42,17 +46,15 @@
       <span class="material-symbols-outlined">person</span>
       <span>العملاء</span>
     </a>
-    <a class="nav-item" routerLink="/accounts" routerLinkActive="active">
-      <span class="material-symbols-outlined">account_balance</span>
-      <span>الحسابات</span>
-    </a>
+    @if (isAdmin()) {
+      <a class="nav-item" routerLink="/accounts" routerLinkActive="active">
+        <span class="material-symbols-outlined">account_balance</span>
+        <span>الحسابات</span>
+      </a>
+    }
   </div>
 
   <div class="nav-footer">
-    <button class="add-transaction-btn">
-      <span class="material-symbols-outlined">add_circle</span>
-      <span>إضافة حركة مالية</span>
-    </button>
     <div class="divider"></div>
     <a class="footer-link">
       <span class="material-symbols-outlined">settings</span>

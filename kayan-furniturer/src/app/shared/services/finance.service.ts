@@ -28,8 +28,10 @@ export interface FinanceMonthlyResponse {
 export class FinanceService {
   private http = inject(HttpClientService);
 
-  getDailyFinance(date?: string): Observable<FinanceDailyResponse> {
-    const params = date ? { date } : {};
+  getDailyFinance(dateFrom?: string, dateTo?: string): Observable<FinanceDailyResponse> {
+    const params: any = {};
+    if (dateFrom) params.date_from = dateFrom;
+    if (dateTo) params.date_to = dateTo;
     return this.http.get<FinanceDailyResponse>('/finance/daily', params);
   }
 
@@ -43,5 +45,9 @@ export class FinanceService {
 
   getTransactions(params?: any): Observable<any> {
     return this.http.get<any>('/finance/transactions', params);
+  }
+
+  addTransaction(transaction: any): Observable<any> {
+    return this.http.post<any>('/finance/transactions', transaction);
   }
 }

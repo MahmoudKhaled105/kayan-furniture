@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CustomerService, Customer } from '../../../shared/services/customer.service';
+import { ToastService } from '../../../shared/services/toast.service';
 
 @Component({
   selector: 'app-customers-list',
@@ -14,6 +15,7 @@ import { CustomerService, Customer } from '../../../shared/services/customer.ser
 export class CustomersList implements OnInit {
   private customerService = inject(CustomerService);
   private fb = inject(FormBuilder);
+  private toast = inject(ToastService);
 
   isLoading = signal(true);
   error = signal<string | null>(null);
@@ -62,7 +64,7 @@ export class CustomersList implements OnInit {
         error: (err: any) => {
           console.error('Failed to create customer:', err);
           this.isLoading.set(false);
-          alert('فشل في إضافة العميل');
+          this.toast.error('فشل في إضافة العميل', err);
         }
       });
     } else {

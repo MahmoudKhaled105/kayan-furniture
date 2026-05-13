@@ -4,20 +4,23 @@ import { jsonResponse, errorResponse, roundMoney, today } from '../utils';
 export function registerFinanceRoutes(router: Router) {
 	// GET /api/v1/finance/daily
 	router.get('api/v1/finance/daily', async (_req, env, _params, query) => {
-		const date = query.date || today();
+		const dateFrom = query.date_from || query.date || today();
+		const dateTo = query.date_to || query.date || today();
 
 		const { results: txRows } = await env.DB.prepare(`
 			SELECT t.*, l.name AS location_name
 			FROM transaction_log t
 			LEFT JOIN location l ON l.id = t.location_id
-			WHERE t.transaction_date = ?
+			WHERE t.transaction_date >= ? AND t.transaction_date <= ?
 			ORDER BY t.id
-		`).bind(date).all();
+		`).bind(dateFrom, dateTo).all();
 
 		const inflows: any[] = [];
 		const outflows: any[] = [];
 		let totalIn = 0;
 		let totalOut = 0;
+		let totalSales = 0;
+		let dailyExpenses = 0;
 
 		for (const tx of txRows as any[]) {
 			let party = '';
@@ -63,16 +66,22 @@ export function registerFinanceRoutes(router: Router) {
 			if (tx.direction === 'inflow') {
 				totalIn += tx.amount;
 				inflows.push(entry);
+				if (tx.type === 'customer') totalSales += tx.amount;
 			} else {
 				totalOut += tx.amount;
 				outflows.push(entry);
+				if (tx.type === 'expense') dailyExpenses += tx.amount;
 			}
 		}
 
 		return jsonResponse({
-			date,
+			date_from: dateFrom,
+			date_to: dateTo,
 			total_in: roundMoney(totalIn),
 			total_out: roundMoney(totalOut),
+			total_sales: roundMoney(totalSales),
+			daily_expenses: roundMoney(dailyExpenses),
+			net_profit: roundMoney(totalSales - dailyExpenses),
 			net: roundMoney(totalIn - totalOut),
 			inflows,
 			outflows,
@@ -198,6 +207,38 @@ export function registerFinanceRoutes(router: Router) {
 			staff_balances: staffBalances,
 			customer_balances: customerBalances,
 		});
+	});
+
+	// POST /api/v1/finance/transactions
+	router.post('api/v1/finance/transactions', async (req, env) => {
+		try {
+			const body: any = await req.json();
+			
+			if (!body.amount || !body.direction || !body.type || !body.party) {
+				return errorResponse('validation_error', 'amount, direction, type, and party are required', 400);
+			}
+
+			const combinedNotes = body.party ? `[${body.party}] ${body.notes || ''}` : (body.notes || '');
+
+			const stmt = env.DB.prepare(`
+				INSERT INTO transaction_log (amount, direction, type, source_id, location_id, transaction_date, notes)
+				VALUES (?, ?, ?, ?, ?, ?, ?)
+				RETURNING *
+			`).bind(
+				body.amount,
+				body.direction,
+				body.type,
+				body.source_id || null,
+				body.location_id || null,
+				body.transaction_date || today(),
+				combinedNotes
+			);
+
+			const transaction = await stmt.first();
+			return jsonResponse(transaction);
+		} catch (error: any) {
+			return errorResponse('server_error', error.message, 500);
+		}
 	});
 
 	// GET /api/v1/finance/transactions

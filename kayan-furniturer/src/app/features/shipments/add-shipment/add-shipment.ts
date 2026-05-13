@@ -4,6 +4,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ShipmentService, Shipment } from '../../../shared/services/shipment.service';
 import { SupplierService, Supplier } from '../../../shared/services/supplier.service';
+import { ToastService } from '../../../shared/services/toast.service';
 
 @Component({
   selector: 'app-add-shipment',
@@ -18,6 +19,7 @@ export class AddShipment implements OnInit {
   private router = inject(Router);
   private shipmentService = inject(ShipmentService);
   private supplierService = inject(SupplierService);
+  private toast = inject(ToastService);
 
   currentStep = signal(1);
   isLoading = signal(false);
@@ -129,7 +131,7 @@ export class AddShipment implements OnInit {
         error: (err) => {
           console.error('Failed to save shipment:', err);
           this.isLoading.set(false);
-          alert('فشل في حفظ الشحنة');
+          this.toast.error('فشل في حفظ الشحنة');
         }
       });
     } else {

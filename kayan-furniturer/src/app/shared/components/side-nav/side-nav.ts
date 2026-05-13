@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-side-nav',
@@ -11,6 +12,11 @@ import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 })
 export class SideNav {
   private router = inject(Router);
+  public authService = inject(AuthService);
+
+  isAdmin() {
+    return this.authService.isAdmin();
+  }
 
   logout() {
     localStorage.removeItem('accessToken');

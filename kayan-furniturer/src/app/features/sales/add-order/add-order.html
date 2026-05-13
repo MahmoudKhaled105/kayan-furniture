@@ -137,6 +137,25 @@
               <span class="absolute left-6 top-1/2 -translate-y-1/2 text-xs font-bold text-outline-variant">ج.م</span>
             </div>
           </div>
+          
+          <div class="space-y-2">
+            <label class="text-xs font-bold text-outline-variant mr-1">الخصم الإضافي</label>
+            <div class="relative">
+              <input formControlName="discount" type="number" 
+                class="w-full bg-surface-container-lowest border-none rounded-2xl pr-6 pl-14 py-5 text-xl font-bold font-manrope text-amber-500 focus:ring-2 focus:ring-amber-500/40 transition-all outline-none"/>
+              <span class="absolute left-6 top-1/2 -translate-y-1/2 text-xs font-bold text-outline-variant">ج.م</span>
+            </div>
+          </div>
+
+          <div class="space-y-2">
+            <label class="text-xs font-bold text-outline-variant mr-1">طريقة الدفع</label>
+            <select formControlName="payment_method" class="w-full bg-surface-container-lowest border-none rounded-2xl px-6 py-5 text-on-surface focus:ring-2 focus:ring-primary/40 outline-none appearance-none cursor-pointer">
+              <option value="cash">نقداً (Cash)</option>
+              <option value="instapay">انستا باي (InstaPay)</option>
+              <option value="vodafone_cash">فودافون كاش</option>
+              <option value="visa">فيزا (Visa)</option>
+            </select>
+          </div>
         </div>
       </div>
       
@@ -174,9 +193,15 @@
               <span class="text-outline-variant font-headline">المسدد الآن</span>
               <span class="font-manrope font-black text-emerald-400 text-lg">{{ orderForm.get('initial_payment')?.value | number }} ج.م</span>
             </div>
+            @if (orderForm.get('discount')?.value > 0) {
+              <div class="flex justify-between items-center text-xs text-amber-500">
+                <span class="font-headline font-bold">الخصم</span>
+                <span class="font-manrope font-black">{{ orderForm.get('discount')?.value | number }} ج.م</span>
+              </div>
+            }
             <div class="flex justify-between items-center text-xs p-4 bg-error/5 rounded-2xl">
               <span class="text-error font-headline font-bold">المتبقي</span>
-              <span class="font-manrope font-black text-error text-xl">{{ (orderForm.get('agreed_price')?.value - orderForm.get('initial_payment')?.value) | number }} ج.م</span>
+              <span class="font-manrope font-black text-error text-xl">{{ (orderForm.get('agreed_price')?.value - orderForm.get('initial_payment')?.value - orderForm.get('discount')?.value) | number }} ج.م</span>
             </div>
           </div>
         </div>

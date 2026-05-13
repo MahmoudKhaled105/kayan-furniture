@@ -6,6 +6,7 @@ export interface Order {
   id: number;
   customer_id: number;
   customer_name: string;
+  customer_phone?: string;
   item_id?: number;
   location_id: number;
   location_name: string;
@@ -17,6 +18,7 @@ export interface Order {
   backorder_description?: string;
   order_date: string;
   expected_arrival?: string;
+  delivery_status?: string;
 }
 
 @Injectable({
@@ -43,6 +45,10 @@ export class OrderService {
 
   fulfillOrder(orderId: number, itemId: number): Observable<Order> {
     return this.http.post<Order>(`/orders/${orderId}/fulfill`, { item_id: itemId });
+  }
+
+  updateDeliveryStatus(orderId: number, status: string): Observable<Order> {
+    return this.http.patch<Order>(`/orders/${orderId}`, { delivery_status: status });
   }
 
   getBackorders(): Observable<Order[]> {

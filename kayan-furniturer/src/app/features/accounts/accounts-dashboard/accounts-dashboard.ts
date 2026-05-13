@@ -1,17 +1,21 @@
 import { Component, signal, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { FinanceService, FinanceDailyResponse, FinanceMonthlyResponse } from '../../../shared/services/finance.service';
+import { ToastService } from '../../../shared/services/toast.service';
 import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-accounts-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './accounts-dashboard.html',
   styleUrl: './accounts-dashboard.scss',
 })
 export class AccountsDashboard implements OnInit {
   private financeService = inject(FinanceService);
+  private fb = inject(FormBuilder);
+  private toast = inject(ToastService);
 
   isLoading = signal(false);
 
@@ -19,7 +23,10 @@ export class AccountsDashboard implements OnInit {
   totalIn = signal<number>(0);
   totalOut = signal<number>(0);
   netProfit = signal<number>(0);
-
+  dateFrom = signal<string>(new Date().toISOString().split('T')[0]);
+  dateTo = signal<string>(new Date().toISOString().split('T')[0]);
+  today = new Date();
+  
   // Lists
   inflows = signal<any[]>([]);
   outflows = signal<any[]>([]);
@@ -28,6 +35,20 @@ export class AccountsDashboard implements OnInit {
   monthlyTarget = signal<number>(600000); // 600K dummy target for now
   currentAchieved = signal<number>(0);
   
+  // Transaction Modal
+  showTransactionModal = signal(false);
+  transactionForm: FormGroup;
+  
+  constructor() {
+    this.transactionForm = this.fb.group({
+      amount: [null, [Validators.required, Validators.min(1)]],
+      direction: ['outflow', Validators.required],
+      type: ['expense', Validators.required],
+      party: ['', Validators.required],
+      notes: ['']
+    });
+  }
+
   // Computed (Signal equivalent using a getter method or computed, but simple method here works fine with UI bindings)
   targetPercentage() {
     if (this.monthlyTarget() === 0) return 0;
@@ -42,7 +63,7 @@ export class AccountsDashboard implements OnInit {
 
   loadDailyData() {
     this.isLoading.set(true);
-    this.financeService.getDailyFinance()
+    this.financeService.getDailyFinance(this.dateFrom(), this.dateTo())
       .pipe(finalize(() => this.isLoading.set(false)))
       .subscribe({
         next: (res: FinanceDailyResponse) => {
@@ -54,6 +75,24 @@ export class AccountsDashboard implements OnInit {
         },
         error: (err: any) => console.error('Failed to load daily finance data', err)
       });
+  }
+
+  setDateRange(type: 'today' | 'yesterday') {
+    const today = new Date();
+    if (type === 'today') {
+      this.dateFrom.set(today.toISOString().split('T')[0]);
+      this.dateTo.set(today.toISOString().split('T')[0]);
+    } else {
+      const yesterday = new Date(today);
+      yesterday.setDate(yesterday.getDate() - 1);
+      this.dateFrom.set(yesterday.toISOString().split('T')[0]);
+      this.dateTo.set(yesterday.toISOString().split('T')[0]);
+    }
+    this.loadDailyData();
+  }
+
+  onDateChange() {
+    this.loadDailyData();
   }
 
   loadMonthlyData() {
@@ -90,6 +129,24 @@ export class AccountsDashboard implements OnInit {
     };
     const prefix = labels[type] || 'معاملة';
     return `${prefix} (رقم المرجع: ${sourceId || 'غير محدد'})`;
+  }
+
+  onAddTransaction() {
+    if (this.transactionForm.valid) {
+      this.isLoading.set(true);
+      this.financeService.addTransaction(this.transactionForm.value).subscribe({
+        next: () => {
+          this.showTransactionModal.set(false);
+          this.transactionForm.reset({ direction: 'outflow', type: 'expense' });
+          this.loadDailyData();
+        },
+        error: (err: any) => {
+          console.error('Failed to add transaction', err);
+          this.isLoading.set(false);
+          this.toast.error('فشل إضافة الحركة المالية', err);
+        }
+      });
+    }
   }
 }
 

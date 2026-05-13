@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { OrderService } from '../../../shared/services/order.service';
 import { CustomerService, Customer } from '../../../shared/services/customer.service';
 import { InventoryService, ProductItem } from '../../../shared/services/inventory.service';
+import { ToastService } from '../../../shared/services/toast.service';
 
 @Component({
   selector: 'app-add-order',
@@ -19,6 +20,7 @@ export class AddOrder implements OnInit {
   private orderService = inject(OrderService);
   private customerService = inject(CustomerService);
   private inventoryService = inject(InventoryService);
+  private toast = inject(ToastService);
 
   isLoading = signal(false);
   customers = signal<Customer[]>([]);
@@ -35,6 +37,8 @@ export class AddOrder implements OnInit {
       location_id: [null, Validators.required],
       agreed_price: [null, [Validators.required, Validators.min(0)]],
       initial_payment: [0, [Validators.required, Validators.min(0)]],
+      discount: [0, [Validators.min(0)]],
+      payment_method: ['cash', Validators.required],
       is_backorder: [false],
       backorder_description: [''],
       expected_arrival: [''],
@@ -92,10 +96,10 @@ export class AddOrder implements OnInit {
           this.isLoading.set(false);
           this.router.navigate(['/sales']);
         },
-        error: (err) => {
-          console.error('Order creation failed:', err);
+        error: (err: any) => {
+          console.error('Failed to create order', err);
           this.isLoading.set(false);
-          alert('فشل في تسجيل عملية البيع');
+          this.toast.error('فشل في تسجيل عملية البيع', err);
         }
       });
     } else {

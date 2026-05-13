@@ -41,6 +41,15 @@
         <span>تحصيل دفعة</span>
         <span class="material-symbols-outlined">&#xef63;</span>
       </button>
+      
+      @if (order()?.status !== 'backorder') {
+        <button (click)="onToggleDeliveryStatus()" 
+                [ngClass]="order()?.delivery_status === 'received' ? 'bg-emerald-500 text-white shadow-emerald-500/20' : 'bg-surface-container-high text-outline-variant hover:text-primary border-white/5'"
+                class="px-8 py-4 font-black rounded-2xl transition-all shadow-xl flex items-center gap-2 border">
+          <span>{{ order()?.delivery_status === 'received' ? 'تم الاستلام' : 'تأكيد الاستلام' }}</span>
+          <span class="material-symbols-outlined">{{ order()?.delivery_status === 'received' ? 'check_circle' : 'inventory_2' }}</span>
+        </button>
+      }
     </div>
   </div>
 

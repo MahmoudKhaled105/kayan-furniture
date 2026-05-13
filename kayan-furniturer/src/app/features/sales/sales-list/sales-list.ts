@@ -16,6 +16,7 @@ export class SalesList implements OnInit {
   isLoading = signal(true);
   error = signal<string | null>(null);
   orders = signal<Order[]>([]);
+  searchQuery = signal<string>('');
   
   activeFilter = signal<'all' | 'active' | 'backorder' | 'fulfilled'>('all');
 
@@ -43,10 +44,21 @@ export class SalesList implements OnInit {
     this.activeFilter.set(filter);
   }
 
+  onSearchInput(event: Event) {
+    const value = (event.target as HTMLInputElement).value;
+    this.searchQuery.set(value);
+  }
+
   getFilteredOrders(): Order[] {
     const filter = this.activeFilter();
-    if (filter === 'all') return this.orders();
-    return this.orders().filter(o => o.status === filter);
+    const query = this.searchQuery().toLowerCase().trim();
+    
+    return this.orders().filter(o => {
+      const matchesFilter = filter === 'all' || o.status === filter;
+      const matchesSearch = query === '' || 
+        (o.customer_name?.toLowerCase().includes(query) || o.customer_phone?.includes(query));
+      return matchesFilter && matchesSearch;
+    });
   }
 
   getStatusClass(status: string): string {

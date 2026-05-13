@@ -1,5 +1,6 @@
 import { Router } from '../router';
 import { jsonResponse, errorResponse, parseId, readBody, roundMoney } from '../utils';
+import { roleMiddleware } from '../middleware/auth';
 
 async function recalcPaymentStatus(db: D1Database, shipmentId: number) {
 	const shipment = await db.prepare('SELECT declared_value FROM shipment WHERE id = ?').bind(shipmentId).first<any>();
@@ -19,7 +20,7 @@ async function recalcPaymentStatus(db: D1Database, shipmentId: number) {
 
 export function registerShipmentRoutes(router: Router) {
 	// GET /api/v1/shipments
-	router.get('api/v1/shipments', async (_req, env, _params, query) => {
+	router.get('api/v1/shipments', roleMiddleware(['admin'], async (_req, env, _params, query) => {
 		let sql = `
 			SELECT sh.id, sh.supplier_id, s.name AS supplier_name, sh.date_received,
 				   sh.declared_value, sh.payment_status, sh.partial_delivery,
@@ -60,10 +61,10 @@ export function registerShipmentRoutes(router: Router) {
 		const stmt = env.DB.prepare(sql);
 		const { results } = bindings.length > 0 ? await stmt.bind(...bindings).all() : await stmt.all();
 		return jsonResponse(results);
-	});
+	}));
 
 	// POST /api/v1/shipments
-	router.post('api/v1/shipments', async (req, env) => {
+	router.post('api/v1/shipments', roleMiddleware(['admin'], async (req, env) => {
 		const body = await readBody(req) as any;
 
 		if (!body.supplier_id) return errorResponse('validation_error', 'supplier_id is required', 400);
@@ -103,10 +104,10 @@ export function registerShipmentRoutes(router: Router) {
 
 		const shipment = await env.DB.prepare('SELECT * FROM shipment WHERE id = ?').bind(shipmentId).first();
 		return jsonResponse({ ...shipment, installments }, 201);
-	});
+	}));
 
 	// GET /api/v1/shipments/:id
-	router.get('api/v1/shipments/:id', async (_req, env, params) => {
+	router.get('api/v1/shipments/:id', roleMiddleware(['admin'], async (_req, env, params) => {
 		const id = parseId(params.id);
 		if (!id) return errorResponse('validation_error', 'Invalid shipment ID', 400);
 
@@ -131,10 +132,10 @@ export function registerShipmentRoutes(router: Router) {
 		).bind(id).all();
 
 		return jsonResponse({ ...shipment, installments });
-	});
+	}));
 
 	// PATCH /api/v1/shipments/:id
-	router.patch('api/v1/shipments/:id', async (req, env, params) => {
+	router.patch('api/v1/shipments/:id', roleMiddleware(['admin'], async (req, env, params) => {
 		const id = parseId(params.id);
 		if (!id) return errorResponse('validation_error', 'Invalid shipment ID', 400);
 
@@ -165,10 +166,10 @@ export function registerShipmentRoutes(router: Router) {
 
 		const updated = await env.DB.prepare('SELECT * FROM shipment WHERE id = ?').bind(id).first();
 		return jsonResponse(updated);
-	});
+	}));
 
 	// GET /api/v1/shipments/:id/installments
-	router.get('api/v1/shipments/:id/installments', async (_req, env, params) => {
+	router.get('api/v1/shipments/:id/installments', roleMiddleware(['admin'], async (_req, env, params) => {
 		const id = parseId(params.id);
 		if (!id) return errorResponse('validation_error', 'Invalid shipment ID', 400);
 
@@ -179,10 +180,10 @@ export function registerShipmentRoutes(router: Router) {
 			'SELECT * FROM shipment_installment WHERE shipment_id = ? ORDER BY due_date'
 		).bind(id).all();
 		return jsonResponse(results);
-	});
+	}));
 
 	// POST /api/v1/shipments/:id/installments
-	router.post('api/v1/shipments/:id/installments', async (req, env, params) => {
+	router.post('api/v1/shipments/:id/installments', roleMiddleware(['admin'], async (req, env, params) => {
 		const id = parseId(params.id);
 		if (!id) return errorResponse('validation_error', 'Invalid shipment ID', 400);
 
@@ -201,10 +202,10 @@ export function registerShipmentRoutes(router: Router) {
 			.bind(result.meta.last_row_id).first();
 
 		return jsonResponse(installment, 201);
-	});
+	}));
 
 	// PATCH /api/v1/shipments/:id/installments/:inst_id
-	router.patch('api/v1/shipments/:id/installments/:inst_id', async (req, env, params) => {
+	router.patch('api/v1/shipments/:id/installments/:inst_id', roleMiddleware(['admin'], async (req, env, params) => {
 		const shipmentId = parseId(params.id);
 		const instId = parseId(params.inst_id);
 		if (!shipmentId || !instId) return errorResponse('validation_error', 'Invalid ID', 400);
@@ -249,10 +250,10 @@ export function registerShipmentRoutes(router: Router) {
 		const shipmentAfter = await env.DB.prepare('SELECT payment_status FROM shipment WHERE id = ?').bind(shipmentId).first<any>();
 
 		return jsonResponse({ ...updated, payment_status: shipmentAfter?.payment_status });
-	});
+	}));
 
 	// GET /api/v1/shipments/:id/manifest
-	router.get('api/v1/shipments/:id/manifest', async (_req, env, params) => {
+	router.get('api/v1/shipments/:id/manifest', roleMiddleware(['admin'], async (_req, env, params) => {
 		const id = parseId(params.id);
 		if (!id) return errorResponse('validation_error', 'Invalid shipment ID', 400);
 
@@ -269,10 +270,10 @@ export function registerShipmentRoutes(router: Router) {
 		`).bind(id).all();
 
 		return jsonResponse(results);
-	});
+	}));
 
 	// GET /api/v1/shipments/:id/stats
-	router.get('api/v1/shipments/:id/stats', async (_req, env, params) => {
+	router.get('api/v1/shipments/:id/stats', roleMiddleware(['admin'], async (_req, env, params) => {
 		const id = parseId(params.id);
 		if (!id) return errorResponse('validation_error', 'Invalid shipment ID', 400);
 
@@ -301,5 +302,5 @@ export function registerShipmentRoutes(router: Router) {
 				total_sale: Math.round((financials?.total_sale || 0) * 100) / 100
 			}
 		});
-	});
+	}));
 }
