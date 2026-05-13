@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+
+<html class="dark" dir="rtl" lang="ar"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Koshk - دفتر الجرد العمومي</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&amp;family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Inter', 'IBM Plex Sans Arabic', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .headline-font { font-family: 'IBM Plex Sans Arabic', sans-serif; }
+        .body-font { font-family: 'Manrope', 'IBM Plex Sans Arabic', sans-serif; }
+        
+        /* Custom scrollbar for dark theme */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0e0e0e; }
+        ::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #353535; }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "surface-container-highest": "#353535",
+                "error": "#ffb4ab",
+                "primary-fixed-dim": "#e7c268",
+                "surface-container-lowest": "#0e0e0e",
+                "error-container": "#93000a",
+                "on-secondary-container": "#ffcfad",
+                "primary-fixed": "#ffdf96",
+                "tertiary-container": "#a9aac5",
+                "on-surface-variant": "#d4c4b7",
+                "surface-container-low": "#1c1b1b",
+                "on-error-container": "#ffdad6",
+                "surface-container-high": "#2a2a2a",
+                "on-primary-fixed-variant": "#5a4400",
+                "surface-container": "#20201f",
+                "on-primary-fixed": "#251a00",
+                "surface": "#131313",
+                "on-primary-container": "#523d00",
+                "on-tertiary-fixed": "#181a2e",
+                "secondary-container": "#924c00",
+                "inverse-primary": "#765a05",
+                "surface-bright": "#393939",
+                "secondary": "#ffb781",
+                "on-secondary": "#4e2600",
+                "on-tertiary-container": "#3d3f55",
+                "on-surface": "#e5e2e1",
+                "secondary-fixed": "#ffdcc4",
+                "outline-variant": "#50453b",
+                "tertiary-fixed": "#e0e0fc",
+                "primary-container": "#cba851",
+                "background": "#131313",
+                "inverse-surface": "#e5e2e1",
+                "tertiary": "#c5c5e1",
+                "on-background": "#e5e2e1",
+                "primary": "#e8c46a",
+                "outline": "#9c8e82",
+                "surface-tint": "#e7c268",
+                "on-tertiary": "#2d2f44",
+                "on-secondary-fixed-variant": "#6f3800",
+                "secondary-fixed-dim": "#ffb781",
+                "inverse-on-surface": "#313030",
+                "on-tertiary-fixed-variant": "#43455b",
+                "on-secondary-fixed": "#2f1400",
+                "tertiary-fixed-dim": "#c4c4df",
+                "on-error": "#690005",
+                "surface-dim": "#131313",
+                "on-primary": "#3e2e00",
+                "surface-variant": "#353535"
+              },
+              fontFamily: {
+                "headline": ["IBM Plex Sans Arabic"],
+                "body": ["Manrope"],
+                "label": ["Manrope"]
+              },
+              borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "1.5rem", "full": "9999px"},
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background min-h-screen">
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 w-full z-50 bg-[#131313]/60 backdrop-blur-xl flex justify-between items-center px-8 py-4 w-full shadow-[0_30px_30px_rgba(0,0,0,0.06)]">
+<div class="flex items-center gap-6">
+<span class="text-2xl font-black text-[#e8c46a] tracking-tight headline-font">Koshk</span>
+<nav class="hidden md:flex gap-8 items-center text-sm font-medium headline-font">
+<a class="text-[#2a2a2a] hover:text-[#ffb781] transition-colors" href="#">الزتونة</a>
+<a class="text-[#e8c46a] border-b-2 border-[#e8c46a] pb-1" href="#">الموردين والحاويات</a>
+<a class="text-[#2a2a2a] hover:text-[#ffb781] transition-colors" href="#">الجرد والمخازن</a>
+<a class="text-[#2a2a2a] hover:text-[#ffb781] transition-colors" href="#">المبيعات والطلبات</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden lg:block">
+<input class="bg-surface-container-lowest border border-outline-variant/15 rounded-full py-2 pr-10 pl-4 text-sm focus:outline-none focus:border-primary/50 transition-all w-64" placeholder="دور على قطعة بالاسم.." type="text"/>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline text-lg">search</span>
+</div>
+<button class="material-symbols-outlined text-[#e8c46a] hover:text-[#ffb781] transition-colors" data-icon="notifications">notifications</button>
+<button class="material-symbols-outlined text-[#e8c46a] hover:text-[#ffb781] transition-colors" data-icon="account_circle">account_circle</button>
+</div>
+</header>
+<!-- Side Navigation Bar -->
+<aside class="h-screen w-72 fixed left-0 top-0 bg-[#0e0e0e] hidden lg:flex flex-col p-6 gap-4 z-40 border-r-0">
+<div class="mb-8 pt-20">
+<div class="flex items-center gap-3 mb-2">
+<div class="w-10 h-10 rounded-xl bg-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary-container" data-icon="chair">chair</span>
+</div>
+<div>
+<h2 class="text-xl font-bold text-[#e8c46a] headline-font leading-tight">المنضرة</h2>
+<p class="text-xs text-on-surface-variant font-medium">إدارة التحف</p>
+</div>
+</div>
+</div>
+<nav class="flex flex-col gap-2 headline-font text-sm">
+<a class="flex items-center gap-3 px-4 py-3 text-[#2a2a2a] hover:bg-[#2a2a2a]/20 rounded-xl hover:translate-x-1 transition-transform duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>الزتونة</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#2a2a2a] hover:bg-[#2a2a2a]/20 rounded-xl hover:translate-x-1 transition-transform duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span>الموردين والحاويات</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-[#e8c46a] to-[#cba851] text-white rounded-xl shadow-lg hover:translate-x-1 transition-transform duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="warehouse" style="font-variation-settings: 'FILL' 1;">warehouse</span>
+<span>الجرد والمخازن</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#2a2a2a] hover:bg-[#2a2a2a]/20 rounded-xl hover:translate-x-1 transition-transform duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
+<span>المبيعات والطلبات</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#2a2a2a] hover:bg-[#2a2a2a]/20 rounded-xl hover:translate-x-1 transition-transform duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span>الحسابات</span>
+</a>
+</nav>
+<div class="mt-auto pt-6 flex flex-col gap-2 border-t border-outline-variant/10 headline-font text-sm">
+<button class="bg-gradient-to-r from-primary to-primary-container text-on-primary py-3 rounded-xl font-bold shadow-lg flex items-center justify-center gap-2 mb-4 active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+<span>إضافة قطعة جديدة</span>
+</button>
+<a class="flex items-center gap-3 px-4 py-2 text-[#2a2a2a] hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span>الإعدادات</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 text-[#2a2a2a] hover:text-error transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span>تسجيل خروج</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="lg:mr-72 pt-28 px-6 pb-12 transition-all duration-300">
+<div class="max-w-7xl mx-auto">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+<div>
+<h1 class="text-4xl lg:text-5xl font-bold headline-font text-on-surface tracking-tight mb-2">دفتر الجرد العمومي (المنضرة)</h1>
+<p class="text-on-surface-variant text-lg headline-font font-light">كل تحفة هنا ليها حكاية.. تابع جردك ووزع شغلك صح.</p>
+</div>
+<div class="flex gap-3">
+<button class="bg-surface-container-high px-6 py-3 rounded-xl font-semibold flex items-center gap-2 text-on-surface-variant hover:bg-surface-container-highest transition-colors active:scale-95 duration-200 headline-font">
+<span class="material-symbols-outlined" data-icon="file_download">file_download</span>
+<span>تصدير الجرد</span>
+</button>
+<button class="bg-gradient-to-r from-primary to-primary-container px-6 py-3 rounded-xl font-bold flex items-center gap-2 text-on-primary shadow-lg hover:shadow-primary/20 active:scale-95 duration-200 headline-font">
+<span class="material-symbols-outlined" data-icon="add_box" style="font-variation-settings: 'FILL' 1;">add_box</span>
+<span>إضافة قطعة جديدة</span>
+</button>
+</div>
+</div>
+<!-- Dashboard Stats (Hassala Style) -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+<div class="bg-surface-container-high p-6 rounded-xl border-b-4 border-primary">
+<p class="text-on-surface-variant text-xs font-bold headline-font mb-1">إجمالي القطع</p>
+<p class="text-3xl font-black text-on-surface body-font">1,248</p>
+</div>
+<div class="bg-surface-container-high p-6 rounded-xl border-b-4 border-secondary">
+<p class="text-on-surface-variant text-xs font-bold headline-font mb-1">في العرض دلوقتي</p>
+<p class="text-3xl font-black text-on-surface body-font">342</p>
+</div>
+<div class="bg-surface-container-high p-6 rounded-xl border-b-4 border-tertiary">
+<p class="text-on-surface-variant text-xs font-bold headline-font mb-1">محجوز للعرسان</p>
+<p class="text-3xl font-black text-on-surface body-font">89</p>
+</div>
+<div class="bg-surface-container-high p-6 rounded-xl border-b-4 border-primary-container">
+<p class="text-on-surface-variant text-xs font-bold headline-font mb-1">قيمة المخزون</p>
+<p class="text-3xl font-black text-on-surface body-font">EGP 2.4M</p>
+</div>
+</div>
+<!-- Filters & Search Canvas -->
+<div class="bg-surface-container-low rounded-xl p-6 mb-6 shadow-sm">
+<div class="flex flex-col lg:flex-row gap-4 items-center">
+<div class="relative w-full lg:flex-1">
+<input class="w-full bg-surface-container-lowest border border-outline-variant/15 rounded-xl py-4 pr-12 pl-4 text-on-surface focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all headline-font" placeholder="دور على قطعة بالاسم.." type="text"/>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-primary text-2xl">search</span>
+</div>
+<div class="flex flex-wrap gap-3 w-full lg:w-auto">
+<select class="bg-surface-container-high border-none rounded-xl px-4 py-4 text-sm font-medium headline-font focus:ring-2 focus:ring-primary/20 text-on-surface-variant min-w-[140px]">
+<option>المكان الحالي</option>
+<option>Gallery A</option>
+<option>Gallery B</option>
+<option>Warehouse A</option>
+<option>Warehouse B</option>
+</select>
+<select class="bg-surface-container-high border-none rounded-xl px-4 py-4 text-sm font-medium headline-font focus:ring-2 focus:ring-primary/20 text-on-surface-variant min-w-[140px]">
+<option>الحالة</option>
+<option>في العرض</option>
+<option>في المخزن</option>
+<option>محجوزة</option>
+<option>مباعة</option>
+<option>في السكة</option>
+</select>
+<select class="bg-surface-container-high border-none rounded-xl px-4 py-4 text-sm font-medium headline-font focus:ring-2 focus:ring-primary/20 text-on-surface-variant min-w-[140px]">
+<option>النوع</option>
+<option>كنب</option>
+<option>كراسي</option>
+<option>طاولات</option>
+<option>ديكور</option>
+</select>
+<button class="bg-surface-container-highest p-4 rounded-xl text-on-surface hover:bg-outline-variant/20 transition-colors">
+<span class="material-symbols-outlined" data-icon="filter_list">filter_list</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Inventory Table (Mandara Grid Pattern) -->
+<div class="bg-surface-container-low rounded-xl overflow-hidden shadow-sm">
+<table class="w-full text-right headline-font">
+<thead class="bg-surface-container-high/50 text-on-surface-variant text-xs uppercase tracking-wider">
+<tr>
+<th class="px-6 py-5 font-bold">اسم القطعة</th>
+<th class="px-6 py-5 font-bold">النوع</th>
+<th class="px-6 py-5 font-bold">المكان الحالي</th>
+<th class="px-6 py-5 font-bold">الحالة</th>
+<th class="px-6 py-5 font-bold">سعر التكلفة</th>
+<th class="px-6 py-5 font-bold">سعر البيع</th>
+<th class="px-6 py-5 font-bold"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/5">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-high/30 transition-colors group">
+<td class="px-6 py-6">
+<div class="flex items-center gap-4">
+<div class="w-16 h-16 rounded-xl overflow-hidden bg-surface-container-highest flex-shrink-0">
+<img alt="luxury green velvet armchair" class="w-full h-full object-cover" data-alt="close-up of a luxurious deep green velvet armchair with polished brass legs against a dark moody wall" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfIhwbGti7yiXK0pjICaHhz342f7Z2TrDVZQq7kTx33eoNNnXhW0cpEkMyLKI0e_aJd7llGlUHpipTg32Nt6c26oiALQ3tG8TUQCs0fv0sFurgYT83WRnF8aDGrqFEl84DEvbafBDFIgtT7FuXZAtr-2xfLdRGgHB_biw7vZUrfTf46TqOE74bkvr231oKZlI4IY4BulH2LgWAJLS7iMvVRZgbNSyuJkCCw5MseewjXdzXAbtPnACTzfC3HIkCr-p8ZZVt4cWZH2o"/>
+</div>
+<div>
+<p class="font-bold text-on-surface text-lg">فوتيه "الخديوي" كابوتونيه</p>
+<p class="text-xs text-on-surface-variant body-font">SKU: KSH-9920</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-6 text-on-surface-variant">كراسي فوتيه</td>
+<td class="px-6 py-6">
+<span class="flex items-center gap-2 text-on-surface">
+<span class="material-symbols-outlined text-primary text-sm" data-icon="location_on">location_on</span>
+                                    Gallery A
+                                </span>
+</td>
+<td class="px-6 py-6">
+<span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-bold">في العرض</span>
+</td>
+<td class="px-6 py-6 body-font font-medium">12,500 <span class="text-[10px] text-on-surface-variant">EGP</span></td>
+<td class="px-6 py-6 body-font font-bold text-primary">18,000 <span class="text-[10px] text-on-surface-variant">EGP</span></td>
+<td class="px-6 py-6 text-left">
+<button class="p-2 rounded-lg hover:bg-surface-container-highest text-on-surface-variant group-hover:text-on-surface transition-all">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-high/30 transition-colors group">
+<td class="px-6 py-6">
+<div class="flex items-center gap-4">
+<div class="w-16 h-16 rounded-xl overflow-hidden bg-surface-container-highest flex-shrink-0">
+<img alt="minimalist oak dining table" class="w-full h-full object-cover" data-alt="modern minimalist solid oak dining table with clean lines in a sunlit gallery space" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAtxquFBapwfrDzOsb4xWk0JXr9obMI1XRPKAQi1SZ8FuZYh0rpPfCkmnEOp-K_fdGLa1YinQW0-mXJEpwHvhqxaI38znCUoFe5dATN7gD8snR7514Jq7fvFpv1YBBtNgCD0SRp9RJHwfdywW5e3WKlRxV8MW8Mpy-8Q2c6VbaNErHnO1_sPeSovTuZMZDv6OP0wuHoCjfHcyl-UXiI_ylPVaxr-DC1bPzztjMMleGqenYv3z359XXVqCI3CtzVmv5QN0O5Dysxhfo"/>
+</div>
+<div>
+<p class="font-bold text-on-surface text-lg">سفرة "الريف" خشب بلوط</p>
+<p class="text-xs text-on-surface-variant body-font">SKU: KSH-4412</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-6 text-on-surface-variant">طاولات سفرة</td>
+<td class="px-6 py-6">
+<span class="flex items-center gap-2 text-on-surface">
+<span class="material-symbols-outlined text-secondary text-sm" data-icon="inventory_2">inventory_2</span>
+                                    Warehouse B
+                                </span>
+</td>
+<td class="px-6 py-6">
+<span class="bg-surface-container-highest text-on-surface-variant px-3 py-1 rounded-full text-xs font-bold">في المخزن</span>
+</td>
+<td class="px-6 py-6 body-font font-medium">35,000 <span class="text-[10px] text-on-surface-variant">EGP</span></td>
+<td class="px-6 py-6 body-font font-bold text-primary">48,500 <span class="text-[10px] text-on-surface-variant">EGP</span></td>
+<td class="px-6 py-6 text-left">
+<button class="p-2 rounded-lg hover:bg-surface-container-highest text-on-surface-variant group-hover:text-on-surface transition-all">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-high/30 transition-colors group">
+<td class="px-6 py-6">
+<div class="flex items-center gap-4">
+<div class="w-16 h-16 rounded-xl overflow-hidden bg-surface-container-highest flex-shrink-0">
+<img alt="vintage ornate mirror" class="w-full h-full object-cover" data-alt="large vintage ornate gold-leaf mirror with intricate baroque carvings standing in a dimly lit atelier" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6vXg-olARdKVE54IMeUJndn7onV3xi8KADjW_XvQub0aEgawEQAPmwLwQhcO2rSaFlbBUnNL22E0fkitCsBZH6kk5mua4yD9E-u9AiPSLswvNKbleFkjDQ4etriw1oL6rF4rrvUV1pDSD1w0IhYc1Soi0njXVUovTcwA2UxVxkjCmOzSoOhBz1mubXWnH3Otxr7z1iQLi7i5wQPiGl94HHnu3D1ADBcaKfWx628OOs1L8BIA65Vgl34DdR0yXODWp-5jW9_4PcCo"/>
+</div>
+<div>
+<p class="font-bold text-on-surface text-lg">مرايا "لوي كانز" مذهبة</p>
+<p class="text-xs text-on-surface-variant body-font">SKU: KSH-1102</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-6 text-on-surface-variant">ديكور حوائط</td>
+<td class="px-6 py-6">
+<span class="flex items-center gap-2 text-on-surface">
+<span class="material-symbols-outlined text-primary text-sm" data-icon="location_on">location_on</span>
+                                    Gallery B
+                                </span>
+</td>
+<td class="px-6 py-6">
+<span class="bg-secondary/20 text-secondary px-3 py-1 rounded-full text-xs font-bold">محجوزة</span>
+</td>
+<td class="px-6 py-6 body-font font-medium">8,200 <span class="text-[10px] text-on-surface-variant">EGP</span></td>
+<td class="px-6 py-6 body-font font-bold text-primary">12,000 <span class="text-[10px] text-on-surface-variant">EGP</span></td>
+<td class="px-6 py-6 text-left">
+<button class="p-2 rounded-lg hover:bg-surface-container-highest text-on-surface-variant group-hover:text-on-surface transition-all">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-high/30 transition-colors group">
+<td class="px-6 py-6">
+<div class="flex items-center gap-4">
+<div class="w-16 h-16 rounded-xl overflow-hidden bg-surface-container-highest flex-shrink-0">
+<img alt="deep blue velvet sofa" class="w-full h-full object-cover" data-alt="contemporary deep blue velvet sofa with gold legs against a neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBer97ukbVreAaF5KXH8DI0AD3Ol6bjLz5BFmnKyJWledtlP-F7zqqONPecRyPRpLPZwQKDlWqM4jLexFf1sPu1xr-1eunvwtXlFLumI_UGJwLPN8sDDKsrmMlFytnBOzh5Ik41B60IokuWF9MDLB1mIWxyu8B-YwzuG6717mImMtWVP7xttDfRL8PEXuiXLdjv6EouHkgkH6tTM1B9WcU5sa_eU29beX40sngtcHZJvCcK-t1imQzMPQyHxVXF9hXI9c0v7oNs6yA"/>
+</div>
+<div>
+<p class="font-bold text-on-surface text-lg">كنبة "نيلية" 3 مقاعد</p>
+<p class="text-xs text-on-surface-variant body-font">SKU: KSH-7704</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-6 text-on-surface-variant">كنب مودرن</td>
+<td class="px-6 py-6">
+<span class="flex items-center gap-2 text-on-surface">
+<span class="material-symbols-outlined text-tertiary text-sm" data-icon="local_shipping">local_shipping</span>
+                                    في السكة
+                                </span>
+</td>
+<td class="px-6 py-6">
+<span class="bg-tertiary/20 text-tertiary px-3 py-1 rounded-full text-xs font-bold">في السكة</span>
+</td>
+<td class="px-6 py-6 body-font font-medium">21,000 <span class="text-[10px] text-on-surface-variant">EGP</span></td>
+<td class="px-6 py-6 body-font font-bold text-primary">29,900 <span class="text-[10px] text-on-surface-variant">EGP</span></td>
+<td class="px-6 py-6 text-left">
+<button class="p-2 rounded-lg hover:bg-surface-container-highest text-on-surface-variant group-hover:text-on-surface transition-all">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-surface-container-high/30 transition-colors group opacity-60">
+<td class="px-6 py-6">
+<div class="flex items-center gap-4">
+<div class="w-16 h-16 rounded-xl overflow-hidden bg-surface-container-highest flex-shrink-0 grayscale">
+<img alt="antique wooden chest" class="w-full h-full object-cover" data-alt="weathered antique wooden chest with heavy iron hardware and ornate carvings" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCwojLGsql4nLbSBlmI_LUTF4qRyLP1kb0El1WnZiXjSZ1kiT3NvCQrp2cc9Uhc4C89j6MHuknrDcnzHGYPD4pzCc2d2vyQT3rhZulDC3wiyOJw7pSGWp-Hat0yyG5JNGmN631CC6Q9SeRtm1HVDBjQtpJIrljOhWUsltXhvAR7OVnmR9cb5hIgVct6w_FrJ49FyREgcl6x7yV2axANwIHCfUOLDg8qxLmzwqtdTW3CJcIAf3QaG66VfFntwtkEHhNpZ_xfPE3o6yc"/>
+</div>
+<div>
+<p class="font-bold text-on-surface text-lg line-through">سحارة "زمان" أبنوس</p>
+<p class="text-xs text-on-surface-variant body-font">SKU: KSH-2022</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-6 text-on-surface-variant">أنتيك</td>
+<td class="px-6 py-6">
+<span class="flex items-center gap-2 text-on-surface">
+<span class="material-symbols-outlined text-error text-sm" data-icon="check_circle">check_circle</span>
+                                    تم البيع
+                                </span>
+</td>
+<td class="px-6 py-6">
+<span class="bg-error/20 text-error px-3 py-1 rounded-full text-xs font-bold">مباعة</span>
+</td>
+<td class="px-6 py-6 body-font font-medium">15,000 <span class="text-[10px] text-on-surface-variant">EGP</span></td>
+<td class="px-6 py-6 body-font font-bold text-primary">22,000 <span class="text-[10px] text-on-surface-variant">EGP</span></td>
+<td class="px-6 py-6 text-left">
+<button class="p-2 rounded-lg hover:bg-surface-container-highest text-on-surface-variant group-hover:text-on-surface transition-all">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+<!-- Pagination -->
+<div class="bg-surface-container-high/20 px-6 py-4 flex items-center justify-between headline-font border-t border-outline-variant/5">
+<p class="text-on-surface-variant text-sm">عرض <span class="text-on-surface font-bold">5</span> من أصل <span class="text-on-surface font-bold">1,248</span> قطعة</p>
+<div class="flex gap-2">
+<button class="w-10 h-10 flex items-center justify-center rounded-xl bg-surface-container-high text-on-surface-variant hover:text-primary transition-all">
+<span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-xl bg-primary text-on-primary font-bold body-font shadow-md">1</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-xl bg-surface-container-high text-on-surface-variant hover:text-primary transition-all font-bold body-font">2</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-xl bg-surface-container-high text-on-surface-variant hover:text-primary transition-all font-bold body-font">3</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-xl bg-surface-container-high text-on-surface-variant hover:text-primary transition-all">
+<span class="material-symbols-outlined" data-icon="chevron_left">chevron_left</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Nav for Mobile -->
+<nav class="md:hidden fixed bottom-0 w-full bg-[#131313]/90 backdrop-blur-lg border-t border-outline-variant/10 px-6 py-3 flex justify-between items-center z-50">
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="text-[10px] font-bold headline-font">الزتونة</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-[#2a2a2a]" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="text-[10px] font-bold headline-font">الموردين</span>
+</a>
+<div class="relative -top-6">
+<button class="w-14 h-14 bg-gradient-to-r from-primary to-primary-container rounded-full shadow-2xl flex items-center justify-center text-on-primary active:scale-90 transition-all">
+<span class="material-symbols-outlined text-3xl" data-icon="add">add</span>
+</button>
+</div>
+<a class="flex flex-col items-center gap-1 text-[#2a2a2a]" href="#">
+<span class="material-symbols-outlined" data-icon="warehouse">warehouse</span>
+<span class="text-[10px] font-bold headline-font">المخازن</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-[#2a2a2a]" href="#">
+<span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
+<span class="text-[10px] font-bold headline-font">الطلبات</span>
+</a>
+</nav>
+</body></html>

@@ -1,0 +1,75 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #131313;
+  --surface: #131313;
+  --surface-container: #20201f;
+  --surface-container-low: #1c1b1b;
+  --surface-container-high: #2a2a2a;
+  --surface-container-highest: #353535;
+  --surface-container-lowest: #0e0e0e;
+  --surface-bright: #393939;
+  --on-background: #e5e2e1;
+  --on-surface: #e5e2e1;
+  --on-surface-variant: #d4c4b7;
+  --primary: #e8c46a;
+  --primary-container: #cba851;
+  --on-primary: #3e2e00;
+  --on-primary-container: #523d00;
+  --secondary: #ffb781;
+  --secondary-container: #924c00;
+  --on-secondary: #4e2600;
+  --secondary-fixed-dim: #ffb781;
+  --tertiary: #c5c5e1;
+  --error: #ffb4ab;
+  --outline-variant: #50453b;
+  --gray-400: #a0a0a0;
+  --gray-500: #7a7a7a;
+  --white: #ffffff;
+
+  --headline-font: 'IBM Plex Sans Arabic', 'Manrope';
+  --body-font: 'Inter', 'IBM Plex Sans Arabic';
+  --label-font: 'Manrope', 'IBM Plex Sans Arabic';
+}
+
+.material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+body {
+    font-family: 'IBM Plex Sans Arabic', 'Inter', sans-serif;
+    background-color: var(--background);
+    color: var(--on-background);
+}
+
+.editorial-shadow {
+    box-shadow: 30px 0 30px rgba(0,0,0,0.06);
+}
+
+/* Custom scrollbar for dark theme */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #0e0e0e; }
+::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 10px; }
+
+/* Make date inputs fully clickable anywhere on the input */
+input[type="date"] {
+    position: relative;
+    cursor: pointer;
+    color-scheme: dark; /* Forces the native calendar picker popup to use dark mode */
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    color: transparent;
+    background: transparent;
+    cursor: pointer;
+    opacity: 0;
+}

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+
+<html class="dark" dir="rtl" lang="ar"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>أمر تحويل - كشك</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&amp;family=Manrope:wght@400;600;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container-highest": "#353535",
+              "error": "#ffb4ab",
+              "primary-fixed-dim": "#e7c268",
+              "surface-container-lowest": "#0e0e0e",
+              "error-container": "#93000a",
+              "on-secondary-container": "#ffcfad",
+              "primary-fixed": "#ffdf96",
+              "tertiary-container": "#a9aac5",
+              "on-surface-variant": "#d4c4b7",
+              "surface-container-low": "#1c1b1b",
+              "on-error-container": "#ffdad6",
+              "surface-container-high": "#2a2a2a",
+              "on-primary-fixed-variant": "#5a4400",
+              "surface-container": "#20201f",
+              "on-primary-fixed": "#251a00",
+              "surface": "#131313",
+              "on-primary-container": "#523d00",
+              "on-tertiary-fixed": "#181a2e",
+              "secondary-container": "#924c00",
+              "inverse-primary": "#765a05",
+              "surface-bright": "#393939",
+              "secondary": "#ffb781",
+              "on-secondary": "#4e2600",
+              "on-tertiary-container": "#3d3f55",
+              "on-surface": "#e5e2e1",
+              "secondary-fixed": "#ffdcc4",
+              "outline-variant": "#50453b",
+              "tertiary-fixed": "#e0e0fc",
+              "primary-container": "#cba851",
+              "background": "#131313",
+              "inverse-surface": "#e5e2e1",
+              "tertiary": "#c5c5e1",
+              "on-background": "#e5e2e1",
+              "primary": "#e8c46a",
+              "outline": "#9c8e82",
+              "surface-tint": "#e7c268",
+              "on-tertiary": "#2d2f44",
+              "on-secondary-fixed-variant": "#6f3800",
+              "secondary-fixed-dim": "#ffb781",
+              "inverse-on-surface": "#313030",
+              "on-tertiary-fixed-variant": "#43455b",
+              "on-secondary-fixed": "#2f1400",
+              "tertiary-fixed-dim": "#c4c4df",
+              "on-error": "#690005",
+              "surface-dim": "#131313",
+              "on-primary": "#3e2e00",
+              "surface-variant": "#353535"
+            },
+            fontFamily: {
+              "headline": ["IBM Plex Sans Arabic"],
+              "body": ["IBM Plex Sans Arabic"],
+              "label": ["Manrope"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "1.5rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      body {
+        background-color: #131313;
+        color: #e5e2e1;
+        font-family: 'IBM Plex Sans Arabic', sans-serif;
+      }
+      .glass-input {
+        background-color: #0e0e0e;
+        border: 1px solid rgba(80, 69, 59, 0.15);
+        transition: all 0.3s ease;
+      }
+      .glass-input:focus {
+        border-color: rgba(232, 196, 106, 0.5);
+        box-shadow: 0 0 15px rgba(232, 196, 106, 0.1);
+        outline: none;
+      }
+    </style>
+</head>
+<body class="min-h-screen">
+<!-- TopAppBar -->
+<header class="bg-[#131313]/60 backdrop-blur-xl fixed top-0 w-full z-50 flex justify-between items-center px-8 py-4 w-full shadow-[0_30px_30px_rgba(0,0,0,0.06)]">
+<div class="flex items-center gap-4">
+<button class="text-[#e8c46a] active:scale-95 duration-200">
+<span class="material-symbols-outlined">arrow_forward</span>
+</button>
+<span class="text-2xl font-black text-[#e8c46a] tracking-tight font-['IBM_Plex_Sans_Arabic']">Koshk</span>
+</div>
+<div class="flex items-center gap-6">
+<div class="hidden md:flex gap-8 text-sm font-medium">
+<span class="text-[#e8c46a] border-b-2 border-[#e8c46a] pb-1 cursor-default">أمر تحويل</span>
+<span class="text-[#2a2a2a] hover:text-[#ffb781] transition-colors cursor-pointer">الزتونة</span>
+<span class="text-[#2a2a2a] hover:text-[#ffb781] transition-colors cursor-pointer">المخازن</span>
+</div>
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-[#e8c46a] cursor-pointer">notifications</span>
+<span class="material-symbols-outlined text-[#e8c46a] cursor-pointer">account_circle</span>
+</div>
+</div>
+</header>
+<main class="pt-24 pb-12 px-4 max-w-4xl mx-auto">
+<!-- Header Section -->
+<div class="mb-10 text-center md:text-right">
+<h1 class="text-4xl font-bold text-on-surface mb-2">أمر تحويل (نقل قطعة)</h1>
+<p class="text-on-surface-variant text-lg">تحريك العفش من مكان لمكان.. عينك على "الحصالة" التكلفة بتسمع في الحسابات.</p>
+</div>
+<form class="space-y-8">
+<!-- Section 1: Item & Route -->
+<div class="bg-surface-container-high rounded-xl p-8 space-y-6">
+<div class="flex items-center gap-3 mb-2">
+<span class="material-symbols-outlined text-primary">inventory_2</span>
+<h2 class="text-xl font-bold text-primary">بيانات القطعة والخط</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-2">
+<label class="block text-sm font-medium text-on-surface-variant mr-1">القطعة المراد نقلها</label>
+<input class="glass-input w-full p-4 rounded-xl text-on-surface cursor-not-allowed opacity-70" readonly="" type="text" value="كرسي لويس الرابع عشر - مذهب"/>
+</div>
+<div class="space-y-2">
+<label class="block text-sm font-medium text-on-surface-variant mr-1">مكانها الحالي</label>
+<input class="glass-input w-full p-4 rounded-xl text-on-surface cursor-not-allowed opacity-70" readonly="" type="text" value="مخزن المنضرة الرئيسي"/>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-2">
+<label class="block text-sm font-medium text-on-surface-variant mr-1">محطة الوصول (الوجهة)</label>
+<select class="glass-input w-full p-4 rounded-xl text-on-surface appearance-none bg-no-repeat bg-[left_1rem_center]">
+<option>اختر المكان الجديد...</option>
+<option>معرض التجمع الخامس</option>
+<option>مخزن الهرم الجانبي</option>
+<option>ورشة التصليح (المعادي)</option>
+<option>بيت العميل (تسليم مباشر)</option>
+</select>
+</div>
+<div class="space-y-2">
+<label class="block text-sm font-medium text-on-surface-variant mr-1">تاريخ النقلة</label>
+<input class="glass-input w-full p-4 rounded-xl text-on-surface" type="date"/>
+</div>
+</div>
+</div>
+<!-- Section 2: Logistics & Cost -->
+<div class="bg-surface-container-high rounded-xl p-8 space-y-6">
+<div class="flex items-center gap-3 mb-2">
+<span class="material-symbols-outlined text-secondary">local_shipping</span>
+<h2 class="text-xl font-bold text-secondary">اللوجستيات والتكلفة</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="space-y-2">
+<label class="block text-sm font-medium text-on-surface-variant mr-1">تكلفة المشوار (جنية)</label>
+<div class="relative">
+<input class="glass-input w-full p-4 rounded-xl text-on-surface pl-12" placeholder="0.00" type="number"/>
+<span class="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm font-label">EGP</span>
+</div>
+<p class="text-[10px] text-primary-fixed-dim mt-1 pr-1 italic">* هيتم خصمها تلقائياً من ميزانية "الحصالة"</p>
+</div>
+<div class="space-y-2">
+<label class="block text-sm font-medium text-on-surface-variant mr-1">نوع العربية</label>
+<input class="glass-input w-full p-4 rounded-xl text-on-surface" placeholder="مثلاً: ربع نقل جامبو" type="text"/>
+</div>
+<div class="space-y-2">
+<label class="block text-sm font-medium text-on-surface-variant mr-1">الأسطى المسؤول (الناقل)</label>
+<select class="glass-input w-full p-4 rounded-xl text-on-surface">
+<option>مين اللي هيشيل؟</option>
+<option>عم عبده السواق</option>
+<option>شركة إنجاز للشحن</option>
+<option>فريق التركيبات الداخلي</option>
+</select>
+</div>
+</div>
+</div>
+<!-- Section 3: Notes -->
+<div class="bg-surface-container-high rounded-xl p-8 space-y-4">
+<div class="flex items-center gap-3 mb-2">
+<span class="material-symbols-outlined text-on-surface-variant">comment</span>
+<h2 class="text-xl font-bold text-on-surface-variant">ملاحظات على الماشي</h2>
+</div>
+<textarea class="glass-input w-full p-4 rounded-xl text-on-surface resize-none" placeholder="أى تنبيهات للسواق أو حالة القطعة قبل ما تطلع..." rows="3"></textarea>
+</div>
+<!-- Action Buttons -->
+<div class="flex flex-col md:flex-row-reverse items-center gap-4 pt-4">
+<button class="w-full md:w-auto px-12 py-4 bg-gradient-to-r from-[#e8c46a] to-[#cba851] text-on-primary font-bold rounded-xl shadow-lg hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2" type="submit">
+<span class="material-symbols-outlined">check_circle</span>
+                    اعتمد التحويل يا هندسة
+                </button>
+<button class="w-full md:w-auto px-8 py-4 bg-surface-container-highest text-on-surface-variant font-medium rounded-xl hover:bg-surface-container-highest/80 transition-all flex items-center justify-center gap-2" type="button">
+                    إلغاء
+                </button>
+</div>
+</form>
+<!-- Informational Visual (Asymmetric Layer) -->
+<div class="mt-16 relative overflow-hidden rounded-xl bg-surface-container-low p-8 flex flex-col md:flex-row items-center gap-8 border border-outline-variant/10">
+<div class="flex-1 space-y-4">
+<h3 class="text-2xl font-bold text-primary">إيه اللي هيحصل دلوقتي؟</h3>
+<ul class="space-y-3">
+<li class="flex items-start gap-3 text-on-surface-variant">
+<span class="material-symbols-outlined text-secondary text-sm mt-1">info</span>
+<span>مكان القطعة هيتحدث في السيستم فوراً لـ "في الطريق".</span>
+</li>
+<li class="flex items-start gap-3 text-on-surface-variant">
+<span class="material-symbols-outlined text-secondary text-sm mt-1">info</span>
+<span>بند المصاريف هيسمع في قسم "الحسابات" تحت بند "نقل ولوجستيات".</span>
+</li>
+</ul>
+</div>
+<div class="w-full md:w-48 h-32 rounded-xl overflow-hidden shadow-2xl rotate-2">
+<img alt="logistics and shipping warehouse" class="w-full h-full object-cover" data-alt="cinematic shot of cardboard boxes and wooden crates in a moody dimly lit high-end logistics warehouse with warm amber backlighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAytkLT8QDjqnsSYiIFYeQ5faxzTrQtcGAZunG964djg66pJM52DValrG-Qel1SjHlhzzPfD7NraairEgivd8Wq4U6qKYVNJDvwuuhSdE4_MtKiHxsctpv5hcLUAQY1i_VL5I9qkp9WXYLIsdBEoJ9M3K5iyhVpi9qYJEnQntuOZEbivoOnPft6sE60MPChFXogbce1pUIN0-AKehEfo7RP89P8cx97h5Pt-r4Zp4DU0cD6HjJ8Up3yhPbn10FleS1Be0YUW06BiXU"/>
+</div>
+</div>
+</main>
+<!-- SideNavBar (Hidden on Mobile) -->
+<aside class="hidden xl:flex flex-col h-screen w-72 fixed left-0 top-0 bg-[#0e0e0e] p-6 gap-4 z-40">
+<div class="mb-8">
+<h2 class="text-xl font-bold text-[#e8c46a] font-['IBM_Plex_Sans_Arabic']">المنضرة</h2>
+<p class="text-[#2a2a2a] text-xs">إدارة التحف</p>
+</div>
+<nav class="flex-1 space-y-2">
+<div class="flex items-center gap-4 p-4 text-[#2a2a2a] hover:bg-[#2a2a2a]/20 rounded-xl transition-all cursor-pointer">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-['IBM_Plex_Sans_Arabic'] font-medium">الزتونة</span>
+</div>
+<div class="flex items-center gap-4 p-4 text-[#2a2a2a] hover:bg-[#2a2a2a]/20 rounded-xl transition-all cursor-pointer">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-['IBM_Plex_Sans_Arabic'] font-medium">الموردين والحاويات</span>
+</div>
+<div class="flex items-center gap-4 p-4 bg-gradient-to-r from-[#e8c46a] to-[#cba851] text-white rounded-xl shadow-lg">
+<span class="material-symbols-outlined">warehouse</span>
+<span class="font-['IBM_Plex_Sans_Arabic'] font-medium">الجرد والمخازن</span>
+</div>
+<div class="flex items-center gap-4 p-4 text-[#2a2a2a] hover:bg-[#2a2a2a]/20 rounded-xl transition-all cursor-pointer">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span class="font-['IBM_Plex_Sans_Arabic'] font-medium">المبيعات والطلبات</span>
+</div>
+<div class="flex items-center gap-4 p-4 text-[#2a2a2a] hover:bg-[#2a2a2a]/20 rounded-xl transition-all cursor-pointer">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-['IBM_Plex_Sans_Arabic'] font-medium">الحسابات</span>
+</div>
+</nav>
+<div class="mt-auto pt-6 border-t border-outline-variant/10 space-y-2">
+<div class="flex items-center gap-4 p-4 text-[#2a2a2a] hover:bg-[#2a2a2a]/20 rounded-xl transition-all cursor-pointer">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-['IBM_Plex_Sans_Arabic'] font-medium">الإعدادات</span>
+</div>
+<div class="flex items-center gap-4 p-4 text-error/80 hover:bg-error/10 rounded-xl transition-all cursor-pointer">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-['IBM_Plex_Sans_Arabic'] font-medium">تسجيل خروج</span>
+</div>
+</div>
+</aside>
+</body></html>

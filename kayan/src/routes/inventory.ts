@@ -71,7 +71,7 @@ export function registerInventoryRoutes(router: Router) {
 		let sql = `
 			SELECT l.id, l.name,
 				   COALESCE(SUM(i.total_value), 0) as bulk_value,
-				   (SELECT COALESCE(SUM(sale_price), 0) FROM item WHERE location_id = l.id) as product_value
+				   (SELECT COALESCE(SUM(sale_price), 0) FROM item WHERE location_id = l.id AND status != 'sold') as product_value
 			FROM location l
 			LEFT JOIN inventory i ON i.location_id = l.id
 		`;

@@ -1,0 +1,20 @@
+<header class="top-app-bar" dir="rtl" lang="ar">
+  <div class="logo-section">
+    <h1 class="app-title text-primary">كُشك</h1>
+    <div class="nav-links">
+      <a class="nav-link" routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">الزتونة</a>
+      <a class="nav-link" routerLink="/suppliers" routerLinkActive="active">الموردين</a>
+      <a class="nav-link" routerLink="/inventory" routerLinkActive="active">الجرد</a>
+      <a class="nav-link" routerLink="/sales" routerLinkActive="active">المبيعات</a>
+    </div>
+  </div>
+  <div class="header-actions">
+    <div class="date-badge bg-surface-container-high">
+      <span class="material-symbols-outlined text-primary">calendar_today</span>
+      <span class="text-sm">{{ getCurrentDate() }}</span>
+    </div>
+    <span class="material-symbols-outlined icon-btn">account_balance_wallet</span>
+    <span class="material-symbols-outlined icon-btn">notifications</span>
+    <div class="profile-avatar"></div>
+  </div>
+</header>

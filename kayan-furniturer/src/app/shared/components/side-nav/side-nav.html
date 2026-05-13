@@ -1,0 +1,66 @@
+<nav class="side-nav" dir="rtl" lang="ar">
+  <div class="brand-section">
+    <div class="brand-icon bg-primary-container">
+      <span class="material-symbols-outlined text-on-primary-container">chair</span>
+    </div>
+    <div class="brand-info">
+      <h2 class="text-xl font-black text-primary">المندرة</h2>
+      <p class="text-[10px] text-gray-500">إدارة الحسابات الفاخرة</p>
+    </div>
+  </div>
+  <div class="treasury-card">
+    <div class="card-header">
+      <span class="material-symbols-outlined">account_balance_wallet</span>
+      <span class="text-xs">رصيد الخزنة الحالي</span>
+    </div>
+    <div class="balance-value">٤٥٠,٢٣٠ <span class="text-sm opacity-60">ج.م</span></div>
+  </div>
+
+  <div class="nav-items">
+    <a
+      class="nav-item"
+      routerLink="/dashboard"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      <span class="material-symbols-outlined">dashboard</span>
+      <span>الزتونة</span>
+    </a>
+    <a class="nav-item" routerLink="/suppliers" routerLinkActive="active">
+      <span class="material-symbols-outlined">local_shipping</span>
+      <span>الموردين</span>
+    </a>
+    <a class="nav-item" routerLink="/inventory" routerLinkActive="active">
+      <span class="material-symbols-outlined">inventory_2</span>
+      <span>الجرد</span>
+    </a>
+    <a class="nav-item" routerLink="/sales" routerLinkActive="active">
+      <span class="material-symbols-outlined">sell</span>
+      <span>المبيعات</span>
+    </a>
+    <a class="nav-item" routerLink="/customers" routerLinkActive="active">
+      <span class="material-symbols-outlined">person</span>
+      <span>العملاء</span>
+    </a>
+    <a class="nav-item" routerLink="/accounts" routerLinkActive="active">
+      <span class="material-symbols-outlined">account_balance</span>
+      <span>الحسابات</span>
+    </a>
+  </div>
+
+  <div class="nav-footer">
+    <button class="add-transaction-btn">
+      <span class="material-symbols-outlined">add_circle</span>
+      <span>إضافة حركة مالية</span>
+    </button>
+    <div class="divider"></div>
+    <a class="footer-link">
+      <span class="material-symbols-outlined">settings</span>
+      <span>الإعدادات</span>
+    </a>
+    <a class="footer-link text-error/80 hover:text-error" (click)="logout()">
+      <span class="material-symbols-outlined">logout</span>
+      <span>تسجيل خروج</span>
+    </a>
+  </div>
+</nav>

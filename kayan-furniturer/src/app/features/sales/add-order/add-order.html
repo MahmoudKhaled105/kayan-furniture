@@ -1,0 +1,190 @@
+<section class="mt-24 px-10 pb-20 max-w-6xl relative">
+  @if (isLoading()) {
+    <div class="absolute inset-0 bg-background/60 backdrop-blur-md flex flex-col items-center justify-center z-50 rounded-3xl">
+      <div class="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin mb-6"></div>
+      <p class="text-lg font-headline text-on-surface/80">جاري تسجيل طلب البيع...</p>
+    </div>
+  }
+
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-16">
+    <div class="flex-1 text-right">
+      <div class="flex items-center gap-3 mb-2">
+        <span class="px-3 py-1 bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-widest rounded-full border border-primary/20">عملية بيع</span>
+      </div>
+      <h2 class="text-4xl font-black font-headline text-on-surface mb-2">تحرير فاتورة بيع جديدة</h2>
+      <p class="text-outline-variant font-headline">تسجيل بيانات العميل، اختيار القطعة، وتحديد شروط السداد</p>
+    </div>
+  </div>
+
+  <form [formGroup]="orderForm" (submit)="onSubmit()" class="grid grid-cols-12 gap-10">
+    <!-- Main Form Section -->
+    <div class="col-span-8 space-y-8">
+      <!-- 1. Customer Selection -->
+      <div class="bg-surface-container-high p-10 rounded-[2.5rem] border border-white/5 space-y-8">
+        <div class="flex items-center gap-3 text-secondary mb-6">
+          <span class="material-symbols-outlined text-3xl">person_search</span>
+          <h3 class="font-black font-headline text-xl">بيانات العميل</h3>
+        </div>
+        
+        <div class="space-y-2">
+          <label class="text-xs font-bold text-outline-variant mr-1">اختيار العميل</label>
+          <select formControlName="customer_id" class="w-full bg-surface-container-lowest border-none rounded-2xl px-6 py-5 text-on-surface focus:ring-1 focus:ring-primary/40 outline-none appearance-none cursor-pointer">
+            <option [value]="null">ابحث عن عميل موجود...</option>
+            @for (c of customers(); track c.id) {
+              <option [value]="c.id">{{ c.name }} ({{ c.phone }})</option>
+            }
+          </select>
+          @if (orderForm.get('customer_id')?.touched && orderForm.get('customer_id')?.invalid) {
+            <p class="text-[10px] text-error mt-1">يجب اختيار عميل</p>
+          }
+          <p class="text-[10px] text-primary mt-3 cursor-pointer hover:underline font-bold" routerLink="/customers">غير موجود؟ أضف عميل جديد أولاً</p>
+        </div>
+      </div>
+
+      <!-- 2. Item & Order Details -->
+      <div class="bg-surface-container-high p-10 rounded-[2.5rem] border border-white/5 space-y-8">
+        <div class="flex items-center justify-between mb-6">
+          <div class="flex items-center gap-3 text-primary">
+            <span class="material-symbols-outlined text-3xl">chair</span>
+            <h3 class="font-black font-headline text-xl">المنتج والموقع</h3>
+          </div>
+          
+          <div class="flex bg-surface-container-lowest p-1 rounded-xl">
+            <button type="button" (click)="orderForm.get('is_backorder')?.setValue(false)"
+              [ngClass]="!isBackorder() ? 'bg-primary text-on-primary shadow-md' : 'text-outline-variant'"
+              class="px-6 py-2 rounded-lg text-xs font-black transition-all">
+              بيع من المخزن
+            </button>
+            <button type="button" (click)="orderForm.get('is_backorder')?.setValue(true)"
+              [ngClass]="isBackorder() ? 'bg-amber-500 text-white shadow-md' : 'text-outline-variant'"
+              class="px-6 py-2 rounded-lg text-xs font-black transition-all">
+              طلب مسبق (Backorder)
+            </button>
+          </div>
+        </div>
+
+        @if (!isBackorder()) {
+          <div class="space-y-8 animate-in fade-in duration-500">
+            <div class="space-y-2">
+              <label class="text-xs font-bold text-outline-variant mr-1">اختيار القطعة من المخزون المتاح</label>
+              <select formControlName="item_id" class="w-full bg-surface-container-lowest border-none rounded-2xl px-6 py-5 text-on-surface focus:ring-1 focus:ring-primary/40 outline-none appearance-none cursor-pointer">
+                <option [value]="null">اختر القطعة...</option>
+                @for (item of availableItems(); track item.id) {
+                  <option [value]="item.id">{{ item.name }} - ({{ item.location_name }}) - {{ item.sale_price | number }} ج.م</option>
+                }
+              </select>
+            </div>
+            
+            <div class="space-y-2">
+              <label class="text-xs font-bold text-outline-variant mr-1">موقع المبيعات (الفرع الحالي)</label>
+              <select formControlName="location_id" class="w-full bg-surface-container-lowest border-none rounded-2xl px-6 py-5 text-on-surface focus:ring-1 focus:ring-primary/40 outline-none">
+                <option [value]="null">اختر الفرع...</option>
+                @for (loc of locations(); track loc.id) {
+                  <option [value]="loc.id">{{ loc.name }}</option>
+                }
+              </select>
+            </div>
+          </div>
+        } @else {
+          <div class="space-y-8 animate-in slide-in-from-top-4 duration-500">
+            <div class="space-y-2">
+              <label class="text-xs font-bold text-outline-variant mr-1">وصف الطلب المطلوب (نواقص)</label>
+              <textarea formControlName="backorder_description" placeholder="مثلاً: انتريه كابوتنيه لون رصاصي، نوع القماش هامر..."
+                class="w-full bg-surface-container-lowest border-none rounded-2xl px-6 py-5 text-on-surface focus:ring-1 focus:ring-amber-400/40 outline-none h-32 resize-none transition-all"></textarea>
+            </div>
+            <div class="grid grid-cols-2 gap-8">
+              <div class="space-y-2">
+                <label class="text-xs font-bold text-outline-variant mr-1">التاريخ المتوقع للتسليم</label>
+                <input formControlName="expected_arrival" type="date" (click)="$any($event.target).showPicker()"
+                  class="w-full bg-surface-container-lowest border-none rounded-2xl px-6 py-5 text-on-surface focus:ring-1 focus:ring-amber-400/40 outline-none transition-all cursor-pointer"/>
+              </div>
+              <div class="space-y-2">
+                <label class="text-xs font-bold text-outline-variant mr-1">الموقع المستلم للطلب</label>
+                <select formControlName="location_id" class="w-full bg-surface-container-lowest border-none rounded-2xl px-6 py-5 text-on-surface focus:ring-1 focus:ring-primary/40 outline-none">
+                  <option [value]="null">اختر الفرع...</option>
+                  @for (loc of locations(); track loc.id) {
+                    <option [value]="loc.id">{{ loc.name }}</option>
+                  }
+                </select>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- 3. Financial Agreement -->
+      <div class="bg-surface-container-high p-10 rounded-[2.5rem] border border-white/5 space-y-8">
+        <div class="flex items-center gap-3 text-emerald-400 mb-6">
+          <span class="material-symbols-outlined text-3xl">payments</span>
+          <h3 class="font-black font-headline text-xl">الاتفاق المالي</h3>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-8">
+          <div class="space-y-2">
+            <label class="text-xs font-bold text-outline-variant mr-1">السعر المتفق عليه (صافي الفاتورة)</label>
+            <div class="relative">
+              <input formControlName="agreed_price" type="number" 
+                class="w-full bg-surface-container-lowest border-none rounded-2xl pr-6 pl-14 py-5 text-2xl font-black font-manrope text-on-surface focus:ring-2 focus:ring-primary/40 transition-all outline-none"/>
+              <span class="absolute left-6 top-1/2 -translate-y-1/2 text-xs font-bold text-outline-variant">ج.م</span>
+            </div>
+          </div>
+          <div class="space-y-2">
+            <label class="text-xs font-bold text-outline-variant mr-1">المبلغ المدفوع (مقدم/عربون)</label>
+            <div class="relative">
+              <input formControlName="initial_payment" type="number" 
+                class="w-full bg-surface-container-lowest border-none rounded-2xl pr-6 pl-14 py-5 text-2xl font-black font-manrope text-emerald-400 focus:ring-2 focus:ring-emerald-400/40 transition-all outline-none"/>
+              <span class="absolute left-6 top-1/2 -translate-y-1/2 text-xs font-bold text-outline-variant">ج.م</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Actions -->
+      <div class="flex items-center justify-end gap-6 pt-6">
+        <button type="button" routerLink="/sales" class="px-8 py-4 text-outline-variant font-bold hover:text-error transition-colors">إلغاء</button>
+        <button type="submit" [disabled]="orderForm.invalid || isLoading()" class="px-12 py-5 bg-gradient-to-r from-primary to-primary-container text-on-primary-fixed font-black rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-xl flex items-center gap-3 disabled:opacity-50">
+          <span>تسجيل البيع نهائياً</span>
+          <span class="material-symbols-outlined">check_circle</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Right Sidebar: Order Overview -->
+    <div class="col-span-4">
+      <div class="bg-surface-container-low p-8 rounded-[2rem] border border-white/5 sticky top-32 space-y-8">
+        <h4 class="font-black font-headline text-lg mb-6">ملخص الفاتورة</h4>
+        
+        <div class="space-y-6">
+          <div class="flex justify-between items-center text-xs">
+            <span class="text-outline-variant font-headline">العميل</span>
+            <span class="font-bold text-on-surface">{{ orderForm.get('customer_id')?.value ? 'محمد أحمد علي' : '---' }}</span>
+          </div>
+          <div class="flex justify-between items-center text-xs">
+            <span class="text-outline-variant font-headline">نوع الطلب</span>
+            <span class="font-bold" [class.text-primary]="!isBackorder()" [class.text-amber-500]="isBackorder()">{{ isBackorder() ? 'حجز نواقص' : 'تسليم فوري' }}</span>
+          </div>
+          
+          <div class="pt-6 border-t border-white/5 space-y-4">
+            <div class="flex justify-between items-center text-xs">
+              <span class="text-outline-variant font-headline">القيمة الإجمالية</span>
+              <span class="font-manrope font-black text-lg">{{ orderForm.get('agreed_price')?.value | number }} ج.م</span>
+            </div>
+            <div class="flex justify-between items-center text-xs">
+              <span class="text-outline-variant font-headline">المسدد الآن</span>
+              <span class="font-manrope font-black text-emerald-400 text-lg">{{ orderForm.get('initial_payment')?.value | number }} ج.م</span>
+            </div>
+            <div class="flex justify-between items-center text-xs p-4 bg-error/5 rounded-2xl">
+              <span class="text-error font-headline font-bold">المتبقي</span>
+              <span class="font-manrope font-black text-error text-xl">{{ (orderForm.get('agreed_price')?.value - orderForm.get('initial_payment')?.value) | number }} ج.م</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="p-6 bg-surface-container-highest/20 rounded-2xl text-[10px] text-outline-variant leading-relaxed italic">
+          * بمجرد الحفظ، سيتم تحويل حالة القطعة من "متاح" إلى "محجوز" تلقائياً، وسيتم تسجيل الحركة في الخزنة.
+        </div>
+      </div>
+    </div>
+  </form>
+</section>

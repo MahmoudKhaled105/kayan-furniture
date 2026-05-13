@@ -1,0 +1,204 @@
+<section class="mt-24 px-10 pb-20 max-w-6xl relative">
+  @if (isLoading()) {
+    <div class="absolute inset-0 bg-background/60 backdrop-blur-md flex flex-col items-center justify-center z-50 rounded-3xl">
+      <div class="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin mb-6"></div>
+      <p class="text-lg font-headline text-on-surface/80">جاري حفظ بيانات الشحنة...</p>
+    </div>
+  }
+
+  <!-- Stepper Header -->
+  <div class="flex items-center justify-between mb-16">
+    <div class="flex-1">
+      <h2 class="text-4xl font-black font-headline text-on-surface mb-2">
+        {{ isEditMode() ? 'تعديل بيانات الشحنة' : 'إضافة شحنة (حاوية)' }}
+      </h2>
+      <p class="text-outline-variant font-headline">
+        {{ isEditMode() ? 'تحديث معلومات الوصول وملاحظات الحاوية' : 'تسجيل بيانات الوصول والمبالغ المستحقة للموردين' }}
+      </p>
+    </div>
+    <div class="flex items-center gap-12 bg-surface-container-low px-10 py-5 rounded-2xl border border-white/5">
+      <div class="flex flex-col items-center gap-2 cursor-pointer transition-all" (click)="setStep(1)" [ngClass]="currentStep() >= 1 ? 'text-primary' : 'text-outline-variant opacity-40'">
+        <div class="w-10 h-10 rounded-full border-2 flex items-center justify-center font-bold font-headline" [ngClass]="currentStep() >= 1 ? 'border-primary bg-primary/10' : 'border-outline-variant'">1</div>
+        <span class="text-[10px] font-bold uppercase tracking-widest">أساسيات</span>
+      </div>
+      <div class="w-12 h-px bg-white/5"></div>
+      <div class="flex flex-col items-center gap-2 cursor-pointer transition-all" (click)="setStep(2)" [ngClass]="currentStep() >= 2 ? 'text-primary' : 'text-outline-variant opacity-40'">
+        <div class="w-10 h-10 rounded-full border-2 flex items-center justify-center font-bold font-headline" [ngClass]="currentStep() >= 2 ? 'border-primary bg-primary/10' : 'border-outline-variant'">2</div>
+        <span class="text-[10px] font-bold uppercase tracking-widest">الموردين</span>
+      </div>
+      <div class="w-12 h-px bg-white/5"></div>
+      <div class="flex flex-col items-center gap-2 cursor-pointer transition-all" (click)="setStep(3)" [ngClass]="currentStep() >= 3 ? 'text-primary' : 'text-outline-variant opacity-40'">
+        <div class="w-10 h-10 rounded-full border-2 flex items-center justify-center font-bold font-headline" [ngClass]="currentStep() >= 3 ? 'border-primary bg-primary/10' : 'border-outline-variant'">3</div>
+        <span class="text-[10px] font-bold uppercase tracking-widest">الحسابات</span>
+      </div>
+    </div>
+  </div>
+
+  <form [formGroup]="shipmentForm" class="grid grid-cols-12 gap-10" (submit)="onSubmit()">
+    <!-- Form Content -->
+    <div class="col-span-8 space-y-8">
+      <!-- Step 1: Basic Info -->
+      @if (currentStep() === 1) {
+        <div class="bg-surface-container-high p-10 rounded-3xl space-y-8 animate-in fade-in slide-in-from-right-4 duration-500">
+          <div class="flex items-center gap-3 text-primary mb-2">
+            <span class="material-symbols-outlined text-3xl">&#xe88e;</span>
+            <h3 class="font-black font-headline text-xl">البيانات الأساسية للحاوية</h3>
+          </div>
+          <div class="grid grid-cols-2 gap-8">
+            <div class="space-y-2">
+              <label class="text-xs font-bold text-outline-variant mr-1">رقم الحاوية (رقم تعريفي)</label>
+              <input formControlName="container_number" class="w-full bg-surface-container-lowest border-none rounded-xl px-6 py-5 text-on-surface focus:ring-1 focus:ring-primary/40 font-manrope outline-none transition-all" placeholder="مثلاً: CNT-2024-X11" type="text"/>
+              @if (shipmentForm.get('container_number')?.touched && shipmentForm.get('container_number')?.invalid) {
+                <p class="text-[10px] text-error mt-1 mr-2">هذا الحقل مطلوب</p>
+              }
+            </div>
+            <div class="space-y-2">
+              <label class="text-xs font-bold text-outline-variant mr-1">تاريخ الاستلام الفعلي</label>
+              <div class="relative">
+                <input formControlName="date_received" class="w-full bg-surface-container-lowest border-none rounded-xl pr-6 pl-12 py-5 text-on-surface focus:ring-1 focus:ring-primary/40 outline-none transition-all" type="date"/>
+                <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant">&#xebcc;</span>
+              </div>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-8">
+            <div class="space-y-2">
+              <label class="text-xs font-bold text-outline-variant mr-1">تاريخ الوصول المتوقع للميناء</label>
+              <input formControlName="estimated_arrival" class="w-full bg-surface-container-lowest border-none rounded-xl px-6 py-5 text-on-surface focus:ring-1 focus:ring-primary/40 outline-none transition-all" type="date"/>
+            </div>
+          </div>
+          <div class="space-y-2">
+            <label class="text-xs font-bold text-outline-variant mr-1">ملاحظات التوقيت (نأكد على إيه؟)</label>
+            <textarea formControlName="notes" class="w-full bg-surface-container-lowest border-none rounded-xl px-6 py-5 text-on-surface focus:ring-1 focus:ring-primary/40 outline-none h-32 resize-none transition-all" placeholder="مثلاً: الشحنة دي لازم تتحرك من المينا قبل يوم ١٠ عشان الغرامات"></textarea>
+          </div>
+        </div>
+      }
+
+      <!-- Step 2: Suppliers -->
+      @if (currentStep() === 2) {
+        <div class="bg-surface-container-high p-10 rounded-3xl space-y-8 animate-in fade-in slide-in-from-right-4 duration-500">
+          <div class="flex justify-between items-center mb-2">
+            <div class="flex items-center gap-3 text-secondary">
+              <span class="material-symbols-outlined text-3xl">&#xebe7;</span>
+              <h3 class="font-black font-headline text-xl">اختيار المورد</h3>
+            </div>
+          </div>
+          <div class="space-y-6">
+            <div class="space-y-2" [ngClass]="{'opacity-50 pointer-events-none': isEditMode()}">
+              <label class="text-xs font-bold text-outline-variant mr-1">المورد الأساسي للشحنة</label>
+              <select formControlName="supplier_id" class="w-full bg-surface-container-lowest border-none rounded-xl px-6 py-5 text-on-surface focus:ring-1 focus:ring-secondary/40 outline-none transition-all appearance-none cursor-pointer">
+                <option [value]="null">اختر مورد...</option>
+                @for (supplier of suppliers(); track supplier.id) {
+                  <option [value]="supplier.id">{{ supplier.name }} ({{ supplier.type }})</option>
+                }
+              </select>
+              @if (shipmentForm.get('supplier_id')?.touched && shipmentForm.get('supplier_id')?.invalid) {
+                <p class="text-[10px] text-error mt-1 mr-2">يجب اختيار مورد</p>
+              }
+            </div>
+
+            @if (selectedSupplier) {
+              <div class="bg-surface-container-lowest p-6 rounded-2xl flex items-center justify-between border border-white/5 border-r-4 border-r-secondary animate-in zoom-in-95 duration-300">
+                <div class="flex items-center gap-4">
+                  <div class="w-12 h-12 rounded-full overflow-hidden border border-secondary/30 bg-secondary/10 flex items-center justify-center font-bold text-secondary">
+                    {{ selectedSupplier.name.charAt(0) }}
+                  </div>
+                  <div>
+                    <h4 class="font-bold text-on-surface">{{ selectedSupplier.name }}</h4>
+                    <p class="text-[10px] text-outline-variant">كود: #SPL-{{ selectedSupplier.id }}</p>
+                  </div>
+                </div>
+                <div class="text-secondary">
+                  <span class="material-symbols-outlined">check_circle</span>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- Step 3: Accounts -->
+      @if (currentStep() === 3) {
+        <div class="bg-surface-container-high p-10 rounded-3xl space-y-8 animate-in fade-in slide-in-from-right-4 duration-500">
+          <div class="flex items-center gap-3 text-emerald-400 mb-2">
+            <span class="material-symbols-outlined text-3xl">&#xe850;</span>
+            <h3 class="font-black font-headline text-xl">تفاصيل القيمة والمبالغ المدفوعة</h3>
+          </div>
+          <div class="grid grid-cols-2 gap-8">
+            <div class="space-y-2">
+              <label class="text-xs font-bold text-outline-variant mr-1">القيمة الإجمالية المعلنة (بالعملة المحلية)</label>
+              <input formControlName="declared_value" class="w-full bg-surface-container-lowest border-none rounded-xl px-6 py-5 text-on-surface focus:ring-1 focus:ring-emerald-400/40 font-manrope outline-none transition-all" placeholder="0.00 ج.م" type="number"/>
+              @if (shipmentForm.get('declared_value')?.touched && shipmentForm.get('declared_value')?.invalid) {
+                <p class="text-[10px] text-error mt-1 mr-2">القيمة يجب أن تكون أكبر من ٠</p>
+              }
+            </div>
+            <div class="space-y-2">
+              <label class="text-xs font-bold text-outline-variant mr-1">استلام جزئي للمنتجات؟</label>
+              <div class="flex items-center gap-4 bg-surface-container-lowest rounded-xl px-6 py-5 border border-white/5">
+                <p class="text-[10px] text-outline-variant flex-1">هل تم استلام بعض القطع فقط؟</p>
+                <input formControlName="partial_delivery" type="checkbox" class="w-6 h-6 rounded-lg border-white/10 bg-surface-container-highest text-primary focus:ring-primary/40"/>
+              </div>
+            </div>
+          </div>
+          
+          <div class="p-6 bg-surface-container-lowest rounded-2xl border border-white/5 border-emerald-400/10">
+            <div class="flex justify-between items-center">
+              <div>
+                <h5 class="text-lg font-black text-on-surface mb-1">ملاحظات الحسابات</h5>
+                <p class="text-xs text-outline-variant">يتم تحديث المديونية تلقائياً بناءً على دفعات الأقساط</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- Form Actions -->
+      <div class="flex items-center justify-between pt-6 border-t border-white/5">
+        <button (click)="prevStep()" [disabled]="currentStep() === 1" class="px-8 py-4 text-outline-variant font-bold hover:text-on-surface transition-all disabled:opacity-30 disabled:pointer-events-none flex items-center gap-2" type="button">
+          <span class="material-symbols-outlined">&#xe5c8;</span>
+          رجوع
+        </button>
+        <div class="flex gap-4">
+          <button routerLink="/shipments" class="px-6 py-4 text-outline-variant hover:text-error transition-colors font-bold" type="button">إلغاء</button>
+          
+          @if (currentStep() < 3) {
+            <button (click)="nextStep()" class="px-12 py-4 bg-surface-container-highest text-primary font-black rounded-2xl hover:bg-primary hover:text-on-primary-fixed transition-all shadow-xl flex items-center gap-2" type="button">
+              الخطوة التالية
+              <span class="material-symbols-outlined">&#xe5c4;</span>
+            </button>
+          } @else {
+            <button class="px-12 py-4 bg-gradient-to-r from-primary to-primary-container text-on-primary-fixed font-black rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-[0_10px_30px_rgba(232,196,106,0.15)] flex items-center gap-3" type="submit" [disabled]="shipmentForm.invalid || isLoading()">
+              <span>{{ isEditMode() ? 'تحديث بيانات الشحنة' : 'حفظ الشحنة بالكامل' }}</span>
+              <span class="material-symbols-outlined">{{ isEditMode() ? 'save' : 'check' }}</span>
+            </button>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Visual Summary / Context -->
+    <div class="col-span-4 space-y-6">
+      <div class="bg-surface-container-low p-8 rounded-3xl border border-white/5 sticky top-32">
+        <h4 class="font-black font-headline text-lg mb-8">ملخص البيانات</h4>
+        <div class="space-y-6">
+          <div class="flex justify-between items-center text-xs">
+            <span class="text-outline-variant font-headline">رقم الحاوية</span>
+            <span class="font-manrope font-bold text-on-surface">{{ shipmentForm.get('container_number')?.value || '---' }}</span>
+          </div>
+          <div class="flex justify-between items-center text-xs">
+            <span class="text-outline-variant font-headline">المورد</span>
+            <span class="font-headline font-bold text-on-surface">{{ selectedSupplier?.name || '---' }}</span>
+          </div>
+          <div class="flex justify-between items-center text-xs">
+            <span class="text-outline-variant font-headline">إجمالي القيمة</span>
+            <span class="font-manrope font-bold text-on-surface">{{ shipmentForm.get('declared_value')?.value | number:'1.0-0' }} ج.م</span>
+          </div>
+          <div class="border-t border-white/5 pt-6 space-y-4">
+            <p class="text-[10px] text-outline-variant font-headline leading-relaxed">
+              * بمجرد الحفظ، سيتم تسجيل المديونية وتعديل كشف حساب المورد وإضافتها لجدول تتبع الحاويات.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</section>

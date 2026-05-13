@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+
+<html class="dark" dir="rtl" lang="ar"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&amp;family=Manrope:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container-lowest": "#0e0e0e",
+              "inverse-primary": "#765a05",
+              "tertiary-fixed-dim": "#c4c4df",
+              "secondary-container": "#924c00",
+              "inverse-surface": "#e5e2e1",
+              "primary-container": "#cba851",
+              "primary": "#e8c46a",
+              "surface-container-highest": "#353535",
+              "error-container": "#93000a",
+              "secondary": "#ffb781",
+              "primary-fixed-dim": "#e7c268",
+              "surface": "#131313",
+              "on-background": "#e5e2e1",
+              "primary-fixed": "#ffdf96",
+              "on-tertiary-fixed": "#181a2e",
+              "on-secondary": "#4e2600",
+              "on-tertiary-fixed-variant": "#43455b",
+              "on-primary": "#3e2e00",
+              "inverse-on-surface": "#313030",
+              "surface-container-low": "#1c1b1b",
+              "on-secondary-fixed": "#2f1400",
+              "secondary-fixed-dim": "#ffb781",
+              "secondary-fixed": "#ffdcc4",
+              "surface-dim": "#131313",
+              "surface-bright": "#393939",
+              "on-primary-fixed-variant": "#5a4400",
+              "surface-container-high": "#2a2a2a",
+              "on-surface": "#e5e2e1",
+              "on-error": "#690005",
+              "background": "#131313",
+              "on-primary-container": "#523d00",
+              "error": "#ffb4ab",
+              "surface-variant": "#353535",
+              "on-surface-variant": "#d4c4b7",
+              "surface-tint": "#e7c268",
+              "on-error-container": "#ffdad6",
+              "outline": "#9c8e82",
+              "on-tertiary-container": "#3d3f55",
+              "on-secondary-fixed-variant": "#6f3800",
+              "on-primary-fixed": "#251a00",
+              "tertiary": "#c5c5e1",
+              "on-tertiary": "#2d2f44",
+              "surface-container": "#20201f",
+              "outline-variant": "#50453b",
+              "tertiary-container": "#a9aac5",
+              "on-secondary-container": "#ffcfad",
+              "tertiary-fixed": "#e0e0fc"
+            },
+            fontFamily: {
+              "headline": ["IBM Plex Sans Arabic", "Manrope"],
+              "body": ["Inter", "IBM Plex Sans Arabic"],
+              "label": ["Manrope", "IBM Plex Sans Arabic"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1.5rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      body { font-family: 'IBM Plex Sans Arabic', sans-serif; }
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .glass-card {
+        background: rgba(53, 53, 53, 0.6);
+        backdrop-filter: blur(20px);
+      }
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="bg-background text-on-background selection:bg-primary/30">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-6 py-4 bg-[#131313] bg-opacity-90 backdrop-blur-md">
+<div class="flex items-center gap-4">
+<span class="text-2xl font-bold tracking-tighter text-[#e8c46a]">كشك</span>
+</div>
+<div class="hidden md:flex gap-8 items-center">
+<a class="text-gray-400 hover:text-[#ffb781] transition-colors duration-200" href="#">الزتونة</a>
+<a class="text-gray-400 hover:text-[#ffb781] transition-colors duration-200" href="#">الموردين</a>
+<a class="text-gray-400 hover:text-[#ffb781] transition-colors duration-200" href="#">الجرد</a>
+<a class="text-gray-400 hover:text-[#ffb781] transition-colors duration-200" href="#">المبيعات</a>
+<a class="text-[#e8c46a] font-bold border-b-2 border-[#e8c46a]" href="#">الحسابات</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">account_balance_wallet</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">notifications</button>
+<div class="w-10 h-10 rounded-full bg-surface-container-high overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Professional portrait of a middle-aged Egyptian craftsman with a kind expression and modern workspace background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBT-2M5pGs2lR68gMuDEaKYJ9qqnjeOSQDHxbjKyqUB5xvSNkPCeioFm-LIfmEMCx5bUJlOhAOYTWxTYnOKYQ1GnWXlpQfL9DB6QUpr-gcm3kAFvOsy3TRSPzkBGDdjZDOCCL-fc6laMnICgSdEoV5bLTv-WPVrtAsMZIOiXW3szPPzzQbmgLVbSUacu4pxMJK7SFkfGKZ9WzMPtVkY_5csAbfSvMFj5Zvs5EyPAf7llWzpM2s2bNygKsDCvAAshn9_jN5UcEkUCXc"/>
+</div>
+</div>
+</header>
+<!-- SideNavBar (Desktop Only) -->
+<aside class="fixed right-0 top-0 h-full hidden lg:flex flex-col py-8 z-40 w-64 border-l border-[#2a2a2a] bg-[#0e0e0e]">
+<div class="px-6 mb-10">
+<div class="flex items-center gap-3 mb-2">
+<div class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">store</span>
+</div>
+<div>
+<h2 class="text-xl font-black text-[#e8c46a]">المندرة</h2>
+<p class="text-[10px] text-gray-500">إدارة الحسابات الفاخرة</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-2">
+<a class="flex items-center gap-3 text-gray-400 px-6 py-3 hover:bg-[#2a2a2a] transition-all" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-medium">الزتونة</span>
+</a>
+<a class="flex items-center gap-3 text-gray-400 px-6 py-3 hover:bg-[#2a2a2a] transition-all" href="#">
+<span class="material-symbols-outlined">local_shipping</span>
+<span class="font-medium">الموردين</span>
+</a>
+<a class="flex items-center gap-3 text-gray-400 px-6 py-3 hover:bg-[#2a2a2a] transition-all" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-medium">الجرد</span>
+</a>
+<a class="flex items-center gap-3 text-gray-400 px-6 py-3 hover:bg-[#2a2a2a] transition-all" href="#">
+<span class="material-symbols-outlined">sell</span>
+<span class="font-medium">المبيعات</span>
+</a>
+<a class="flex items-center gap-3 bg-gradient-to-r from-[#e8c46a]/10 to-transparent text-[#e8c46a] border-r-4 border-[#e8c46a] px-6 py-3 rounded-l-xl" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">account_balance</span>
+<span class="font-medium">الحسابات</span>
+</a>
+</nav>
+<div class="px-4 mt-auto">
+<button class="w-full py-4 bg-gradient-to-br from-primary to-primary-container text-on-primary font-bold rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-primary/10">
+<span class="material-symbols-outlined">add_circle</span>
+<span>إضافة حركة مالية</span>
+</button>
+</div>
+<div class="mt-6 px-6 pt-6 border-t border-[#2a2a2a] space-y-4">
+<a class="flex items-center gap-3 text-gray-400 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined text-sm">settings</span>
+<span class="text-sm">الإعدادات</span>
+</a>
+<a class="flex items-center gap-3 text-error hover:opacity-80 transition-opacity" href="#">
+<span class="material-symbols-outlined text-sm">logout</span>
+<span class="text-sm">تسجيل خروج</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="pt-24 pb-32 lg:pb-12 lg:pr-64 px-6 max-w-7xl mx-auto">
+<!-- Header Section -->
+<div class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<h1 class="text-4xl font-bold text-on-background mb-2">رادار الالتزامات</h1>
+<p class="text-on-surface-variant text-lg">متابعة اللي لينا واللي علينا بكل دقة</p>
+</div>
+<!-- Total Summary Card -->
+<div class="bg-surface-container-high rounded-2xl p-6 flex items-center gap-8 shadow-2xl shadow-black/40 min-w-[320px]">
+<div class="flex-1">
+<p class="text-xs text-gray-400 mb-1">إجمالي الصافي</p>
+<p class="text-3xl font-black text-primary tracking-tight">45,200 <span class="text-sm font-normal text-on-surface-variant">ج.م</span></p>
+</div>
+<div class="h-12 w-px bg-outline-variant/30"></div>
+<div class="relative w-16 h-16">
+<!-- Hassala Progress Component -->
+<svg class="w-full h-full -rotate-90">
+<circle class="text-surface-container-highest" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" stroke-width="4"></circle>
+<circle class="text-secondary" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" stroke-dasharray="176" stroke-dashoffset="44" stroke-width="4"></circle>
+</svg>
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary text-xl">account_balance_wallet</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<!-- Section 1: Owed to Suppliers (Installments) -->
+<div class="lg:col-span-2 space-y-6">
+<div class="bg-surface-container-high rounded-2xl overflow-hidden shadow-xl">
+<div class="p-6 flex justify-between items-center border-b border-outline-variant/10">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary">local_shipping</span>
+<h3 class="text-xl font-bold">أقساط الموردين</h3>
+</div>
+<span class="bg-error/10 text-error px-3 py-1 rounded-full text-xs font-bold">3 متأخرين</span>
+</div>
+<div class="divide-y divide-outline-variant/5">
+<!-- Supplier Item 1 (Overdue) -->
+<div class="p-6 flex items-center justify-between hover:bg-surface-container-highest/50 transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-error/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-error">warning</span>
+</div>
+<div>
+<p class="font-bold">ورشة الأبنودي للأخشاب</p>
+<p class="text-sm text-error font-medium">متأخر منذ 5 أيام</p>
+</div>
+</div>
+<div class="text-left">
+<p class="text-xl font-black text-on-background">12,500 <span class="text-xs">ج.م</span></p>
+<p class="text-xs text-gray-500">ميعاده: 12 أكتوبر</p>
+</div>
+</div>
+<!-- Supplier Item 2 -->
+<div class="p-6 flex items-center justify-between hover:bg-surface-container-highest/50 transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant">event</span>
+</div>
+<div>
+<p class="font-bold">مصنع النحاس الذهبي</p>
+<p class="text-sm text-gray-500 font-medium">قسط رقم 4/6</p>
+</div>
+</div>
+<div class="text-left">
+<p class="text-xl font-black text-on-background">5,000 <span class="text-xs">ج.م</span></p>
+<p class="text-xs text-gray-500">ميعاده: 20 أكتوبر</p>
+</div>
+</div>
+<!-- Supplier Item 3 -->
+<div class="p-6 flex items-center justify-between hover:bg-surface-container-highest/50 transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant">event</span>
+</div>
+<div>
+<p class="font-bold">مودرن جلاس للأزاز</p>
+<p class="text-sm text-gray-500 font-medium">دفعة أخيرة</p>
+</div>
+</div>
+<div class="text-left">
+<p class="text-xl font-black text-on-background">3,200 <span class="text-xs">ج.م</span></p>
+<p class="text-xs text-gray-500">ميعاده: 25 أكتوبر</p>
+</div>
+</div>
+</div>
+<button class="w-full py-4 text-primary text-sm font-bold border-t border-outline-variant/10 hover:bg-primary/5 transition-colors">عرض كل فواتير الموردين</button>
+</div>
+<!-- Section 2: Owed to Staff (Wages) -->
+<div class="bg-surface-container-high rounded-2xl p-6 shadow-xl">
+<div class="flex justify-between items-center mb-6">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">groups</span>
+<h3 class="text-xl font-bold">يوميات العمال والموظفين</h3>
+</div>
+<p class="text-on-surface-variant font-medium">إجمالي: <span class="text-primary">8,400 ج.م</span></p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Staff Card 1 -->
+<div class="bg-surface-container-low p-4 rounded-xl flex items-center gap-4 border border-outline-variant/10">
+<img class="w-12 h-12 rounded-lg object-cover" data-alt="Close up of an Egyptian carpenter working with tools in a warm woodworking studio" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCLwLmAaRFdHUr6AU0sLU7rw9VNU0WtpeCP5UeJS3MMq8mNMd0VgXkJjonB5Lz_83Juki7zmeM0KgmIqjS8aP9RQ0ERczKJnEUUmPLzVtD8Rl324mMaNalg4cjlYshOUGg-4kJuJqPG3JqnstJSB8IuHVOoHmKqTl8fOogUl3sC4ita9eXXPG6D6wkGKmjhA0Z2TZqJdlLBL29Udur5dLyj9DewTBjJzxZO_Jw5XXUQY-0IFCDEnnY680rsc0_SJ7vakDUG0BuTY9k"/>
+<div class="flex-1">
+<p class="font-bold text-sm">أحمد النجار</p>
+<p class="text-xs text-gray-500">3 أيام متأخرة</p>
+</div>
+<div class="text-left">
+<p class="font-black text-secondary">900 ج.م</p>
+</div>
+</div>
+<!-- Staff Card 2 -->
+<div class="bg-surface-container-low p-4 rounded-xl flex items-center gap-4 border border-outline-variant/10">
+<img class="w-12 h-12 rounded-lg object-cover" data-alt="Portrait of a young artisan apprentice in a creative workshop setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAkV-ucSPhjxsUtSO5Rwhm0W-X3Rz62Op44otIBvTaGq19axCtsLqDZxOH1g8NBlAF9dMxPoDXrdG9knZfa4wa-2p68pNJOCJt3_NiBLVB1ISEhW5SCn3R0jJCUSkPGGdwmAj8eMoDMXdZshucGzAUCjrABTYMkSplrjUJk2pm_9FAAFbPw7uOVVyY849uLCTbhpQs1mTc6rz_2FR7giyIDjzQ-3_SoyJRHRadxQ6PpKQaFfhIIF0T5Ji8CulLX6oYFzPRqTZdOHv4"/>
+<div class="flex-1">
+<p class="font-bold text-sm">سعيد المنجد</p>
+<p class="text-xs text-gray-500">يومية الأسبوع</p>
+</div>
+<div class="text-left">
+<p class="font-black text-secondary">2,100 ج.م</p>
+</div>
+</div>
+<!-- Staff Card 3 -->
+<div class="bg-surface-container-low p-4 rounded-xl flex items-center gap-4 border border-outline-variant/10">
+<img class="w-12 h-12 rounded-lg object-cover" data-alt="Egyptian delivery professional smiling against a clean backdrop" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDa0D8z8PCKiqJIo7r7RZJR1_FUGnlzv3vt5hScywrHUsnnwAOwszQt0Fhf1hrCbFyi9skES2IdNBkxDVU9caipKBv9rHkpWBk7IqQBtAza1CtYZuv3CAxisEQk_M2wHEpb83dvF_Vs5-gUWAgwgXhas6A2B3EqJmYkbzhzA56eO3yYECUPKqq4O69fUrds46210wFOIMtCDGyqYSJHZZcbkTRv52FlVkcl_ZQYO3UoXO-C8gSUCTq5g8wV253qtXzrFLnssMmlusQ"/>
+<div class="flex-1">
+<p class="font-bold text-sm">إبراهيم السواق</p>
+<p class="text-xs text-gray-500">حساب النقلات</p>
+</div>
+<div class="text-left">
+<p class="font-black text-secondary">1,400 ج.م</p>
+</div>
+</div>
+<!-- Add Staff Entry -->
+<button class="border-2 border-dashed border-outline-variant/20 rounded-xl p-4 flex items-center justify-center gap-2 text-gray-500 hover:border-primary/50 hover:text-primary transition-all group">
+<span class="material-symbols-outlined text-sm group-hover:scale-125 transition-transform">add_circle</span>
+<span class="text-sm">تسجيل يومية جديدة</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Section 3: Owed by Customers (Outstanding Balances) -->
+<div class="lg:col-span-1">
+<div class="bg-surface-container-high rounded-2xl h-full flex flex-col shadow-xl overflow-hidden">
+<div class="p-6 bg-primary/10 border-b border-primary/20">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">person_search</span>
+<h3 class="text-xl font-bold">بواقي الزبائن</h3>
+</div>
+<p class="text-sm text-primary/70 mt-1">فلوس لسه ما اتحصلتش</p>
+</div>
+<div class="p-6 space-y-4 flex-1 overflow-y-auto no-scrollbar max-h-[600px]">
+<!-- Customer Item 1 -->
+<div class="p-4 rounded-xl bg-surface-container-low border border-outline-variant/10 hover:border-primary/30 transition-all">
+<div class="flex justify-between items-start mb-2">
+<p class="font-bold text-lg">أ/ ممدوح سالم</p>
+<span class="bg-primary/20 text-primary text-[10px] px-2 py-0.5 rounded-full uppercase">طقم صالون</span>
+</div>
+<div class="flex justify-between items-center">
+<p class="text-2xl font-black text-on-background">15,000 <span class="text-xs font-normal opacity-60">ج.م</span></p>
+<button class="p-2 rounded-full bg-surface-container-highest text-primary hover:bg-primary hover:text-on-primary transition-all">
+<span class="material-symbols-outlined text-sm">send</span>
+</button>
+</div>
+<p class="text-[10px] text-gray-500 mt-2">آخر تواصل: من أسبوع</p>
+</div>
+<!-- Customer Item 2 -->
+<div class="p-4 rounded-xl bg-surface-container-low border border-outline-variant/10 hover:border-primary/30 transition-all">
+<div class="flex justify-between items-start mb-2">
+<p class="font-bold text-lg">مدام ميرفت</p>
+<span class="bg-primary/20 text-primary text-[10px] px-2 py-0.5 rounded-full uppercase">سفرة مودرن</span>
+</div>
+<div class="flex justify-between items-center">
+<p class="text-2xl font-black text-on-background">8,500 <span class="text-xs font-normal opacity-60">ج.م</span></p>
+<button class="p-2 rounded-full bg-surface-container-highest text-primary hover:bg-primary hover:text-on-primary transition-all">
+<span class="material-symbols-outlined text-sm">send</span>
+</button>
+</div>
+<p class="text-[10px] text-gray-500 mt-2">موعد السداد: اليوم</p>
+</div>
+<!-- Customer Item 3 -->
+<div class="p-4 rounded-xl bg-surface-container-low border border-outline-variant/10 hover:border-primary/30 transition-all opacity-70">
+<div class="flex justify-between items-start mb-2">
+<p class="font-bold text-lg">أ/ سمير كمال</p>
+<span class="bg-primary/20 text-primary text-[10px] px-2 py-0.5 rounded-full uppercase">ترابيزات ركنة</span>
+</div>
+<div class="flex justify-between items-center">
+<p class="text-2xl font-black text-on-background">3,400 <span class="text-xs font-normal opacity-60">ج.م</span></p>
+<button class="p-2 rounded-full bg-surface-container-highest text-primary hover:bg-primary hover:text-on-primary transition-all">
+<span class="material-symbols-outlined text-sm">send</span>
+</button>
+</div>
+<p class="text-[10px] text-gray-500 mt-2">آخر تواصل: من شهر</p>
+</div>
+</div>
+<div class="p-4 bg-surface-container-highest/30">
+<div class="flex justify-between items-center text-sm font-bold">
+<span>إجمالي اللي بره:</span>
+<span class="text-xl text-primary">26,900 ج.م</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Strategic Analytics (Decorative/Functional Asymmetric Section) -->
+<div class="mt-12 grid grid-cols-1 md:grid-cols-4 gap-6">
+<div class="md:col-span-1 bg-surface-container-high rounded-2xl p-6 relative overflow-hidden group">
+<div class="relative z-10">
+<p class="text-xs text-gray-400 mb-2">أعلى التزام قادم</p>
+<p class="text-2xl font-black text-on-background mb-4">قسط الضرائب</p>
+<p class="text-primary text-sm font-bold">باقي 14 يوم</p>
+</div>
+<div class="absolute -right-4 -bottom-4 opacity-5 group-hover:opacity-10 transition-opacity">
+<span class="material-symbols-outlined text-9xl">receipt_long</span>
+</div>
+</div>
+<div class="md:col-span-3 bg-gradient-to-r from-surface-container-high to-surface-container-lowest border border-outline-variant/10 rounded-2xl p-8 flex items-center justify-between">
+<div>
+<h4 class="text-2xl font-bold mb-2">الموقف المالي العام</h4>
+<p class="text-on-surface-variant">الالتزامات مغطاة بنسبة 140% من التدفقات المتوقعة.</p>
+</div>
+<div class="flex gap-4">
+<div class="text-center">
+<div class="text-3xl font-black text-secondary">71%</div>
+<div class="text-[10px] text-gray-500 uppercase">موردين</div>
+</div>
+<div class="w-px h-10 bg-outline-variant/20"></div>
+<div class="text-center">
+<div class="text-3xl font-black text-primary">29%</div>
+<div class="text-[10px] text-gray-500 uppercase">عمالة</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-4 pt-2 md:hidden bg-[#131313]/80 backdrop-blur-xl border-t border-[#2a2a2a] rounded-t-[1.5rem] shadow-[0_-10px_30px_rgba(0,0,0,0.5)]">
+<a class="flex flex-col items-center justify-center text-gray-500 p-2 hover:text-[#ffb781]" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="text-[10px] font-medium">الزتونة</span>
+</a>
+<a class="flex flex-col items-center justify-center text-gray-500 p-2 hover:text-[#ffb781]" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="text-[10px] font-medium">الموردين</span>
+</a>
+<a class="flex flex-col items-center justify-center text-gray-500 p-2 hover:text-[#ffb781]" href="#">
+<span class="material-symbols-outlined">chair</span>
+<span class="text-[10px] font-medium">الجرد</span>
+</a>
+<a class="flex flex-col items-center justify-center text-gray-500 p-2 hover:text-[#ffb781]" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="text-[10px] font-medium">المبيعات</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#e8c46a] bg-[#e8c46a]/10 rounded-2xl p-2 scale-110 duration-300" href="#">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="text-[10px] font-bold">الحسابات</span>
+</a>
+</nav>
+</body></html>

@@ -50,8 +50,12 @@ export function registerOrderRoutes(router: Router) {
 			}
 		}
 
-		const status = isBackorder ? 'backorder' : 'active';
+		let status = isBackorder ? 'backorder' : 'active';
 		const orderDate = today();
+
+		if (!isBackorder && body.initial_payment >= body.agreed_price) {
+			status = 'fulfilled';
+		}
 
 		const result = await env.DB.prepare(`
 			INSERT INTO sales_order (customer_id, item_id, location_id, agreed_price, status, is_backorder, backorder_description, expected_arrival, fulfillment_trigger, order_date)
@@ -71,9 +75,10 @@ export function registerOrderRoutes(router: Router) {
 
 		const orderId = result.meta.last_row_id;
 
-		// Set item to reserved if provided
+		// Set item to reserved (or sold if fulfilled) if provided
 		if (body.item_id) {
-			await env.DB.prepare('UPDATE item SET status = ? WHERE id = ?').bind('reserved', body.item_id).run();
+			const itemStatus = status === 'fulfilled' ? 'sold' : 'reserved';
+			await env.DB.prepare('UPDATE item SET status = ? WHERE id = ?').bind(itemStatus, body.item_id).run();
 		}
 
 		// Create initial payment if > 0
@@ -194,6 +199,17 @@ export function registerOrderRoutes(router: Router) {
 		const runningTotalPaid = totals?.running_total_paid || 0;
 		const remainingBalance = order.agreed_price - runningTotalPaid;
 
+		// Auto-fulfill if paid in full and currently active
+		let currentStatus = order.status;
+		if (runningTotalPaid >= order.agreed_price && order.status === 'active') {
+			await env.DB.prepare('UPDATE sales_order SET status = ? WHERE id = ?').bind('fulfilled', id).run();
+			currentStatus = 'fulfilled';
+
+			if (order.item_id) {
+				await env.DB.prepare('UPDATE item SET status = ? WHERE id = ?').bind('sold', order.item_id).run();
+			}
+		}
+
 		return jsonResponse({
 			id: payResult.meta.last_row_id,
 			order_id: id,
@@ -201,6 +217,7 @@ export function registerOrderRoutes(router: Router) {
 			payment_date: body.payment_date,
 			running_total_paid: Math.round(runningTotalPaid * 100) / 100,
 			remaining_balance: Math.round(remainingBalance * 100) / 100,
+			status: currentStatus,
 		}, 201);
 	});
 

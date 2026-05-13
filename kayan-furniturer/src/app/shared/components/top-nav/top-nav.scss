@@ -1,0 +1,120 @@
+.top-app-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4rem;
+  background: var(--surface-container-lowest);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  z-index: 30;
+  transition: all 0.3s;
+
+  @media (min-width: 768px) {
+    margin-right: 16rem;
+    padding: 0 3rem;
+  }
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+
+  .app-title {
+    font-size: 1.5rem;
+    font-weight: 900;
+    font-family: 'IBM Plex Sans Arabic', sans-serif;
+    margin: 0;
+    background: linear-gradient(135deg, var(--primary), var(--primary-container));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
+
+.nav-links {
+  display: none;
+  gap: 1.5rem;
+
+  @media (min-width: 1024px) {
+    display: flex;
+  }
+}
+
+.nav-link {
+  color: var(--on-surface-variant);
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  font-family: var(--headline-font);
+  transition: all 0.2s;
+
+  &:hover { color: var(--primary); }
+
+  &.active {
+    color: var(--primary);
+    position: relative;
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -1.25rem;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--primary);
+      border-radius: 2px;
+    }
+  }
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.date-badge {
+  display: none;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  background: var(--surface-container-high);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+
+  @media (min-width: 640px) {
+    display: flex;
+  }
+
+  span:last-child {
+    font-family: var(--label-font);
+    font-weight: 600;
+  }
+}
+
+.icon-btn {
+  color: var(--on-surface-variant);
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: all 0.2s;
+
+  &:hover {
+    background: var(--surface-bright);
+    color: var(--on-surface);
+  }
+}
+
+.profile-avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  border: 2px solid var(--surface-container-high);
+  cursor: pointer;
+}

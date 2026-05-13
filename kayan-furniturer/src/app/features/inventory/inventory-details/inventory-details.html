@@ -1,0 +1,198 @@
+<section class="mt-24 px-10 pb-20 max-w-6xl mx-auto relative">
+  @if (isLoading()) {
+    <div class="absolute inset-0 bg-background/60 backdrop-blur-md flex flex-col items-center justify-center z-50 rounded-3xl">
+      <div class="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin mb-6"></div>
+      <p class="text-lg font-headline text-on-surface/80">جاري تحميل بيانات القطعة...</p>
+    </div>
+  }
+
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-16">
+    <div class="flex-1">
+      <div class="flex items-center gap-4 mb-4">
+        <button routerLink="/inventory" class="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center text-outline-variant hover:text-primary transition-colors">
+          <span class="material-symbols-outlined">&#xe5c8;</span>
+        </button>
+        <span class="px-3 py-1 bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-widest rounded-full border border-primary/20">تفاصيل المنتج</span>
+      </div>
+      <h2 class="text-4xl font-black font-headline text-on-surface mb-2">{{ item()?.name }}</h2>
+      <p class="text-outline-variant font-headline">كود المنتج: #PRD-{{ item()?.id }} | التصنيف: {{ item()?.category || 'أثاث' }}</p>
+    </div>
+    
+    <div class="flex gap-4">
+      <button [routerLink]="['/inventory/edit', item()?.id]" class="px-6 py-4 bg-surface-container-high text-outline-variant font-black rounded-2xl hover:bg-surface-container-highest hover:text-primary transition-all border border-white/5 flex items-center gap-2">
+        <span class="material-symbols-outlined">edit</span>
+        <span>تعديل</span>
+      </button>
+      <button (click)="showTransferModal.set(true)" class="px-8 py-4 bg-surface-container-high text-primary font-black rounded-2xl hover:bg-primary hover:text-on-primary-fixed transition-all border border-primary/20 flex items-center gap-2">
+        <span>بدء عملية نقل</span>
+        <span class="material-symbols-outlined">&#xe8d1;</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-12 gap-10">
+    <!-- Left: Details & Photos -->
+    <div class="col-span-12 lg:col-span-8 space-y-10">
+      <!-- Media/Gallery -->
+      <div class="space-y-6">
+        <div class="bg-surface-container-high aspect-video rounded-[3rem] border border-white/5 overflow-hidden relative group shadow-2xl">
+          @if (item()?.images?.length) {
+            <div class="w-full h-full relative">
+              <img [src]="item()!.images![selectedImageIndex()]" class="w-full h-full object-cover transition-all duration-700" alt="Product Image"/>
+              <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+              <div class="absolute bottom-10 right-10 flex gap-4">
+                <span [class]="'px-6 py-2 rounded-full text-xs font-black border backdrop-blur-md ' + 
+                  (item()?.status === 'in_storage' ? 'bg-emerald-400/20 text-emerald-400 border-emerald-400/40' : 'bg-primary/20 text-primary border-primary/40')">
+                  {{ getStatusText(item()?.status || '') }}
+                </span>
+                <span class="px-6 py-2 bg-white/10 backdrop-blur-md text-white border border-white/20 rounded-full text-xs font-black">فرع: {{ item()?.location_name }}</span>
+              </div>
+            </div>
+          } @else {
+            <div class="w-full h-full flex items-center justify-center text-outline-variant/10">
+              <span class="material-symbols-outlined text-[10rem] group-hover:scale-110 transition-transform duration-700">&#xe16b;</span>
+            </div>
+          }
+        </div>
+
+        <!-- Thumbnails -->
+        @if (item()?.images && item()!.images!.length > 1) {
+          <div class="flex gap-4 overflow-x-auto pb-4 px-2 no-scrollbar animate-in slide-in-from-bottom-4 duration-500">
+            @for (img of item()!.images; track $index) {
+              <button 
+                (click)="setMainImage($index)"
+                class="w-24 h-24 rounded-2xl overflow-hidden border-2 transition-all flex-shrink-0"
+                [class.border-primary]="selectedImageIndex() === $index"
+                [class.border-white/5]="selectedImageIndex() !== $index"
+                [class.opacity-50]="selectedImageIndex() !== $index"
+                [class.hover:opacity-100]="selectedImageIndex() !== $index"
+              >
+                <img [src]="img" class="w-full h-full object-cover" />
+              </button>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Description & Specs -->
+      <div class="bg-surface-container-high p-10 rounded-3xl border border-white/5 space-y-8">
+        <div>
+          <h3 class="font-black font-headline text-xl text-on-surface mb-4">وصف القطعة</h3>
+          <p class="text-outline-variant leading-relaxed text-sm">
+            {{ item()?.description || 'لا يوجد وصف معمق لهذه القطعة حالياً. تفاصيل القطعة تشمل جودة الخشب والتشطيب النهائي.' }}
+          </p>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-10 pt-8 border-t border-white/5">
+          <div>
+            <h4 class="text-[10px] text-primary font-bold uppercase tracking-widest mb-4">التقدير المالي</h4>
+            <div class="space-y-4">
+              <div class="flex justify-between items-center text-sm">
+                <span class="text-outline-variant font-headline">تكلفة الشراء</span>
+                <span class="font-manrope font-bold text-on-surface">{{ item()?.purchase_value | number:'1.0-0' }} ج.م</span>
+              </div>
+              <div class="flex justify-between items-center text-sm">
+                <span class="text-outline-variant font-headline">سعر البيع المقترح</span>
+                <span class="font-manrope font-bold text-primary text-xl">{{ item()?.sale_price | number:'1.0-0' }} ج.م</span>
+              </div>
+            </div>
+          </div>
+          <div>
+            <h4 class="text-[10px] text-primary font-bold uppercase tracking-widest mb-4">بيانات المنشأ</h4>
+            <div class="space-y-4">
+              <div class="flex justify-between items-center text-sm">
+                <span class="text-outline-variant font-headline">رقم الشحنة</span>
+                <span class="font-manrope font-bold text-on-surface">{{ item()?.shipment_id ? '#SHP-' + item()?.shipment_id : 'إدخال محلي' }}</span>
+              </div>
+              <div class="flex justify-between items-center text-sm">
+                <span class="text-outline-variant font-headline">تاريخ الإضافة</span>
+                <span class="font-manrope font-bold text-on-surface">٢٣ مارس ٢٠٢٤</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: History & Actions -->
+    <div class="col-span-12 lg:col-span-4 space-y-8">
+      <div class="bg-surface-container-low p-8 rounded-3xl border border-white/5">
+        <h4 class="font-black font-headline text-lg mb-8 flex items-center justify-between">
+          سجل الحركات
+          <span class="px-3 py-1 bg-surface-container-highest text-[10px] text-outline-variant rounded-md">{{ transfers().length }} حركات</span>
+        </h4>
+        
+        <div class="space-y-8 relative">
+          <!-- Timeline Line -->
+          <div class="absolute top-2 bottom-2 right-4 w-0.5 bg-white/5"></div>
+          
+          @for (tr of transfers(); track tr.id) {
+            <div class="relative pr-10">
+              <div class="absolute right-3.5 top-1.5 w-1.5 h-1.5 rounded-full bg-primary ring-4 ring-primary/10"></div>
+              <div class="space-y-2">
+                <p class="text-[10px] text-outline-variant font-bold">{{ tr.transfer_date | date:'mediumDate' }}</p>
+                <p class="text-sm font-bold text-on-surface">تم النقل: {{ tr.from_location_name }} ➡ {{ tr.to_location_name }}</p>
+                @if (tr.transport_cost) {
+                  <p class="text-xs text-primary font-manrope">تكلفة النقل: {{ tr.transport_cost | number }} ج.م</p>
+                }
+              </div>
+            </div>
+          } @empty {
+            <p class="text-center text-xs text-outline-variant py-8 italic font-headline opacity-40">لا يوجد سجل حركات للقطعة حتى الآن</p>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Transfer Modal (Overlay) -->
+  @if (showTransferModal()) {
+    <div class="fixed inset-0 bg-black/80 backdrop-blur-xl z-[100] flex items-center justify-center p-6 animate-in fade-in duration-300">
+      <div class="bg-surface-container-high w-full max-w-lg rounded-[2.5rem] p-10 border border-white/5 space-y-8 shadow-2xl scale-in-center">
+        <div class="flex justify-between items-center">
+          <h3 class="text-2xl font-black font-headline text-on-surface">بدء عملية نقل</h3>
+          <button (click)="showTransferModal.set(false)" class="text-outline-variant hover:text-error transition-colors">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+        
+        <form [formGroup]="transferForm" (submit)="onTransfer()" class="space-y-6">
+          <div class="space-y-2">
+            <label class="text-xs font-bold text-outline-variant">النقل إلى الموقع</label>
+            <select formControlName="to_location_id" class="w-full bg-surface-container-lowest border-none rounded-2xl px-6 py-5 text-on-surface focus:ring-1 focus:ring-primary/40 outline-none">
+              <option [value]="null">اختر الموقع الجديد...</option>
+              @for (loc of locations(); track loc.id) {
+                @if (loc.id !== item()?.location_id) {
+                  <option [value]="loc.id">{{ loc.name }}</option>
+                }
+              }
+            </select>
+          </div>
+          
+          <div class="grid grid-cols-2 gap-6">
+            <div class="space-y-2">
+              <label class="text-xs font-bold text-outline-variant">تاريخ النقل</label>
+              <input formControlName="transfer_date" type="date" class="w-full bg-surface-container-lowest border-none rounded-2xl px-6 py-5 text-on-surface focus:ring-1 focus:ring-primary/40 outline-none"/>
+            </div>
+            <div class="space-y-2">
+              <label class="text-xs font-bold text-outline-variant">تكلفة النقل</label>
+              <input formControlName="transport_cost" type="number" class="w-full bg-surface-container-lowest border-none rounded-2xl px-6 py-5 text-on-surface focus:ring-1 focus:ring-primary/40 outline-none" placeholder="0.00"/>
+            </div>
+          </div>
+          
+          <div class="space-y-2">
+            <label class="text-xs font-bold text-outline-variant">ملحوظات النقل</label>
+            <textarea formControlName="notes" class="w-full bg-surface-container-lowest border-none rounded-2xl px-6 py-5 text-on-surface focus:ring-1 focus:ring-primary/40 outline-none h-24 resize-none"></textarea>
+          </div>
+          
+          <div class="pt-6">
+            <button type="submit" class="w-full py-5 bg-primary text-on-primary-fixed font-black rounded-2xl hover:scale-[1.02] active:scale-95 transition-all shadow-xl">
+              تأكيد عملية النقل
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+</section>

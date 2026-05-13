@@ -1,0 +1,182 @@
+<div class="pt-4">
+  <!-- Screen Header -->
+  <div class="flex justify-between items-end mb-10">
+    <div>
+      <h2 class="text-4xl font-black font-headline text-on-surface mb-2">متابعة الحاويات (الشحنات)</h2>
+      <p class="text-outline-variant font-headline">كل اللي جاي من بره ومستنيينه يوصل بالسلامة</p>
+    </div>
+    <button routerLink="/shipments/add" class="bg-surface-container-high text-primary px-6 py-3 rounded-xl font-headline font-bold text-sm flex items-center gap-2 hover:bg-surface-container-highest transition-all">
+      <span class="material-symbols-outlined text-lg">&#xe147;</span>
+      + شحنة جديدة
+    </button>
+  </div>
+
+  <!-- Filters Section -->
+  <div class="grid grid-cols-12 gap-6 mb-8">
+    <div class="col-span-8 bg-surface-container-low p-6 rounded-xl flex items-center gap-8">
+      <div class="flex flex-col gap-1 flex-1">
+        <label class="text-[10px] text-outline-variant font-label px-1">الحالة</label>
+        <select class="bg-surface-container-lowest border-none rounded-lg text-sm font-headline text-on-surface focus:ring-1 focus:ring-primary/40 py-2 outline-none">
+          <option>كل الحالات</option>
+          <option>خالصة</option>
+          <option>متقسطة</option>
+          <option>لسه مدفعش</option>
+        </select>
+      </div>
+      <div class="flex flex-col gap-1 flex-1">
+        <label class="text-[10px] text-outline-variant font-label px-1">المورد</label>
+        <select class="bg-surface-container-lowest border-none rounded-lg text-sm font-headline text-on-surface focus:ring-1 focus:ring-primary/40 py-2 outline-none">
+          <option>كل الموردين</option>
+          <option>مصنع الشرق للأثاث</option>
+          <option>إيطاليان ديزاين</option>
+          <option>توريدات الرواد</option>
+        </select>
+      </div>
+      <div class="flex flex-col gap-1 flex-1">
+        <label class="text-[10px] text-outline-variant font-label px-1">الفترة</label>
+        <div class="bg-surface-container-lowest rounded-lg py-2 px-4 text-sm font-headline text-on-surface flex items-center justify-between cursor-pointer">
+          <span>آخر 30 يوم</span>
+          <span class="material-symbols-outlined text-lg text-outline-variant">&#xebcc;</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-span-4 bg-gradient-to-br from-secondary-container/40 to-surface-container-high p-6 rounded-xl flex items-center justify-between relative overflow-hidden group">
+      <div class="relative z-10">
+        <p class="text-secondary text-[10px] font-bold uppercase tracking-widest font-label mb-1">إجمالي المديونيات</p>
+        <h3 class="text-2xl font-black font-headline text-on-surface">{{ totalDebts() }}</h3>
+      </div>
+      <span class="material-symbols-outlined text-6xl text-on-secondary-container/10 absolute -left-2 -bottom-2 group-hover:scale-110 transition-transform duration-500">&#xe600;</span>
+    </div>
+  </div>
+
+  <!-- Shipments Table -->
+  <div class="bg-surface-container-low rounded-xl overflow-hidden relative min-h-[400px]">
+    @if (isLoading()) {
+      <div class="absolute inset-0 bg-surface-container-low/60 backdrop-blur-sm flex flex-col items-center justify-center z-20">
+        <div class="w-10 h-10 border-4 border-primary/20 border-t-primary rounded-full animate-spin mb-4"></div>
+        <p class="text-sm font-headline text-outline-variant">جاري تحميل الشحنات...</p>
+      </div>
+    }
+
+    @if (error()) {
+      <div class="p-12 text-center">
+        <span class="material-symbols-outlined text-5xl text-error mb-4">error</span>
+        <p class="text-on-surface font-headline mb-4">{{ error() }}</p>
+        <button (click)="loadShipments()" class="text-primary hover:underline font-bold">إعادة المحاولة</button>
+      </div>
+    } @else {
+      <table class="w-full text-right border-collapse">
+        <thead>
+          <tr class="bg-surface-container-lowest/50 text-outline-variant">
+            <th class="px-8 py-5 font-headline font-bold text-xs">التاريخ / الحاوية</th>
+            <th class="px-6 py-5 font-headline font-bold text-xs">المورد</th>
+            <th class="px-6 py-5 font-headline font-bold text-xs text-left">القيمة</th>
+            <th class="px-6 py-5 font-headline font-bold text-xs text-left">المدفوع</th>
+            <th class="px-6 py-5 font-headline font-bold text-xs text-left">الباقي</th>
+            <th class="px-6 py-5 font-headline font-bold text-xs text-center">الحالة</th>
+            <th class="px-8 py-5"></th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-outline-variant/5">
+          @if (shipments().length === 0 && !isLoading()) {
+            <tr>
+              <td colspan="7" class="px-8 py-20 text-center color-outline-variant">
+                <span class="material-symbols-outlined text-6xl opacity-20 mb-4">inventory_2</span>
+                <p class="font-headline">لا توجد شحنات مسجلة حالياً</p>
+              </td>
+            </tr>
+          }
+          @for (shipment of shipments(); track shipment.id) {
+            <tr class="hover:bg-surface-container-high/40 transition-colors group border-none">
+              <td class="px-8 py-6 font-label text-sm text-on-surface-variant">
+                <div class="flex flex-col">
+                  <span class="text-on-surface font-bold">{{ shipment.container_number || 'بدون رقم' }}</span>
+                  <span class="text-[10px] opacity-60">{{ shipment.date_received | date:'dd MMM yyyy' }}</span>
+                </div>
+              </td>
+              <td class="px-6 py-6" [routerLink]="['/shipments', shipment.id]">
+                <div class="flex items-center gap-3 cursor-pointer">
+                  <div class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs" 
+                       [ngClass]="{
+                         'bg-primary/10 text-primary': getSupplierColor(shipment.supplier_id) === 'primary',
+                         'bg-secondary/10 text-secondary': getSupplierColor(shipment.supplier_id) === 'secondary',
+                         'bg-tertiary/10 text-tertiary': getSupplierColor(shipment.supplier_id) === 'tertiary'
+                       }">
+                    {{ getSupplierInitial(shipment.supplier_name) }}
+                  </div>
+                  <span class="font-headline font-medium text-sm group-hover:text-primary transition-colors text-on-surface">
+                    {{ shipment.supplier_name || 'مورد مجهول' }}
+                  </span>
+                </div>
+              </td>
+              <td class="px-6 py-6 font-label text-sm text-on-surface text-left">{{ formatCurrency(shipment.declared_value) }}</td>
+              <td class="px-6 py-6 font-label text-sm text-secondary text-left">{{ formatCurrency(shipment.amount_paid) }}</td>
+              <td class="px-6 py-6 font-label text-sm text-left" [ngClass]="shipment.declared_value - shipment.amount_paid > 0 ? 'text-error/80' : 'text-outline-variant'">
+                {{ formatCurrency(shipment.declared_value - shipment.amount_paid) }}
+              </td>
+              <td class="px-6 py-6 text-center">
+                <span class="text-[10px] font-bold font-headline px-3 py-1 rounded-full border"
+                      [ngClass]="{
+                        'bg-emerald-500/10 text-emerald-400 border-emerald-500/20': shipment.payment_status === 'settled',
+                        'bg-amber-500/10 text-amber-400 border-amber-500/20': shipment.payment_status === 'partial',
+                        'bg-error/10 text-error border-error/20': shipment.payment_status === 'unpaid'
+                      }">
+                  {{ getStatusLabel(shipment.payment_status) }}
+                </span>
+              </td>
+              <td class="px-8 py-6 text-left">
+                <button class="p-2 text-outline-variant hover:text-primary transition-colors">
+                  <span class="material-symbols-outlined">&#xe5d4;</span>
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+    <!-- Pagination -->
+    <div class="p-6 bg-surface-container-lowest/30 flex justify-between items-center border-t border-outline-variant/10">
+      <p class="text-xs text-outline-variant font-label">عرض 1-4 من أصل {{ shipments().length }} شحنة</p>
+      <div class="flex gap-2">
+        <button class="p-2 rounded-lg bg-surface-container-high text-outline-variant hover:text-primary transition-all">
+          <span class="material-symbols-outlined text-lg">&#xe5cc;</span>
+        </button>
+        <button class="p-2 rounded-lg bg-surface-container-high text-outline-variant hover:text-primary transition-all">
+          <span class="material-symbols-outlined text-lg">&#xe5cb;</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Visual Decorative Elements -->
+  <div class="mt-12 grid grid-cols-4 gap-6">
+    <div class="h-48 rounded-xl overflow-hidden relative group cursor-pointer shadow-xl">
+      <img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwkMDYUrMnRIp0yrZ2e-dvliV_MAC6tZJyMSo-JIDAlf2vNJ7JyAVOIiyDPQjtE92e6MSCBInyATClMAlmwGQddqcijPua7vQ6c8pMwSkneCPud5P1zEpJmP36n0eSZLjynruNQsCu49xe7jpGVg24P_ybFaB7iTTzQXHyf-PIK-6bENLD_SK6IPyrpdwTpl0ETfHFD4QPfcuz_rQRiTlh_W1GXSF-rFUOkMwtZA6XMC-tddhH-r9ECnCAPwG0649RWWpAetvvRC8"/>
+      <div class="absolute inset-0 bg-gradient-to-t from-background via-transparent opacity-80"></div>
+      <div class="absolute bottom-4 right-4 text-right">
+        <p class="text-[10px] font-bold text-primary font-label uppercase">أحدث الواصل</p>
+        <p class="text-sm font-headline font-bold">طقم صالون فيرونا</p>
+      </div>
+    </div>
+    <div class="h-48 rounded-xl overflow-hidden relative group cursor-pointer shadow-xl text-right">
+      <img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCfAQS4lWx4BVxSHcKvviYtJgXGSDEFOFb-QwmvyVLQCdm9yBBUwNFWXOpLUWqCPt-YntWjEEthZ-OgGWimrLk7-1jA36CnWlc0ow8hiZjUvz4e-ln1UKhgrYZ00A7s6XJ9cEXEw0LkJ64Iq-lTdimEXFKFvAlYleNtb8q10aiWMKWrZkZP6r_YLyV5V6GdbqgRq9YFjsYzSB8vhXcLRgud2EAf-9VMe-B9nOao8jnxE4ykvrOvCe7tO60eow8A52Mu_XiNUklkbSA"/>
+      <div class="absolute inset-0 bg-gradient-to-t from-background via-transparent opacity-80"></div>
+      <div class="absolute bottom-4 right-4">
+        <p class="text-[10px] font-bold text-primary font-label uppercase">شحنة الطريق</p>
+        <p class="text-sm font-headline font-bold">كراسي زان مطعمة</p>
+      </div>
+    </div>
+    <div class="h-48 rounded-xl overflow-hidden relative group cursor-pointer shadow-xl text-right">
+      <img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD27bZBggny1iCp9WKAyoe47sHAN_7deI5QbF4au2buNH-gXk5tjITp7a7mzsROaTS9ZRJAeBUYkwKGF0jhJ4GxxZzw3wX2ouMSwR4rFsyTnCTkKrY2r_1XOr38oEJo7SiXfYnVj_nfmLh47syXxaQhuG1yy8pGrYhfXfLMXKKXvhIOYyw00_s_wbO2Wg6uVnhqc5etFrMszsJRFhatqoNG49xsJ6z2NtzP1zGtOriWdmJMKKPfk0h9pTz9MPkvwwLSYQUrI9Fzc2g"/>
+      <div class="absolute inset-0 bg-gradient-to-t from-background via-transparent opacity-80"></div>
+      <div class="absolute bottom-4 right-4">
+        <p class="text-[10px] font-bold text-primary font-label uppercase">تجهيز المعرض</p>
+        <p class="text-sm font-headline font-bold">موديلات 2024</p>
+      </div>
+    </div>
+    <div class="h-48 rounded-xl bg-surface-container-high border-2 border-dashed border-outline-variant/30 flex flex-col items-center justify-center gap-3 text-outline-variant hover:border-primary/50 hover:text-primary transition-all cursor-pointer">
+      <span class="material-symbols-outlined text-4xl">&#xe39e;</span>
+      <span class="text-xs font-headline font-bold">صور شحنة جديدة</span>
+    </div>
+  </div>
+</div>

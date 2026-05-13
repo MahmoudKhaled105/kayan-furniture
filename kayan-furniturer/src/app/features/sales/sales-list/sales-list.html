@@ -1,0 +1,126 @@
+<section class="mt-24 px-10 pb-20 max-w-7xl mx-auto">
+  <!-- Header Section -->
+  <div class="flex items-end justify-between mb-16">
+    <div class="space-y-4">
+      <div class="flex items-center gap-3">
+        <span class="px-3 py-1 bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-widest rounded-full border border-primary/20">صالة العرض</span>
+      </div>
+      <h2 class="text-4xl font-black font-headline text-on-surface">إدارة المبيعات والطلبات</h2>
+      <p class="text-outline-variant font-headline max-w-lg">متابعة حركة الأثاث، سداد الأقساط، وإدارة طلبات الحجز المسبق (النواقص).</p>
+    </div>
+    
+    <div class="flex gap-4">
+      <button routerLink="/sales/add" class="px-8 py-4 bg-gradient-to-r from-primary to-primary-container text-on-primary-fixed font-black rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-xl flex items-center gap-3">
+        <span>تسجيل بيع جديد</span>
+        <span class="material-symbols-outlined">&#xe8cc;</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Filters & Tabs -->
+  <div class="flex items-center justify-between mb-10 bg-surface-container-low p-2 rounded-2xl border border-white/5">
+    <div class="flex items-center gap-2">
+      <button (click)="setFilter('all')"
+        [ngClass]="activeFilter() === 'all' ? 'bg-surface-container-highest text-primary shadow-lg' : 'text-outline-variant hover:text-on-surface'"
+        class="px-8 py-3 rounded-xl font-bold text-sm transition-all whitespace-nowrap lowercase">
+        جميع العمليات
+      </button>
+      <button (click)="setFilter('active')"
+        [ngClass]="activeFilter() === 'active' ? 'bg-surface-container-highest text-primary shadow-lg' : 'text-outline-variant hover:text-on-surface'"
+        class="px-8 py-3 rounded-xl font-bold text-sm transition-all whitespace-nowrap">
+        نشط (قيد التنفيذ)
+      </button>
+      <button (click)="setFilter('backorder')"
+        [ngClass]="activeFilter() === 'backorder' ? 'bg-surface-container-highest text-primary shadow-lg' : 'text-outline-variant hover:text-on-surface'"
+        class="px-8 py-3 rounded-xl font-bold text-sm transition-all whitespace-nowrap">
+        النواقص (Backorders)
+      </button>
+      <button (click)="setFilter('fulfilled')"
+        [ngClass]="activeFilter() === 'fulfilled' ? 'bg-surface-container-highest text-primary shadow-lg' : 'text-outline-variant hover:text-on-surface'"
+        class="px-8 py-3 rounded-xl font-bold text-sm transition-all whitespace-nowrap">
+        تم التسليم
+      </button>
+    </div>
+  </div>
+
+  @if (isLoading()) {
+    <div class="py-32 flex flex-col items-center justify-center space-y-6">
+      <div class="w-16 h-16 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
+      <p class="font-headline text-outline-variant animate-pulse">جاري جلب بيانات المبيعات...</p>
+    </div>
+  } @else if (error()) {
+    <div class="py-24 bg-error/5 rounded-3xl border border-error/10 text-center space-y-6">
+      <span class="material-symbols-outlined text-6xl text-error/40">&#xe000;</span>
+      <p class="text-error font-headline font-bold text-xl">{{ error() }}</p>
+      <button (click)="loadOrders()" class="px-8 py-3 bg-error/10 text-error rounded-xl hover:bg-error/20 transition-all font-bold">إعادة المحاولة</button>
+    </div>
+  } @else {
+    <div class="bg-surface-container-high rounded-[2.5rem] border border-white/5 overflow-hidden shadow-2xl animate-in fade-in slide-in-from-bottom-6 duration-700">
+      <table class="w-full text-right border-collapse">
+        <thead>
+          <tr class="bg-surface-container-highest/50 border-b border-white/5">
+            <th class="px-10 py-6 text-[10px] font-black text-primary uppercase">العميل / التاريخ</th>
+            <th class="px-10 py-6 text-[10px] font-black text-primary uppercase">الموقع</th>
+            <th class="px-10 py-6 text-[10px] font-black text-primary uppercase">الحالة</th>
+            <th class="px-10 py-6 text-[10px] font-black text-primary uppercase">القيمة / المتبقي</th>
+            <th class="px-10 py-6 text-[10px] font-black text-primary uppercase text-left">التفاصيل</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (order of getFilteredOrders(); track order.id) {
+            <tr class="group hover:bg-white/5 transition-colors border-b border-white/5 last:border-none">
+              <td class="px-10 py-8">
+                <div class="flex items-center gap-4">
+                  <div class="w-10 h-10 rounded-xl bg-surface-container-low text-primary flex items-center justify-center font-black text-xs">
+                    #{{ order.id }}
+                  </div>
+                  <div>
+                    <h4 class="font-bold text-on-surface group-hover:text-primary transition-colors">{{ order.customer_name }}</h4>
+                    <p class="text-[10px] text-outline-variant font-manrope">{{ order.order_date | date:'mediumDate' }}</p>
+                  </div>
+                </div>
+              </td>
+              <td class="px-10 py-8 text-xs font-bold text-on-surface/80">
+                <div class="flex items-center gap-1">
+                  <span class="material-symbols-outlined text-sm text-primary">&#xe0c8;</span>
+                  {{ order.location_name }}
+                </div>
+              </td>
+              <td class="px-10 py-8">
+                <span [class]="'px-4 py-1.5 rounded-full text-[10px] font-black border ' + getStatusClass(order.status)">
+                  {{ getStatusText(order.status) }}
+                </span>
+                @if (order.is_backorder) {
+                  <span class="mr-2 px-3 py-1 bg-amber-400/10 text-amber-400 text-[8px] font-black uppercase rounded-full">Backorder</span>
+                }
+              </td>
+              <td class="px-10 py-8">
+                <div class="space-y-1">
+                  <p class="font-manrope font-bold text-on-surface">{{ order.agreed_price | number }} <span class="text-[10px]">ج.م</span></p>
+                  @if (order.remaining_balance > 0) {
+                    <p class="text-[10px] font-manrope text-error font-black">متبقي: {{ order.remaining_balance | number }} ج.م</p>
+                  } @else {
+                    <p class="text-[10px] font-black text-emerald-400 uppercase tracking-tighter">مدفوع بالكامل</p>
+                  }
+                </div>
+              </td>
+              <td class="px-10 py-8 text-left">
+                <button [routerLink]="['/sales', order.id]" class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center text-outline-variant hover:text-primary hover:scale-110 active:scale-95 transition-all">
+                  <span class="material-symbols-outlined text-sm">&#xe5c8;</span>
+                </button>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="5" class="py-32 text-center">
+                <span class="material-symbols-outlined text-6xl text-on-surface/5 mb-4 block">&#xe8d1;</span>
+                <p class="text-outline-variant font-headline font-bold text-lg">لا يوجد عمليات بيع مسجلة لهذا التصنيف</p>
+                <button routerLink="/sales/add" class="mt-6 text-primary font-bold hover:underline">ابدأ أول عملية مبيعات الآن</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>

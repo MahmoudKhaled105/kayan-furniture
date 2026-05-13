@@ -1,0 +1,215 @@
+<div class="supplier-details-container" dir="rtl" lang="ar">
+  @if (isLoading()) {
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <p class="text-on-surface-variant">جاري تحميل بيانات المورد...</p>
+    </div>
+  } @else if (error()) {
+    <div class="error-container">
+      <span class="material-symbols-outlined text-6xl text-error">error</span>
+      <p class="text-error text-xl mb-4">{{ error() }}</p>
+      <button class="bg-primary text-on-primary px-6 py-3 rounded-xl font-bold" (click)="retry()">
+        إعادة المحاولة
+      </button>
+    </div>
+  } @else {
+    <!-- Supplier Header Section -->
+    <header class="supplier-header">
+      <div class="header-content">
+        <div class="breadcrumbs">
+          <a routerLink="/suppliers" class="breadcrumb-link">الموردين</a>
+          <span class="material-symbols-outlined separator">chevron_left</span>
+          <span class="breadcrumb-current">تفاصيل المورد</span>
+        </div>
+        <h2 class="supplier-title">
+          تفاصيل المورد: <span class="supplier-name">{{ supplier()?.name }}</span>
+        </h2>
+        <div class="contact-info">
+          <div class="contact-item">
+            <span class="material-symbols-outlined icon">phone</span>
+            <span class="contact-value">{{ supplier()?.phone || 'غير متوفر' }}</span>
+          </div>
+          <div class="contact-item">
+            <span class="material-symbols-outlined icon">location_on</span>
+            <span class="contact-value">{{ supplier()?.address || 'غير محدد' }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="action-btn payment-btn">
+          <span class="material-symbols-outlined">payments</span>
+          <span>سدد دفعة</span>
+        </button>
+        <button routerLink="/shipments/add" class="action-btn shipment-btn">
+          <span class="material-symbols-outlined">add_circle</span>
+          <span>شحنة جديدة</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Bento Stats Grid -->
+    <section class="stats-grid">
+      <div class="stat-card stat-card-balance">
+        <span class="stat-icon-bg">
+          <span class="material-symbols-outlined stat-icon">account_balance_wallet</span>
+        </span>
+        <div class="stat-content">
+          <p class="stat-label">إجمالي اللي لينا (المستحقات)</p>
+          <h3 class="stat-value text-secondary">
+            {{ formatCurrency(summary()?.outstanding_balance || 0) }}
+            <span class="stat-unit">ج.م</span>
+          </h3>
+          @if (lastPaymentDelay > 14) {
+            <p class="stat-warning">
+              <span class="material-symbols-outlined">warning</span>
+              متأخر بقاله {{ lastPaymentDelay }} يوم
+            </p>
+          }
+        </div>
+        <div class="progress-circle">
+          <svg class="progress-svg" viewBox="0 0 128 128">
+            <circle class="progress-bg" cx="64" cy="64" r="58"></circle>
+            <circle class="progress-fill" cx="64" cy="64" r="58"
+              [attr.stroke-dashoffset]="364.42 - (364.42 * paidPercentage / 100)">
+            </circle>
+          </svg>
+          <div class="progress-text">
+            <span class="progress-value">{{ paidPercentage }}%</span>
+            <span class="progress-label">مدفوع</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="stat-card stat-card-lifetime">
+        <div class="lifetime-bg"></div>
+        <p class="stat-label">إجمالي اللي دفعناه (Lifetime)</p>
+        <h3 class="stat-value text-on-surface">
+          {{ formatCurrency(summary()?.amount_paid || 0) }}
+          <span class="stat-unit">ج.م</span>
+        </h3>
+        <div class="lifetime-stats">
+          <div class="stat-row">
+            <span class="stat-row-label">آخر دفعة</span>
+            <span class="stat-row-value">{{ formatCurrency(0) }} ج.م</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" [style.width.%]="paidPercentage"></div>
+          </div>
+          <div class="stat-row dates">
+            <span>يناير 2024</span>
+            <span>مارس 2024</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tabs Section -->
+    <section class="tabs-section">
+      <div class="tabs-header">
+        <button 
+          (click)="setTab('shipments')"
+          [class.active]="activeTab() === 'shipments'"
+          class="tab-btn">
+          <span class="material-symbols-outlined">local_shipping</span>
+          <span>الداويات (الشحنات)</span>
+        </button>
+        <button 
+          (click)="setTab('payments')"
+          [class.active]="activeTab() === 'payments'"
+          class="tab-btn">
+          <span class="material-symbols-outlined">receipt_long</span>
+          <span>كشف الحساب (المدفوعات)</span>
+        </button>
+      </div>
+
+      <!-- Tab Content -->
+      <div class="tab-content">
+        @if (activeTab() === 'shipments') {
+          @if (shipments().length === 0) {
+            <div class="empty-state">
+              <span class="material-symbols-outlined empty-icon">local_shipping</span>
+              <p class="empty-text">لا توجد شحنات لهذا المورد</p>
+            </div>
+          } @else {
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>رقم الحاوية</th>
+                  <th>تاريخ الوصول</th>
+                  <th>الحالة</th>
+                  <th>عدد القطع</th>
+                  <th>القيمة الإجمالية</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (shipment of shipments(); track shipment.id) {
+                  <tr class="table-row">
+                    <td>
+                      <div class="shipment-link" (click)="navigateToShipment(shipment.id)">
+                        <div class="shipment-icon">
+                          <span class="material-symbols-outlined">inventory_2</span>
+                        </div>
+                        <span class="shipment-number">{{ shipment.date_received.substring(0, 10).replace(/-/g, '') }}</span>
+                      </div>
+                    </td>
+                    <td class="text-on-surface-variant">{{ formatDate(shipment.date_received) }}</td>
+                    <td>
+                      <span class="status-badge" [class]="getShipmentStatus(shipment.payment_status).class">
+                        {{ getShipmentStatus(shipment.payment_status).text }}
+                      </span>
+                    </td>
+                    <td>--</td>
+                    <td class="text-primary font-bold">{{ formatCurrency(shipment.declared_value) }} ج.م</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          }
+        } @else {
+          @if (payments().length === 0) {
+            <div class="empty-state">
+              <span class="material-symbols-outlined empty-icon">receipt</span>
+              <p class="empty-text">لا توجد مدفوعات مسجلة لهذا المورد</p>
+            </div>
+          } @else {
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>التاريخ</th>
+                  <th>النوع</th>
+                  <th>الشحنة</th>
+                  <th>المبلغ</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (payment of payments(); track payment.id) {
+                  <tr class="table-row">
+                    <td>{{ formatDate(payment.paid_date) }}</td>
+                    <td>دفعة</td>
+                    <td>--</td>
+                    <td class="text-primary font-bold">{{ formatCurrency(payment.amount) }} ج.م</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          }
+        }
+      </div>
+    </section>
+
+    <!-- Showroom Note -->
+    @if (supplier()?.notes) {
+      <section class="showroom-note">
+        <div class="note-card">
+          <div class="note-icon">
+            <span class="material-symbols-outlined">info</span>
+          </div>
+          <div class="note-content">
+            <h4 class="note-title">ملاحظة المعرض:</h4>
+            <p class="note-text">{{ supplier()?.notes }}</p>
+          </div>
+        </div>
+      </section>
+    }
+  }
+</div>

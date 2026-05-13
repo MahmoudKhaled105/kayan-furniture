@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+
+<html class="dark" dir="rtl" lang="ar"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>إضافة / تعديل قطعة - Koshk</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&amp;family=Manrope:wght@400;600;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-container-highest": "#353535",
+                        "error": "#ffb4ab",
+                        "primary-fixed-dim": "#e7c268",
+                        "surface-container-lowest": "#0e0e0e",
+                        "error-container": "#93000a",
+                        "on-secondary-container": "#ffcfad",
+                        "primary-fixed": "#ffdf96",
+                        "tertiary-container": "#a9aac5",
+                        "on-surface-variant": "#d4c4b7",
+                        "surface-container-low": "#1c1b1b",
+                        "on-error-container": "#ffdad6",
+                        "surface-container-high": "#2a2a2a",
+                        "on-primary-fixed-variant": "#5a4400",
+                        "surface-container": "#20201f",
+                        "on-primary-fixed": "#251a00",
+                        "surface": "#131313",
+                        "on-primary-container": "#523d00",
+                        "on-tertiary-fixed": "#181a2e",
+                        "secondary-container": "#924c00",
+                        "inverse-primary": "#765a05",
+                        "surface-bright": "#393939",
+                        "secondary": "#ffb781",
+                        "on-secondary": "#4e2600",
+                        "on-tertiary-container": "#3d3f55",
+                        "on-surface": "#e5e2e1",
+                        "secondary-fixed": "#ffdcc4",
+                        "outline-variant": "#50453b",
+                        "tertiary-fixed": "#e0e0fc",
+                        "primary-container": "#cba851",
+                        "background": "#131313",
+                        "inverse-surface": "#e5e2e1",
+                        "tertiary": "#c5c5e1",
+                        "on-background": "#e5e2e1",
+                        "primary": "#e8c46a",
+                        "outline": "#9c8e82",
+                        "surface-tint": "#e7c268",
+                        "on-tertiary": "#2d2f44",
+                        "on-secondary-fixed-variant": "#6f3800",
+                        "secondary-fixed-dim": "#ffb781",
+                        "inverse-on-surface": "#313030",
+                        "on-tertiary-fixed-variant": "#43455b",
+                        "on-secondary-fixed": "#2f1400",
+                        "tertiary-fixed-dim": "#c4c4df",
+                        "on-error": "#690005",
+                        "surface-dim": "#131313",
+                        "on-primary": "#3e2e00",
+                        "surface-variant": "#353535"
+                    },
+                    fontFamily: {
+                        "headline": ["IBM Plex Sans Arabic", "Manrope"],
+                        "body": ["IBM Plex Sans Arabic", "Inter"],
+                        "label": ["IBM Plex Sans Arabic", "Manrope"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'IBM Plex Sans Arabic', sans-serif;
+            background-color: #131313;
+            color: #e5e2e1;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+<!-- Sidebar Navigation Shell -->
+<aside class="h-screen w-72 fixed right-0 top-0 bg-[#0e0e0e] flex flex-col p-6 gap-4 z-40 hidden md:flex border-l border-white/5">
+<div class="flex items-center gap-3 mb-8">
+<div class="w-10 h-10 bg-gradient-to-br from-primary to-primary-container rounded-xl flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">chair</span>
+</div>
+<div>
+<h1 class="text-xl font-bold text-[#e8c46a] font-headline tracking-tight">المنضرة</h1>
+<p class="text-xs text-on-surface-variant font-medium">إدارة التحف</p>
+</div>
+</div>
+<nav class="flex flex-col gap-2 flex-grow">
+<a class="flex items-center gap-3 px-4 py-3 text-[#2a2a2a] hover:bg-[#2a2a2a]/20 rounded-xl transition-all duration-300" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-medium">الزتونة</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-[#e8c46a] to-[#cba851] text-white rounded-xl shadow-lg transition-transform duration-300" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+<span class="font-medium">الموردين والحاويات</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#2a2a2a] hover:bg-[#2a2a2a]/20 rounded-xl transition-all duration-300" href="#">
+<span class="material-symbols-outlined">warehouse</span>
+<span class="font-medium">الجرد والمخازن</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#2a2a2a] hover:bg-[#2a2a2a]/20 rounded-xl transition-all duration-300" href="#">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span class="font-medium">المبيعات والطلبات</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#2a2a2a] hover:bg-[#2a2a2a]/20 rounded-xl transition-all duration-300" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-medium">الحسابات</span>
+</a>
+</nav>
+<div class="mt-auto flex flex-col gap-2 pt-6 border-t border-white/5">
+<a class="flex items-center gap-3 px-4 py-3 text-[#2a2a2a] hover:bg-[#2a2a2a]/20 rounded-xl transition-all duration-300" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-medium">الإعدادات</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-error/80 hover:bg-error/10 rounded-xl transition-all duration-300" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-medium">تسجيل خروج</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="md:mr-72 min-h-screen p-4 md:p-10 lg:p-16 flex flex-col gap-10">
+<!-- Header Section -->
+<header class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div class="space-y-2">
+<nav class="flex items-center gap-2 text-on-surface-variant text-sm mb-4">
+<span>المخازن</span>
+<span class="material-symbols-outlined text-xs">chevron_left</span>
+<span class="text-primary">إضافة قطعة</span>
+</nav>
+<h2 class="text-4xl md:text-5xl font-black text-on-surface font-headline leading-tight">إضافة / تعديل قطعة</h2>
+<p class="text-on-surface-variant max-w-xl text-lg">سجل تفاصيل التحفة الجديدة هنا، خليك دقيق في السعر عشان الحسابات تظبط.</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="px-8 py-4 rounded-xl font-bold bg-surface-container-high text-on-surface hover:bg-surface-container-highest transition-colors">إلغاء</button>
+<button class="px-8 py-4 rounded-xl font-bold bg-gradient-to-r from-primary to-primary-container text-on-primary-fixed shadow-lg shadow-primary/10 active:scale-95 transition-all">حفظ القطعة</button>
+</div>
+</header>
+<!-- Form Layout: Asymmetric Bento Style -->
+<section class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Left Column: Core Info & Pricing -->
+<div class="lg:col-span-8 flex flex-col gap-8">
+<!-- Basic Info Card -->
+<div class="bg-surface-container-high rounded-xl p-8 space-y-8">
+<div class="flex items-center gap-3 border-b border-white/5 pb-4">
+<span class="material-symbols-outlined text-primary">info</span>
+<h3 class="text-xl font-bold">بيانات القطعة الأساسية</h3>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-2">
+<label class="text-sm font-semibold text-on-surface-variant mr-1">اسم القطعة</label>
+<input class="w-full bg-surface-container-lowest border border-outline-variant/15 rounded-xl px-4 py-4 focus:border-primary/50 focus:ring-0 text-on-surface placeholder:text-outline/40 transition-all" placeholder="مثلاً: كنبة لويس الرابع عشر مذهبة" type="text"/>
+</div>
+<div class="space-y-2">
+<label class="text-sm font-semibold text-on-surface-variant mr-1">النوع</label>
+<select class="w-full bg-surface-container-lowest border border-outline-variant/15 rounded-xl px-4 py-4 focus:border-primary/50 focus:ring-0 text-on-surface transition-all appearance-none">
+<option>أثاث ملكي</option>
+<option>سجاد يدوي</option>
+<option>نجف كريستال</option>
+<option>لوحات زيتية</option>
+</select>
+</div>
+<div class="md:col-span-2 space-y-2">
+<label class="text-sm font-semibold text-on-surface-variant mr-1">وصف بسيط</label>
+<textarea class="w-full bg-surface-container-lowest border border-outline-variant/15 rounded-xl px-4 py-4 focus:border-primary/50 focus:ring-0 text-on-surface placeholder:text-outline/40 transition-all" placeholder="احكي لنا قصة القطعة دي وحالتها إيه..." rows="3"></textarea>
+</div>
+</div>
+</div>
+<!-- Pricing & Finances Card -->
+<div class="bg-surface-container-high rounded-xl p-8 space-y-8">
+<div class="flex items-center gap-3 border-b border-white/5 pb-4">
+<span class="material-symbols-outlined text-primary">payments</span>
+<h3 class="text-xl font-bold">الحصالة (التسعير)</h3>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="space-y-2">
+<label class="text-sm font-semibold text-on-surface-variant mr-1">التكلفة (Purchase Value)</label>
+<div class="relative">
+<input class="w-full bg-surface-container-lowest border border-outline-variant/15 rounded-xl pl-16 pr-4 py-4 focus:border-primary/50 focus:ring-0 text-on-surface font-headline transition-all" placeholder="0.00" type="number"/>
+<span class="absolute left-4 top-1/2 -translate-y-1/2 text-primary font-bold">EGP</span>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-sm font-semibold text-on-surface-variant mr-1">سعر البيع (Sale Price)</label>
+<div class="relative">
+<input class="w-full bg-surface-container-lowest border border-outline-variant/15 rounded-xl pl-16 pr-4 py-4 focus:border-primary/50 focus:ring-0 text-primary font-headline text-lg font-bold transition-all" placeholder="0.00" type="number"/>
+<span class="absolute left-4 top-1/2 -translate-y-1/2 text-primary font-bold">EGP</span>
+</div>
+</div>
+</div>
+<div class="p-6 bg-primary/5 rounded-xl flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">trending_up</span>
+</div>
+<div>
+<p class="text-sm text-on-surface-variant">هامش الربح المتوقع</p>
+<p class="text-xl font-bold text-primary">0.00 EGP <span class="text-sm font-normal text-on-surface-variant/60 mr-2">(0%)</span></p>
+</div>
+</div>
+</div>
+<!-- Composition & Linked Items -->
+<div class="bg-surface-container-high rounded-xl p-8 space-y-6">
+<div class="flex items-center justify-between border-b border-white/5 pb-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">hub</span>
+<h3 class="text-xl font-bold">تكوين القطعة (الأجزاء)</h3>
+</div>
+<button class="text-primary flex items-center gap-1 hover:underline text-sm font-bold">
+<span class="material-symbols-outlined text-sm">add</span>
+                            ربط جزء جديد
+                        </button>
+</div>
+<!-- Linked Items List -->
+<div class="space-y-4">
+<!-- Placeholder for linked items -->
+<div class="flex items-center gap-4 p-4 bg-surface-container-low rounded-xl border border-outline-variant/10">
+<div class="w-16 h-16 bg-surface-container-highest rounded-lg overflow-hidden shrink-0">
+<img class="w-full h-full object-cover opacity-60" data-alt="close-up of ornate brass drawer handle with intricate floral carvings and aged patina" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB4Uu7-B8nvYDztk2yZne_IdWj4mkoGx8E2jOCG8OXP98eBWE0V_QwA0fw2B6oXLx_iV5rEejRNkmCnekZH9YWzwmmbm2zYPIni8f850RZFOu0_O-IqC_Su-R8nBMfGeQg7zL6WMdX13InbFHg19p0dGwjJvs96arX99UGMefWz8c9lbDFBxdM22U4YVravmJFfi1hAM1hwXVbw822o20M1r6xMYyxFf2atWjWwzxAeXBolNFLJsVDNP-0QKEhRBwUUC7t35TjH8aU"/>
+</div>
+<div class="flex-grow">
+<p class="font-bold text-on-surface">طقم مقابض نحاس أثري</p>
+<p class="text-xs text-on-surface-variant">كود: PRT-9921</p>
+</div>
+<div class="text-left">
+<p class="font-headline font-bold text-primary">1,250 EGP</p>
+<button class="text-error text-xs hover:underline">إزالة</button>
+</div>
+</div>
+<div class="border-2 border-dashed border-outline-variant/20 rounded-xl p-8 flex flex-col items-center justify-center text-on-surface-variant gap-2 hover:bg-white/5 transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-3xl">post_add</span>
+<p class="text-sm font-medium">مفيش أجزاء تانية؟ دوس هنا عشان تضيف</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Meta & Logistics -->
+<div class="lg:col-span-4 flex flex-col gap-8">
+<!-- Logistics Card -->
+<div class="bg-surface-container-high rounded-xl p-8 space-y-6">
+<div class="flex items-center gap-3 border-b border-white/5 pb-4">
+<span class="material-symbols-outlined text-primary">location_on</span>
+<h3 class="text-lg font-bold">مكان الاستقرار</h3>
+</div>
+<div class="space-y-4">
+<div class="space-y-2">
+<label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">موقع القطعة الحالي</label>
+<div class="grid grid-cols-1 gap-2">
+<label class="flex items-center gap-3 p-4 bg-surface-container-lowest rounded-xl border border-outline-variant/10 cursor-pointer hover:border-primary/40 transition-all">
+<input class="text-primary focus:ring-offset-surface-container-high bg-transparent border-outline-variant" name="location" type="radio"/>
+<div class="flex flex-col">
+<span class="font-bold text-on-surface">Gallery A (المنضرة)</span>
+<span class="text-xs text-on-surface-variant">العرض المباشر</span>
+</div>
+</label>
+<label class="flex items-center gap-3 p-4 bg-surface-container-lowest rounded-xl border border-outline-variant/10 cursor-pointer hover:border-primary/40 transition-all">
+<input class="text-primary focus:ring-offset-surface-container-high bg-transparent border-outline-variant" name="location" type="radio"/>
+<div class="flex flex-col">
+<span class="font-bold text-on-surface">Warehouse B (المخزن الكبير)</span>
+<span class="text-xs text-on-surface-variant">تخزين طويل الأمد</span>
+</div>
+</label>
+</div>
+</div>
+<div class="space-y-2 pt-4">
+<label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">رابط الشحنة (تلقائي)</label>
+<div class="flex items-center gap-2 p-3 bg-surface-container-lowest/50 rounded-xl border border-outline-variant/5 text-on-surface-variant italic">
+<span class="material-symbols-outlined text-sm">link</span>
+<span class="text-sm">SHP-2023-X99 (تم التعبئة تلقائياً)</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Media Upload Card -->
+<div class="bg-surface-container-high rounded-xl p-8 space-y-6">
+<div class="flex items-center gap-3 border-b border-white/5 pb-4">
+<span class="material-symbols-outlined text-primary">photo_library</span>
+<h3 class="text-lg font-bold">صور الشو-رووم</h3>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<div class="aspect-square bg-surface-container-lowest rounded-xl border border-outline-variant/20 overflow-hidden relative group cursor-pointer">
+<img class="w-full h-full object-cover" data-alt="professional studio shot of a classic antique velvet armchair in a dark moody gallery setting with dramatic spotlighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6Cso2vgqUdCIFBtZ2r369kICcjoeXkFbbMfNr3GFb1_LwgbTGCgBseRXArqB4LJKfGVupePRcSufstbo3aH3jBZ23cHrOGggZRGJxpjJE1sWfopK18VslQkZMQv7XiPKsAbQIbgYydopiDdHpveHkztaeodXzIpt_5jQr0kiVusQkYRzUgSDx7QRxVwNFpxVWzlDQlL5L0WCbrNGYpoh6F9Eo9unIpp73JsXFvZdEGxMR7gwxJWcu4CQqksjORSAMA3dCadq7yUI"/>
+<div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-white">delete</span>
+</div>
+</div>
+<div class="aspect-square bg-surface-container-lowest border-2 border-dashed border-outline-variant/20 rounded-xl flex flex-col items-center justify-center gap-2 text-on-surface-variant hover:text-primary hover:border-primary/40 transition-all cursor-pointer">
+<span class="material-symbols-outlined">add_a_photo</span>
+<span class="text-[10px] font-bold">إضافة صورة</span>
+</div>
+</div>
+</div>
+<!-- Quick Actions / Status -->
+<div class="bg-primary/10 rounded-xl p-6 border border-primary/20">
+<h4 class="text-primary font-bold mb-3 flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">auto_awesome</span>
+                        نصيحة المنضرة
+                    </h4>
+<p class="text-sm text-on-surface leading-relaxed">القطعة دي من الأنواع المطلوبة حالياً. حاول ترفع صور بجودة عالية عشان تجذب الزباين "التقيلة".</p>
+</div>
+</div>
+</section>
+<!-- Footer spacing for mobile -->
+<footer class="md:hidden h-24"></footer>
+</main>
+<!-- Bottom Nav for Mobile -->
+<nav class="md:hidden fixed bottom-0 w-full bg-[#131313]/90 backdrop-blur-xl flex justify-around items-center py-4 px-6 z-50 border-t border-white/5">
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+<span class="text-[10px]">المخازن</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-[#2a2a2a]" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-[10px]">الزتونة</span>
+</a>
+<div class="w-12 h-12 -mt-10 bg-gradient-to-br from-primary to-primary-container rounded-full flex items-center justify-center shadow-lg shadow-primary/40 border-4 border-[#131313]">
+<span class="material-symbols-outlined text-on-primary">add</span>
+</div>
+<a class="flex flex-col items-center gap-1 text-[#2a2a2a]" href="#">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span class="text-[10px]">المبيعات</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-[#2a2a2a]" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="text-[10px]">الحسابات</span>
+</a>
+</nav>
+</body></html>

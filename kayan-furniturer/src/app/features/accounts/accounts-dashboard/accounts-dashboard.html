@@ -1,0 +1,154 @@
+<section class="mt-24 px-10 pb-20 max-w-6xl mx-auto relative">
+  <!-- Dashboard Header -->
+  <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
+    <div>
+      <span class="text-secondary font-bold text-sm tracking-widest uppercase mb-2 block">حركة الخزنة اليومية</span>
+      <h2 class="text-4xl md:text-5xl font-black font-headline text-on-surface">الزتونة المالية</h2>
+    </div>
+    <div class="flex gap-3">
+      <div class="bg-surface-container-high p-1 rounded-2xl flex">
+        <button class="bg-primary text-on-primary px-6 py-2 rounded-xl text-sm font-bold transition-all shadow-md">اليوم</button>
+        <button class="text-on-surface-variant px-6 py-2 rounded-xl text-sm font-medium hover:text-on-surface transition-all">أمس</button>
+        <button class="text-on-surface-variant px-6 py-2 rounded-xl text-sm font-medium hover:text-on-surface transition-all">تاريخ محدد</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Summary Cards: The Bento Summary -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+    <!-- Total In -->
+    <div class="bg-surface-container-high p-8 rounded-2xl flex flex-col justify-between group hover:bg-surface-bright transition-all duration-300 relative overflow-hidden border border-white/5">
+      <div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16 blur-3xl group-hover:bg-primary/10 transition-all"></div>
+      <div class="flex justify-between items-start mb-6">
+        <span class="material-symbols-outlined text-primary text-4xl" style="font-variation-settings: 'FILL' 1;">arrow_downward</span>
+        <span class="text-xs font-bold bg-primary/10 text-primary px-3 py-1 rounded-full border border-primary/20">منذ بداية اليوم</span>
+      </div>
+      <div class="relative z-10">
+        <p class="text-on-surface-variant text-sm mb-1 font-headline">إجمالي الداخل</p>
+        <h3 class="text-3xl font-black font-manrope text-on-surface leading-none">{{ totalIn() | number }} <span class="text-sm font-medium text-on-surface-variant">ج.م</span></h3>
+      </div>
+    </div>
+
+    <!-- Total Out -->
+    <div class="bg-surface-container-high p-8 rounded-2xl flex flex-col justify-between group hover:bg-surface-bright transition-all duration-300 border border-white/5">
+      <div class="flex justify-between items-start mb-6 relative z-10">
+        <span class="material-symbols-outlined text-secondary text-4xl" style="font-variation-settings: 'FILL' 1;">arrow_upward</span>
+        <span class="text-xs font-bold bg-secondary/10 text-secondary px-3 py-1 rounded-full border border-secondary/20">منذ بداية اليوم</span>
+      </div>
+      <div>
+        <p class="text-on-surface-variant text-sm mb-1 font-headline">إجمالي الخارج</p>
+        <h3 class="text-3xl font-black font-manrope text-on-surface leading-none">{{ totalOut() | number }} <span class="text-sm font-medium text-on-surface-variant">ج.م</span></h3>
+      </div>
+    </div>
+
+    <!-- Net Profit (The Gold Card) -->
+    <div class="bg-gradient-to-br from-primary to-primary-container p-8 rounded-2xl flex flex-col justify-between shadow-2xl shadow-primary/20 relative overflow-hidden group border border-primary/30">
+      <div class="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+      <div class="flex justify-between items-start mb-6 relative z-10">
+        <span class="material-symbols-outlined text-on-primary text-4xl" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+        <span class="text-xs font-bold bg-on-primary/10 text-on-primary px-3 py-1 rounded-full border border-on-primary/20">صافي اليوم</span>
+      </div>
+      <div class="relative z-10">
+        <p class="text-on-primary/70 text-sm mb-1 font-headline font-bold">الصافي الفعلي</p>
+        <h3 class="text-3xl font-black font-manrope text-on-primary leading-none">{{ netProfit() | number }} <span class="text-sm font-bold text-on-primary/70">ج.م</span></h3>
+      </div>
+    </div>
+  </div>
+
+  <!-- Transaction Sections -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+    <!-- Inflows: Payments from Customers -->
+    <section>
+      <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center gap-3">
+          <div class="w-1.5 h-8 bg-primary rounded-full"></div>
+          <h3 class="text-xl font-black font-headline text-on-surface">المتحصلات (الداخل)</h3>
+        </div>
+        <span class="text-xs font-bold text-primary hover:underline cursor-pointer">عرض الكل</span>
+      </div>
+      <div class="flex flex-col gap-4">
+        @for (item of inflows(); track item.source_id) {
+          <div class="bg-surface-container-high border border-white/5 p-5 rounded-2xl flex items-center justify-between hover:bg-surface-container-highest transition-all cursor-pointer group">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 bg-surface-container-highest rounded-xl flex items-center justify-center group-hover:bg-primary/10 group-hover:text-primary transition-colors border border-white/5">
+                <span class="material-symbols-outlined text-outline-variant group-hover:text-primary">{{ getIconForType(item.type) }}</span>
+              </div>
+              <div>
+                <h4 class="font-bold font-headline text-on-surface leading-tight">{{ item.party }}</h4>
+                <p class="text-[10px] text-outline-variant font-headline mt-1">{{ getArabicTypeLabel(item.type, item.source_id) }}</p>
+              </div>
+            </div>
+            <div class="text-left whitespace-nowrap">
+              <p class="font-black font-manrope text-primary">+ {{ item.amount | number }} ج.م</p>
+              <p class="text-[10px] text-outline-variant mt-1">{{ item.location || 'الحساب الرئيسي' }}</p>
+            </div>
+          </div>
+        }
+      </div>
+    </section>
+
+    <!-- Outflows: Expenses -->
+    <section>
+      <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center gap-3">
+          <div class="w-1.5 h-8 bg-secondary rounded-full"></div>
+          <h3 class="text-xl font-black font-headline text-on-surface">المصروفات (الخارج)</h3>
+        </div>
+        <span class="text-xs font-bold text-secondary hover:underline cursor-pointer">عرض الكل</span>
+      </div>
+      <div class="flex flex-col gap-4">
+        @for (item of outflows(); track item.source_id) {
+          <div class="bg-surface-container-high border border-white/5 p-5 rounded-2xl flex items-center justify-between hover:bg-surface-container-highest transition-all cursor-pointer group">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 bg-surface-container-highest rounded-xl flex items-center justify-center group-hover:bg-secondary/10 group-hover:text-secondary transition-colors border border-white/5">
+                <span class="material-symbols-outlined text-outline-variant group-hover:text-secondary">{{ getIconForType(item.type) }}</span>
+              </div>
+              <div>
+                <h4 class="font-bold font-headline text-on-surface leading-tight">{{ item.party }}</h4>
+                <p class="text-[10px] text-outline-variant font-headline mt-1">{{ getArabicTypeLabel(item.type, item.source_id) }}</p>
+              </div>
+            </div>
+            <div class="text-left whitespace-nowrap">
+              <p class="font-black font-manrope text-secondary-container">- {{ item.amount | number }} ج.م</p>
+              <p class="text-[10px] text-outline-variant mt-1">{{ item.location || 'الحساب الرئيسي' }}</p>
+            </div>
+          </div>
+        }
+      </div>
+    </section>
+  </div>
+
+  <!-- Signature Component: The "Hassala" Monthly Target -->
+  <div class="mt-16 bg-surface-container-high p-10 rounded-[2.5rem] flex flex-col md:flex-row items-center justify-center md:justify-start gap-12 border border-white/5 shadow-2xl relative overflow-hidden">
+    <!-- Abstract background -->
+    <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-primary/5 rounded-full blur-3xl"></div>
+    
+    <div class="relative w-48 h-48 flex items-center justify-center flex-shrink-0 z-10">
+      <svg class="w-full h-full transform -rotate-90">
+        <circle class="text-surface-container-lowest" cx="96" cy="96" fill="transparent" r="88" stroke="currentColor" stroke-width="8"></circle>
+        <!-- The stroke-dasharray is circumference (2 * pi * 88 = ~553). The target is 75%, so dashoffset is 553 * 0.25 = ~138 -->
+        <circle class="text-primary rounded-full transition-all duration-1000 ease-out" cx="96" cy="96" fill="transparent" r="88" stroke="currentColor" stroke-dasharray="553" [style.stroke-dashoffset]="553 - (553 * targetPercentage() / 100)" stroke-width="12"></circle>
+      </svg>
+      <div class="absolute inset-0 flex flex-col items-center justify-center">
+        <span class="text-3xl font-black font-manrope text-on-surface">{{ targetPercentage() }}٪</span>
+        <span class="text-[10px] text-outline-variant uppercase tracking-widest font-bold mt-1">من الهدف</span>
+      </div>
+    </div>
+    
+    <div class="flex-1 text-center md:text-right z-10">
+      <h3 class="text-3xl font-black font-headline text-primary mb-4">الحصالة الشهرية</h3>
+      <p class="text-outline-variant max-w-lg mb-8 font-headline leading-relaxed">إحنا وصلنا لـ {{ currentAchieved() | number }} ج.م من أصل هدف مبيعات {{ monthlyTarget() | number }} ج.م لشهر أكتوبر. عاش يا وحوش המندرة، فاضل "تكة" ونقفل التارجت!</p>
+      
+      <div class="flex flex-wrap gap-4 justify-center md:justify-start">
+        <div class="bg-surface-container-lowest px-8 py-4 rounded-2xl border border-white/5">
+          <p class="text-[10px] text-outline-variant mb-1 font-bold">المتبقي</p>
+          <p class="text-xl font-black font-manrope text-on-surface">{{ (monthlyTarget() - currentAchieved()) | number }} ج.م</p>
+        </div>
+        <div class="bg-surface-container-lowest px-8 py-4 rounded-2xl border border-primary/20 shadow-lg shadow-primary/5">
+          <p class="text-[10px] text-outline-variant mb-1 font-bold">متوسط اليوم</p>
+          <p class="text-xl font-black font-manrope text-primary">٢٥,٠٠٠ ج.م</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

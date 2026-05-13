@@ -1,0 +1,166 @@
+<div class="suppliers-list-container" dir="rtl" lang="ar">
+  @if (isLoading()) {
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <p class="text-on-surface-variant">جاري تحميل الموردين...</p>
+    </div>
+  } @else if (error()) {
+    <div class="error-container">
+      <span class="material-symbols-outlined text-6xl text-error">error</span>
+      <p class="text-error text-xl mb-4">{{ error() }}</p>
+      <button class="bg-primary text-on-primary px-6 py-3 rounded-xl font-bold" (click)="loadSuppliers()">
+        إعادة المحاولة
+      </button>
+    </div>
+  } @else {
+    <!-- Header Section -->
+    <header class="page-header">
+      <div class="header-title">
+        <h2>سجل الحبايب (الموردين)</h2>
+        <p>
+          <span class="status-indicator"></span>
+          إجمالي {{ suppliers().length }} مورد شغالين حالياً
+        </p>
+      </div>
+      <a routerLink="/suppliers/add" class="add-supplier-btn">
+        <span class="material-symbols-outlined">add</span>
+        <span>+ مورد جديد</span>
+      </a>
+    </header>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+      <div class="stat-card stat-card-debt">
+        <span class="material-symbols-outlined stat-icon">payments</span>
+        <p>علينا للحبايب (إجمالي مديونية)</p>
+        <h3>
+          {{ totalDebt() }}
+          <span>ج.م</span>
+        </h3>
+      </div>
+
+      <div class="stat-card stat-card-containers">
+        <span class="material-symbols-outlined stat-icon">local_shipping</span>
+        <p>حاويات في السكة</p>
+        <h3>
+          {{ containersInRoute() }}
+          <span>حاويات</span>
+        </h3>
+      </div>
+
+      <div class="stat-card stat-card-last-payment">
+        <span class="material-symbols-outlined stat-icon">receipt_long</span>
+        <p>آخر دفعة خرجت</p>
+        <h3>
+          {{ lastPayment() }}
+          <span>منذ يومين</span>
+        </h3>
+      </div>
+    </div>
+
+    <!-- Suppliers Table -->
+    <div class="table-card">
+      <table class="suppliers-table">
+        <thead>
+          <tr>
+            <th>المورد</th>
+            <th>التواصل</th>
+            <th>المديونية (ج.م)</th>
+            <th>آخر دفعة</th>
+            <th>الحالة</th>
+            <th>الإجراءات</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (supplier of suppliers(); track supplier.id) {
+            <tr class="supplier-row">
+              <td>
+                <div class="supplier-cell" [routerLink]="['/suppliers', supplier.id]">
+                  <div class="supplier-avatar">
+                    <img [src]="supplier.imageUrl" [alt]="supplier.name" />
+                  </div>
+                  <div class="supplier-info">
+                    <h4 class="supplier-name">{{ supplier.name }}</h4>
+                    <p class="supplier-code">كود المورد: {{ supplier.code }}</p>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="contact-cell">
+                  <span class="phone">{{ supplier.phone }}</span>
+                  <span class="notes">{{ supplier.contactNotes }}</span>
+                </div>
+              </td>
+              <td class="debt-cell" [class.has-debt]="supplier.debt !== '٠'">
+                {{ supplier.debt }}
+              </td>
+              <td>
+                @if (supplier.lastPaymentDate !== '---') {
+                  <div class="payment-cell">
+                    <span class="date">{{ supplier.lastPaymentDate }}</span>
+                    <span class="amount">{{ supplier.lastPaymentAmount }}</span>
+                  </div>
+                } @else {
+                  <div class="payment-cell">
+                    <span class="empty">---</span>
+                  </div>
+                }
+              </td>
+              <td>
+                @if (supplier.status === 'active') {
+                  <span class="status-badge active">
+                    <span class="status-dot"></span>
+                    شغال
+                  </span>
+                } @else {
+                  <span class="status-badge inactive">
+                    <span class="status-dot"></span>
+                    مأنتخ
+                  </span>
+                }
+              </td>
+              <td>
+                <div class="action-buttons">
+                  <button class="action-btn edit-btn" [routerLink]="['/suppliers', supplier.id]">
+                    <span class="material-symbols-outlined">visibility</span>
+                  </button>
+                  <button class="action-btn edit-btn" [routerLink]="['/suppliers', supplier.id, 'edit']">
+                    <span class="material-symbols-outlined">edit</span>
+                  </button>
+                  <button class="action-btn delete-btn">
+                    <span class="material-symbols-outlined">delete</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="6" style="text-align: center; padding: 3rem;">
+                <div class="empty-state">
+                  <span class="material-symbols-outlined text-4xl text-on-surface-variant">inbox</span>
+                  <p class="text-on-surface-variant mt-4">لا يوجد موردين حالياً</p>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      <!-- Table Footer -->
+      <div class="table-footer">
+        <p>عرض 1-{{ suppliers().length }} من أصل {{ suppliers().length }} مورد</p>
+        <div class="pagination">
+          <button class="page-btn">
+            <span class="material-symbols-outlined">chevron_right</span>
+          </button>
+          <button class="page-btn active">1</button>
+          <button class="page-btn">2</button>
+          <button class="page-btn">3</button>
+          <button class="page-btn">
+            <span class="material-symbols-outlined">chevron_left</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

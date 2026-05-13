@@ -1,0 +1,151 @@
+<div class="register-container">
+  <div class="register-card">
+    <div class="register-header">
+      <div class="logo-container">
+        <span class="material-symbols-outlined logo-icon">person_add</span>
+      </div>
+      <h2 class="register-title">إنشاء حساب جديد</h2>
+      <p class="register-subtitle">سجل للحصول على وصول كامل للنظام</p>
+    </div>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onRegister()" class="register-form">
+      <div class="form-group">
+        <label for="name" class="form-label">الاسم الكامل</label>
+        <div class="input-wrapper">
+          <span class="input-icon material-symbols-outlined">person</span>
+          <input
+            type="text"
+            id="name"
+            formControlName="name"
+            class="form-input"
+            placeholder="أدخل اسمك الكامل"
+            [ngClass]="{ 'input-error': name?.invalid && name?.touched }"
+          />
+        </div>
+        <span class="error-message" *ngIf="name?.invalid && name?.touched">
+          <span *ngIf="name?.errors?.['required']">الاسم مطلوب</span>
+          <span *ngIf="name?.errors?.['minlength']">الاسم يجب أن يكون 3 أحرف على الأقل</span>
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="email" class="form-label">البريد الإلكتروني</label>
+        <div class="input-wrapper">
+          <span class="input-icon material-symbols-outlined">mail</span>
+          <input
+            type="email"
+            id="email"
+            formControlName="email"
+            class="form-input"
+            placeholder="user@example.com"
+            [ngClass]="{ 'input-error': email?.invalid && email?.touched }"
+          />
+        </div>
+        <span class="error-message" *ngIf="email?.invalid && email?.touched">
+          <span *ngIf="email?.errors?.['required']">البريد الإلكتروني مطلوب</span>
+          <span *ngIf="email?.errors?.['email']">البريد الإلكتروني غير صحيح</span>
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="password" class="form-label">كلمة المرور</label>
+        <div class="input-wrapper">
+          <span class="input-icon material-symbols-outlined">lock</span>
+          <input
+            [type]="showPassword ? 'text' : 'password'"
+            id="password"
+            formControlName="password"
+            class="form-input"
+            placeholder="••••••••"
+            [ngClass]="{ 'input-error': password?.invalid && password?.touched }"
+          />
+          <button
+            type="button"
+            class="toggle-password"
+            (click)="togglePasswordVisibility()"
+            aria-label="عرض/إخفاء كلمة المرور"
+          >
+            <span class="material-symbols-outlined" *ngIf="!showPassword">visibility</span>
+            <span class="material-symbols-outlined" *ngIf="showPassword">visibility_off</span>
+          </button>
+        </div>
+
+        <div class="password-strength" *ngIf="password?.value">
+          <div class="strength-bar">
+            <div
+              class="strength-fill"
+              [style.width.%]="getPasswordStrength()"
+              [style.background-color]="getPasswordStrengthColor()"
+            ></div>
+          </div>
+          <span
+            class="strength-text"
+            [style.color]="getPasswordStrengthColor()"
+          >
+            {{ getPasswordStrengthLabel() }}
+          </span>
+        </div>
+
+        <span class="error-message" *ngIf="password?.invalid && password?.touched">
+          <span *ngIf="password?.errors?.['required']">كلمة المرور مطلوبة</span>
+          <span *ngIf="password?.errors?.['minlength']">كلمة المرور يجب أن تكون 6 أحرف على الأقل</span>
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword" class="form-label">تأكيد كلمة المرور</label>
+        <div class="input-wrapper">
+          <span class="input-icon material-symbols-outlined">lock_check</span>
+          <input
+            [type]="showConfirmPassword ? 'text' : 'password'"
+            id="confirmPassword"
+            formControlName="confirmPassword"
+            class="form-input"
+            placeholder="••••••••"
+            [ngClass]="{ 'input-error': confirmPassword?.invalid && confirmPassword?.touched }"
+          />
+          <button
+            type="button"
+            class="toggle-password"
+            (click)="toggleConfirmPasswordVisibility()"
+            aria-label="عرض/إخفاء كلمة المرور"
+          >
+            <span class="material-symbols-outlined" *ngIf="!showConfirmPassword">visibility</span>
+            <span class="material-symbols-outlined" *ngIf="showConfirmPassword">visibility_off</span>
+          </button>
+        </div>
+        <span class="error-message" *ngIf="confirmPassword?.invalid && confirmPassword?.touched">
+          <span *ngIf="confirmPassword?.errors?.['required']">تأكيد كلمة المرور مطلوب</span>
+          <span *ngIf="confirmPassword?.errors?.['mismatch']">كلمات المرور غير متطابقة</span>
+        </span>
+      </div>
+
+      <button
+        type="submit"
+        class="register-button"
+        [disabled]="registerForm.invalid || loading()"
+        [class.loading]="loading()"
+      >
+        <span *ngIf="loading()" class="loading-spinner"></span>
+        <span class="button-text">
+          {{ loading() ? 'جاري إنشاء الحساب...' : 'إنشاء حساب' }}
+        </span>
+      </button>
+
+      <div class="success-alert" *ngIf="success()">
+        <span class="material-symbols-outlined success-icon">check_circle</span>
+        <span class="success-text">{{ success() }}</span>
+      </div>
+
+      <div class="error-alert" *ngIf="error()">
+        <span class="material-symbols-outlined error-icon">error</span>
+        <span class="error-text">{{ error() }}</span>
+      </div>
+    </form>
+
+    <div class="register-footer">
+      <p class="footer-text">لديك حساب بالفعل؟</p>
+      <a routerLink="/login" class="login-link">تسجيل الدخول</a>
+    </div>
+  </div>
+</div>

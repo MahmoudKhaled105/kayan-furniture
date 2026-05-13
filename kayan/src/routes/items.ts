@@ -143,7 +143,7 @@ export function registerItemRoutes(router: Router) {
 		const body = await readBody(req) as any;
 		const fields: string[] = [];
 		const values: unknown[] = [];
-		const allowed = ['name', 'category', 'description', 'purchase_value', 'sale_price', 'status'];
+		const allowed = ['name', 'category', 'description', 'purchase_value', 'sale_price', 'status', 'location_id', 'shipment_id'];
 
 		for (const key of allowed) {
 			if (key in body) {
@@ -278,37 +278,6 @@ export function registerItemRoutes(router: Router) {
 		`).bind(id).all();
 
 		return jsonResponse(results);
-	});
-
-	// GET /api/v1/inventory/stock-value
-	router.get('api/v1/inventory/stock-value', async (_req, env, _params, query) => {
-		const asOfDate = query.as_of_date || today();
-		let locationFilter = '';
-		const bindings: unknown[] = [];
-
-		if (query.location_id) {
-			locationFilter = ' AND i.location_id = ?';
-			bindings.push(parseInt(query.location_id));
-		}
-
-		// For stock value, we consider items that are NOT sold
-		const { results } = await env.DB.prepare(`
-			SELECT i.location_id, l.name AS location_name,
-				   SUM(i.purchase_value) AS value, COUNT(*) AS item_count
-			FROM item i
-			JOIN location l ON l.id = i.location_id
-			WHERE i.status != 'sold'${locationFilter}
-			GROUP BY i.location_id
-			ORDER BY i.location_id
-		`).bind(...bindings).all();
-
-		const totalValue = (results as any[]).reduce((sum, r) => sum + (r.value || 0), 0);
-
-		return jsonResponse({
-			as_of_date: asOfDate,
-			total_unsold_value: Math.round(totalValue * 100) / 100,
-			by_location: results,
-		});
 	});
 
 	// DELETE /api/v1/items/:id

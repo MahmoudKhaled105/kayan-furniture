@@ -1,0 +1,15 @@
+<div class="main-shell" [class.no-nav]="!showNav">
+  @if (showNav) {
+    <app-side-nav></app-side-nav>
+  }
+
+  <main class="content-wrapper">
+    @if (showNav) {
+      <app-top-nav></app-top-nav>
+    }
+    
+    <div class="content-area" [class.no-nav]="!showNav">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>

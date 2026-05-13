@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+
+<html class="dark" dir="rtl" lang="ar"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&amp;family=Manrope:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "tertiary-container": "#a9aac5",
+              "surface-tint": "#e7c268",
+              "inverse-surface": "#e5e2e1",
+              "tertiary-fixed": "#e0e0fc",
+              "outline": "#9c8e82",
+              "surface": "#131313",
+              "on-secondary-container": "#ffcfad",
+              "inverse-on-surface": "#313030",
+              "surface-container": "#20201f",
+              "on-error-container": "#ffdad6",
+              "on-secondary-fixed": "#2f1400",
+              "primary": "#e8c46a",
+              "surface-variant": "#353535",
+              "on-primary-fixed": "#251a00",
+              "on-tertiary-container": "#3d3f55",
+              "on-background": "#e5e2e1",
+              "secondary": "#ffb781",
+              "on-secondary-fixed-variant": "#6f3800",
+              "inverse-primary": "#765a05",
+              "surface-container-lowest": "#0e0e0e",
+              "on-surface": "#e5e2e1",
+              "error-container": "#93000a",
+              "secondary-fixed": "#ffdcc4",
+              "tertiary-fixed-dim": "#c4c4df",
+              "on-tertiary": "#2d2f44",
+              "primary-fixed-dim": "#e7c268",
+              "secondary-fixed-dim": "#ffb781",
+              "surface-bright": "#393939",
+              "error": "#ffb4ab",
+              "background": "#131313",
+              "primary-container": "#cba851",
+              "on-secondary": "#4e2600",
+              "on-primary-fixed-variant": "#5a4400",
+              "surface-container-highest": "#353535",
+              "outline-variant": "#50453b",
+              "secondary-container": "#924c00",
+              "on-error": "#690005",
+              "tertiary": "#c5c5e1",
+              "primary-fixed": "#ffdf96",
+              "on-tertiary-fixed-variant": "#43455b",
+              "on-primary-container": "#523d00",
+              "on-surface-variant": "#d4c4b7",
+              "surface-dim": "#131313",
+              "on-tertiary-fixed": "#181a2e",
+              "surface-container-low": "#1c1b1b",
+              "on-primary": "#3e2e00",
+              "surface-container-high": "#2a2a2a"
+            },
+            fontFamily: {
+              "headline": ["IBM Plex Sans Arabic", "Manrope"],
+              "body": ["IBM Plex Sans Arabic", "Inter"],
+              "label": ["Manrope"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1.5rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      body {
+        background-color: #131313;
+        color: #e5e2e1;
+        font-family: 'IBM Plex Sans Arabic', sans-serif;
+      }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-screen w-[280px] z-50 bg-[#0e0e0e] flex flex-col py-10 px-6 space-y-8">
+<div class="flex flex-col items-center mb-4">
+<div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary to-primary-container flex items-center justify-center mb-4 shadow-lg overflow-hidden">
+<img alt="شعار كشك" class="w-full h-full object-cover" data-alt="minimalist luxury brand logo for a high-end furniture workshop featuring geometric gold lines on a dark charcoal background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBVURf7D6xqrBxp6VZOlQAZGYfIlnPwwfH9X8SWkkD-FM0RMfTyKtfk6Ml0W1K5tTuHTF6W2BQ8LWkb-xTxo13Xsnvf7tAxUvrls8EHgXZSgAq1qkMvr2axAHFFeJry1U8esRh_NuzC8OFvEclIOfUPd5buHDw6yf1gN8zQ05IP0LvxF_F6t2ywnmiiPoWZJ5QBshcfwq_XxMIbvcuGR-3fZtnz6hu5TU4KPVaguzrd-gO5jp9hZwMs4F11kGmYm-D1u7KNI-tQjUc"/>
+</div>
+<h1 class="text-[#e8c46a] font-black text-3xl mb-2 tracking-tighter">كشك</h1>
+<p class="text-gray-500 text-sm font-medium">إدارة الموبيليا</p>
+</div>
+<nav class="flex-1 space-y-2">
+<a class="flex items-center space-x-4 space-x-reverse px-4 py-3 text-gray-500 hover:text-gray-200 hover:bg-[#2a2a2a] rounded-xl transition-all active:translate-x-1 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-medium">الزتونة</span>
+</a>
+<a class="flex items-center space-x-4 space-x-reverse px-4 py-3 text-gray-500 hover:text-gray-200 hover:bg-[#2a2a2a] rounded-xl transition-all active:translate-x-1 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-medium">الموردين</span>
+</a>
+<a class="flex items-center space-x-4 space-x-reverse px-4 py-3 text-gray-500 hover:text-gray-200 hover:bg-[#2a2a2a] rounded-xl transition-all active:translate-x-1 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="font-medium">الجرد</span>
+</a>
+<a class="flex items-center space-x-4 space-x-reverse px-4 py-3 text-[#e8c46a] font-bold border-r-4 border-[#e8c46a] bg-gradient-to-l from-[#e8c46a]/10 to-transparent transition-all active:translate-x-1 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+<span class="font-medium">المبيعات</span>
+</a>
+<a class="flex items-center space-x-4 space-x-reverse px-4 py-3 text-gray-500 hover:text-gray-200 hover:bg-[#2a2a2a] rounded-xl transition-all active:translate-x-1 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span class="font-medium">الحسابات</span>
+</a>
+</nav>
+<button class="w-full py-4 px-6 bg-gradient-to-r from-primary to-primary-container text-on-primary font-bold rounded-2xl flex items-center justify-center space-x-2 space-x-reverse shadow-xl active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-xl" data-icon="add_circle">add_circle</span>
+<span>إضافة قطعة جديدة</span>
+</button>
+<div class="pt-6 border-t border-[#2a2a2a]">
+<a class="flex items-center space-x-4 space-x-reverse px-4 py-3 text-gray-500 hover:text-error rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="font-medium">تسجيل خروج</span>
+</a>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="mr-[280px] min-h-screen relative">
+<!-- TopAppBar -->
+<header class="fixed top-0 right-0 w-[calc(100%-280px)] z-40 bg-[#131313]/60 backdrop-blur-xl flex justify-between items-center px-8 h-20 shadow-[0_30px_30px_rgba(0,0,0,0.06)]">
+<div class="flex items-center space-x-6 space-x-reverse">
+<h2 class="font-['IBM_Plex_Sans_Arabic'] font-bold text-2xl text-[#e8c46a]">دفتر الطلبات</h2>
+<div class="relative w-80">
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-gray-500" data-icon="search">search</span>
+<input class="w-full pr-12 pl-4 py-2.5 bg-surface-container-lowest border border-outline-variant/15 rounded-xl text-on-surface focus:outline-none focus:border-primary/50 transition-all placeholder:text-gray-600" placeholder="تدور على أوردر؟" type="text"/>
+</div>
+</div>
+<div class="flex items-center space-x-4 space-x-reverse">
+<button class="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-[#e8c46a] transition-colors active:scale-95">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-[#e8c46a] transition-colors active:scale-95">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<div class="w-10 h-10 rounded-full border-2 border-primary/20 p-0.5 overflow-hidden">
+<img alt="صورة المدير" class="w-full h-full object-cover rounded-full" data-alt="portrait of a confident middle-aged artisan woodworker in a stylish studio with soft warm cinematic lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDx3CIJlTNQYeT031n9GQwfpbWQVH9ZaCxBRciNTePolifWzB3BFKBjgaD-spcgF7d1jGYqFIdSlfM1JgpieortAvcFKDfbnpF3mN73HGaENX7ymDH2Q7xYB1TI1u1k7TLfRTLquZBWqAdLgGy0RQc__DLHPqV0aelSc93HZwaimd6wQNnNxv1AizUQPsX_rMgCnXCBv1i22gzrivosVif1MxyZI88mMrKacbQH8adR8nJVJvlx8g8WhqHjWyH1iz1nKgBWRV-r_9s"/>
+</div>
+</div>
+</header>
+<!-- Content Canvas -->
+<div class="pt-28 pb-12 px-8">
+<!-- Filters & Summary Bento -->
+<div class="grid grid-cols-12 gap-6 mb-8">
+<!-- Gallery Filter -->
+<div class="col-span-8 bg-surface-container-high rounded-2xl p-6 flex items-center justify-between">
+<div class="flex items-center space-x-8 space-x-reverse">
+<div class="space-y-1">
+<label class="block text-xs text-gray-500 font-bold uppercase tracking-wider">المعرض</label>
+<select class="bg-transparent text-primary font-bold text-lg border-none focus:ring-0 p-0 cursor-pointer">
+<option>كل المعارض</option>
+<option>فرع دمياط الرئيسي</option>
+<option>معرض القاهرة - التجمع</option>
+<option>مخزن الورشة</option>
+</select>
+</div>
+<div class="h-10 w-px bg-outline-variant/20"></div>
+<div class="space-y-1">
+<label class="block text-xs text-gray-500 font-bold uppercase tracking-wider">تاريخ الأوردر</label>
+<div class="flex items-center space-x-2 space-x-reverse text-on-surface font-medium">
+<span class="material-symbols-outlined text-sm text-primary" data-icon="calendar_today">calendar_today</span>
+<span>آخر 30 يوم</span>
+</div>
+</div>
+</div>
+<div class="flex space-x-2 space-x-reverse">
+<button class="px-4 py-2 rounded-xl bg-surface-container-lowest text-on-surface text-sm font-medium hover:bg-surface-variant transition-colors border border-outline-variant/10">فلترة متقدمة</button>
+<button class="px-4 py-2 rounded-xl bg-primary/10 text-primary text-sm font-bold hover:bg-primary/20 transition-colors">تصدير اكسيل</button>
+</div>
+</div>
+<!-- Status Fast-Links -->
+<div class="col-span-4 bg-surface-container-high rounded-2xl p-6 flex justify-around items-center">
+<div class="text-center group cursor-pointer">
+<div class="text-primary font-bold text-2xl mb-1 group-hover:scale-110 transition-transform">24</div>
+<div class="text-xs text-gray-500">شغال</div>
+</div>
+<div class="text-center group cursor-pointer">
+<div class="text-secondary font-bold text-2xl mb-1 group-hover:scale-110 transition-transform">8</div>
+<div class="text-xs text-gray-500">حجز</div>
+</div>
+<div class="text-center group cursor-pointer">
+<div class="text-green-400 font-bold text-2xl mb-1 group-hover:scale-110 transition-transform">152</div>
+<div class="text-xs text-gray-500">خلصان</div>
+</div>
+</div>
+</div>
+<!-- Orders Table Container -->
+<div class="bg-surface-container rounded-2xl overflow-hidden shadow-2xl">
+<div class="overflow-x-auto">
+<table class="w-full text-right border-collapse">
+<thead>
+<tr class="bg-surface-container-high/50 border-b border-outline-variant/10">
+<th class="px-6 py-5 text-gray-400 font-bold text-xs uppercase tracking-widest">التاريخ</th>
+<th class="px-6 py-5 text-gray-400 font-bold text-xs uppercase tracking-widest">العميل</th>
+<th class="px-6 py-5 text-gray-400 font-bold text-xs uppercase tracking-widest">الحاجة اللي طلبها</th>
+<th class="px-6 py-5 text-gray-400 font-bold text-xs uppercase tracking-widest">المعرض</th>
+<th class="px-6 py-5 text-gray-400 font-bold text-xs uppercase tracking-widest">الحساب</th>
+<th class="px-6 py-5 text-gray-400 font-bold text-xs uppercase tracking-widest">الحالة</th>
+<th class="px-6 py-5"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/5">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-highest/20 transition-colors">
+<td class="px-6 py-6">
+<div class="text-on-surface font-medium">12 أكتوبر 2023</div>
+<div class="text-[10px] text-gray-500 font-mono tracking-tighter">#ORD-8821</div>
+</td>
+<td class="px-6 py-6">
+<div class="flex items-center space-x-3 space-x-reverse">
+<div class="w-10 h-10 rounded-full bg-gradient-to-tr from-surface-container-highest to-surface-variant flex items-center justify-center text-primary font-bold text-sm">أ.ش</div>
+<div>
+<div class="text-on-surface font-bold">أحمد الشناوي</div>
+<div class="text-xs text-gray-500">01012345678</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-6">
+<div class="text-on-surface font-medium">غرفة نوم "كلاسيك" + انتريه</div>
+<div class="flex items-center mt-1 space-x-1 space-x-reverse">
+<span class="inline-block w-2 h-2 rounded-full bg-primary-container"></span>
+<span class="text-[10px] text-gray-500">خشب زان أحمر</span>
+</div>
+</td>
+<td class="px-6 py-6">
+<span class="px-3 py-1 rounded-full bg-surface-container-lowest text-on-surface-variant text-xs font-medium">فرع القاهرة</span>
+</td>
+<td class="px-6 py-6">
+<div class="space-y-1">
+<div class="text-primary font-bold text-sm">85,000 ج.م</div>
+<div class="flex items-center justify-between text-[10px]">
+<span class="text-green-500">دفع: 60k</span>
+<span class="text-error">باقي: 25k</span>
+</div>
+<div class="w-full h-1 bg-surface-container-lowest rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[70%]"></div>
+</div>
+</div>
+</td>
+<td class="px-6 py-6">
+<span class="inline-flex items-center px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold border border-primary/20">
+<span class="w-1.5 h-1.5 rounded-full bg-primary ml-2"></span>
+                                        شغال
+                                    </span>
+</td>
+<td class="px-6 py-6 text-left">
+<button class="text-gray-500 hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-highest/20 transition-colors">
+<td class="px-6 py-6">
+<div class="text-on-surface font-medium">10 أكتوبر 2023</div>
+<div class="text-[10px] text-gray-500 font-mono tracking-tighter">#ORD-8819</div>
+</td>
+<td class="px-6 py-6">
+<div class="flex items-center space-x-3 space-x-reverse">
+<div class="w-10 h-10 rounded-full bg-gradient-to-tr from-surface-container-highest to-surface-variant flex items-center justify-center text-secondary font-bold text-sm">م.ن</div>
+<div>
+<div class="text-on-surface font-bold">منى نصر</div>
+<div class="text-xs text-gray-500">01298765432</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-6">
+<div class="text-on-surface font-medium">ترابيزة سفرة + 6 كراسي</div>
+<div class="flex items-center mt-1 space-x-1 space-x-reverse">
+<span class="inline-block w-2 h-2 rounded-full bg-secondary"></span>
+<span class="text-[10px] text-gray-500">دهان أستر</span>
+</div>
+</td>
+<td class="px-6 py-6">
+<span class="px-3 py-1 rounded-full bg-surface-container-lowest text-on-surface-variant text-xs font-medium">فرع دمياط</span>
+</td>
+<td class="px-6 py-6">
+<div class="space-y-1">
+<div class="text-primary font-bold text-sm">32,500 ج.م</div>
+<div class="flex items-center justify-between text-[10px]">
+<span class="text-green-500">دفع: 10k</span>
+<span class="text-error">باقي: 22.5k</span>
+</div>
+<div class="w-full h-1 bg-surface-container-lowest rounded-full overflow-hidden">
+<div class="h-full bg-secondary w-[30%]"></div>
+</div>
+</div>
+</td>
+<td class="px-6 py-6">
+<span class="inline-flex items-center px-3 py-1 rounded-full bg-secondary/10 text-secondary text-xs font-bold border border-secondary/20">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary ml-2"></span>
+                                        حجز/نواقص
+                                    </span>
+</td>
+<td class="px-6 py-6 text-left">
+<button class="text-gray-500 hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-highest/20 transition-colors">
+<td class="px-6 py-6">
+<div class="text-on-surface font-medium">08 أكتوبر 2023</div>
+<div class="text-[10px] text-gray-500 font-mono tracking-tighter">#ORD-8815</div>
+</td>
+<td class="px-6 py-6">
+<div class="flex items-center space-x-3 space-x-reverse">
+<div class="w-10 h-10 rounded-full bg-gradient-to-tr from-surface-container-highest to-surface-variant flex items-center justify-center text-green-400 font-bold text-sm">هـ.م</div>
+<div>
+<div class="text-on-surface font-bold">هشام محمود</div>
+<div class="text-xs text-gray-500">01144556677</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-6">
+<div class="text-on-surface font-medium">مكتب دراسة مودرن</div>
+<div class="flex items-center mt-1 space-x-1 space-x-reverse">
+<span class="inline-block w-2 h-2 rounded-full bg-green-500"></span>
+<span class="text-[10px] text-gray-500">خشب MDF أسباني</span>
+</div>
+</td>
+<td class="px-6 py-6">
+<span class="px-3 py-1 rounded-full bg-surface-container-lowest text-on-surface-variant text-xs font-medium">فرع القاهرة</span>
+</td>
+<td class="px-6 py-6">
+<div class="space-y-1">
+<div class="text-primary font-bold text-sm">12,000 ج.م</div>
+<div class="flex items-center justify-between text-[10px]">
+<span class="text-green-500">دفع: 12k</span>
+<span class="text-gray-500">باقي: 0</span>
+</div>
+<div class="w-full h-1 bg-surface-container-lowest rounded-full overflow-hidden">
+<div class="h-full bg-green-500 w-[100%]"></div>
+</div>
+</div>
+</td>
+<td class="px-6 py-6">
+<span class="inline-flex items-center px-3 py-1 rounded-full bg-green-500/10 text-green-500 text-xs font-bold border border-green-500/20">
+<span class="w-1.5 h-1.5 rounded-full bg-green-500 ml-2"></span>
+                                        خلصان
+                                    </span>
+</td>
+<td class="px-6 py-6 text-left">
+<button class="text-gray-500 hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-highest/20 transition-colors">
+<td class="px-6 py-6">
+<div class="text-on-surface font-medium">05 أكتوبر 2023</div>
+<div class="text-[10px] text-gray-500 font-mono tracking-tighter">#ORD-8812</div>
+</td>
+<td class="px-6 py-6">
+<div class="flex items-center space-x-3 space-x-reverse">
+<div class="w-10 h-10 rounded-full bg-gradient-to-tr from-surface-container-highest to-surface-variant flex items-center justify-center text-error font-bold text-sm">ي.ع</div>
+<div>
+<div class="text-on-surface font-bold">ياسر علاء</div>
+<div class="text-xs text-gray-500">01566778899</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-6">
+<div class="text-on-surface font-medium">ركنة حرف L رمادي</div>
+<div class="flex items-center mt-1 space-x-1 space-x-reverse">
+<span class="inline-block w-2 h-2 rounded-full bg-error"></span>
+<span class="text-[10px] text-gray-500">قماش جلد مقلوب</span>
+</div>
+</td>
+<td class="px-6 py-6">
+<span class="px-3 py-1 rounded-full bg-surface-container-lowest text-on-surface-variant text-xs font-medium">فرع دمياط</span>
+</td>
+<td class="px-6 py-6">
+<div class="space-y-1 opacity-50">
+<div class="text-on-surface-variant font-bold text-sm">22,000 ج.م</div>
+<div class="flex items-center justify-between text-[10px]">
+<span class="text-error">ملغي</span>
+</div>
+</div>
+</td>
+<td class="px-6 py-6">
+<span class="inline-flex items-center px-3 py-1 rounded-full bg-error/10 text-error text-xs font-bold border border-error/20">
+<span class="w-1.5 h-1.5 rounded-full bg-error ml-2"></span>
+                                        ملغي
+                                    </span>
+</td>
+<td class="px-6 py-6 text-left">
+<button class="text-gray-500 hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination / Footer -->
+<div class="px-8 py-5 flex items-center justify-between bg-surface-container-high/30">
+<div class="text-xs text-gray-500 font-medium">بيعرض 10 أوردرات من أصل 245</div>
+<div class="flex space-x-2 space-x-reverse">
+<button class="w-8 h-8 rounded-lg bg-surface-container-lowest flex items-center justify-center text-gray-400 hover:text-primary transition-all border border-outline-variant/10">
+<span class="material-symbols-outlined text-sm" data-icon="chevron_right">chevron_right</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-primary text-on-primary text-xs font-bold shadow-lg shadow-primary/20">1</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-lowest text-gray-400 text-xs font-bold hover:text-primary transition-all border border-outline-variant/10">2</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-lowest text-gray-400 text-xs font-bold hover:text-primary transition-all border border-outline-variant/10">3</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-lowest flex items-center justify-center text-gray-400 hover:text-primary transition-all border border-outline-variant/10">
+<span class="material-symbols-outlined text-sm" data-icon="chevron_left">chevron_left</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Dashboard Style Bottom Cards -->
+<div class="mt-8 grid grid-cols-4 gap-6">
+<div class="bg-surface-container-high p-6 rounded-2xl relative overflow-hidden group">
+<div class="relative z-10">
+<div class="text-gray-500 text-xs font-bold mb-2 uppercase tracking-widest">إجمالي مبيعات الشهر</div>
+<div class="text-primary font-black text-3xl mb-1 tracking-tighter">420,500 <span class="text-sm font-normal text-gray-500">ج.م</span></div>
+<div class="flex items-center text-green-400 text-xs font-bold">
+<span class="material-symbols-outlined text-sm mr-1" data-icon="trending_up">trending_up</span>
+<span>12% عن الشهر اللي فات</span>
+</div>
+</div>
+<div class="absolute -bottom-4 -left-4 opacity-5 group-hover:scale-110 transition-transform duration-500">
+<span class="material-symbols-outlined text-8xl" data-icon="payments">payments</span>
+</div>
+</div>
+<div class="bg-surface-container-high p-6 rounded-2xl relative overflow-hidden group">
+<div class="relative z-10">
+<div class="text-gray-500 text-xs font-bold mb-2 uppercase tracking-widest">تحصيل النهاردة</div>
+<div class="text-secondary font-black text-3xl mb-1 tracking-tighter">15,200 <span class="text-sm font-normal text-gray-500">ج.م</span></div>
+<div class="text-gray-400 text-xs font-medium">من 3 عملاء مختلفين</div>
+</div>
+<div class="absolute -bottom-4 -left-4 opacity-5 group-hover:scale-110 transition-transform duration-500">
+<span class="material-symbols-outlined text-8xl" data-icon="receipt_long">receipt_long</span>
+</div>
+</div>
+<div class="bg-surface-container-high p-6 rounded-2xl relative overflow-hidden group">
+<div class="relative z-10">
+<div class="text-gray-500 text-xs font-bold mb-2 uppercase tracking-widest">أوردرات متأخرة</div>
+<div class="text-error font-black text-3xl mb-1 tracking-tighter">5</div>
+<div class="text-error/70 text-xs font-medium">محتاجة متابعة مع الورشة</div>
+</div>
+<div class="absolute -bottom-4 -left-4 opacity-5 group-hover:scale-110 transition-transform duration-500">
+<span class="material-symbols-outlined text-8xl" data-icon="timer_off">timer_off</span>
+</div>
+</div>
+<div class="bg-surface-container-high p-6 rounded-2xl relative overflow-hidden group">
+<div class="relative z-10">
+<div class="text-gray-500 text-xs font-bold mb-2 uppercase tracking-widest">نسبة التسليمات</div>
+<div class="text-green-400 font-black text-3xl mb-1 tracking-tighter">92%</div>
+<div class="text-gray-400 text-xs font-medium">زيادة عن المتوسط بـ 4%</div>
+</div>
+<div class="absolute -bottom-4 -left-4 opacity-5 group-hover:scale-110 transition-transform duration-500">
+<span class="material-symbols-outlined text-8xl" data-icon="local_shipping">local_shipping</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+
+<html class="dark" dir="rtl" lang="ar"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&amp;family=Inter:wght@400;500;600&amp;family=Manrope:wght@400;500;600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "inverse-primary": "#765a05",
+              "on-secondary-fixed-variant": "#6f3800",
+              "surface-container-lowest": "#0e0e0e",
+              "on-surface": "#e5e2e1",
+              "error-container": "#93000a",
+              "tertiary-fixed-dim": "#c4c4df",
+              "on-tertiary": "#2d2f44",
+              "secondary-fixed": "#ffdcc4",
+              "primary-fixed-dim": "#e7c268",
+              "surface-tint": "#e7c268",
+              "inverse-surface": "#e5e2e1",
+              "tertiary-fixed": "#e0e0fc",
+              "outline": "#9c8e82",
+              "tertiary-container": "#a9aac5",
+              "on-error-container": "#ffdad6",
+              "surface": "#131313",
+              "on-secondary-container": "#ffcfad",
+              "inverse-on-surface": "#313030",
+              "surface-container": "#20201f",
+              "primary": "#e8c46a",
+              "surface-variant": "#353535",
+              "on-primary-fixed": "#251a00",
+              "on-secondary-fixed": "#2f1400",
+              "on-background": "#e5e2e1",
+              "secondary": "#ffb781",
+              "on-tertiary-container": "#3d3f55",
+              "on-tertiary-fixed-variant": "#43455b",
+              "on-primary-container": "#523d00",
+              "surface-container-low": "#1c1b1b",
+              "on-primary": "#3e2e00",
+              "on-surface-variant": "#d4c4b7",
+              "surface-dim": "#131313",
+              "on-tertiary-fixed": "#181a2e",
+              "surface-bright": "#393939",
+              "error": "#ffb4ab",
+              "background": "#131313",
+              "surface-container-highest": "#353535",
+              "outline-variant": "#50453b",
+              "tertiary": "#c5c5e1",
+              "primary-fixed": "#ffdf96",
+              "secondary-container": "#924c00",
+              "on-error": "#690005"
+            },
+            fontFamily: {
+              "headline": ["IBM Plex Sans Arabic", "sans-serif"],
+              "body": ["Inter", "sans-serif"],
+              "label": ["Manrope", "sans-serif"],
+              "arabic": ["IBM Plex Sans Arabic", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1.5rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        body {
+            background-color: #131313;
+            color: #e5e2e1;
+            font-family: 'IBM Plex Sans Arabic', sans-serif;
+        }
+        .glass-nav {
+            background: rgba(19, 19, 19, 0.6);
+            backdrop-filter: blur(20px);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen overflow-x-hidden">
+<!-- SideNavBar (Authority: JSON & Design System) -->
+<aside class="h-screen w-72 fixed right-0 top-0 flex flex-col bg-[#0e0e0e] border-l border-white/5 z-50">
+<div class="flex flex-col h-full py-8 space-y-2">
+<!-- Header Section -->
+<div class="px-8 mb-10">
+<div class="flex items-center gap-3 mb-4">
+<div class="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-primary-container flex items-center justify-center overflow-hidden">
+<img alt="شعار كشك" data-alt="minimalist luxury furniture brand logo icon in gold and charcoal tones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC6VlfSKq4Jz56f1D9JR-yIMkJ9GBh4js9xjoExCEAkEBQrKS_eAyGXjaKQoyYwD8yxirRkRi7DTs9KivC0lVhOTLnnid2qmP2xmOKcxOvUT3-a6UIQ1u9dJn54ozd5icptyUNOyTZRpSX3QD5TWzl1EuG53eqwe4AfulypGCZ1sDYdeEqhkA_r8loLCKw7lBl9klosD7PRu8x2tzBzi-oJWr5Zx42_ZGk_lQnY54iPKzNqQ8PLHy5IDoqPu5Ux1RFm8m9gpb6zvoI"/>
+</div>
+<div>
+<h1 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#e8c46a] to-[#cba851] tracking-tight font-headline">كشك للأثاث</h1>
+<p class="text-white/40 text-xs font-arabic">لوحة التحكم الفاخرة</p>
+</div>
+</div>
+</div>
+<!-- Navigation Tabs -->
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-4 text-white/40 hover:text-white/80 px-6 py-4 hover:bg-[#2a2a2a] transition-all duration-300 group" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-arabic font-medium">الزتونة</span>
+</a>
+<a class="flex items-center gap-4 text-white/40 hover:text-white/80 px-6 py-4 hover:bg-[#2a2a2a] transition-all duration-300 group" href="#">
+<span class="material-symbols-outlined" data-icon="local_shipping">local_shipping</span>
+<span class="font-arabic font-medium">الموردين</span>
+</a>
+<a class="flex items-center gap-4 text-white/40 hover:text-white/80 px-6 py-4 hover:bg-[#2a2a2a] transition-all duration-300 group" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="font-arabic font-medium">الجرد</span>
+</a>
+<a class="flex items-center gap-4 text-white/40 hover:text-white/80 px-6 py-4 hover:bg-[#2a2a2a] transition-all duration-300 group" href="#">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+<span class="font-arabic font-medium">المبيعات</span>
+</a>
+<!-- Active Tab: الحسابات (Account/People Logic) -->
+<a class="flex items-center gap-4 bg-gradient-to-l from-[#e8c46a]/10 to-transparent text-[#e8c46a] border-l-4 border-[#e8c46a] px-6 py-4 group" href="#">
+<span class="material-symbols-outlined" data-icon="account_balance_wallet" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+<span class="font-arabic font-bold">الحسابات</span>
+</a>
+</nav>
+<!-- Footer Section -->
+<div class="mt-auto px-6 space-y-1 border-t border-white/5 pt-6">
+<a class="flex items-center gap-4 text-white/40 hover:text-white/80 px-4 py-3 hover:bg-[#2a2a2a] transition-all duration-300 rounded-xl" href="#">
+<span class="material-symbols-outlined" data-icon="support_agent">support_agent</span>
+<span class="font-arabic font-medium">الدعم</span>
+</a>
+<a class="flex items-center gap-4 text-error/60 hover:text-error px-4 py-3 hover:bg-error/5 transition-all duration-300 rounded-xl" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="font-arabic font-medium">خروج</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="pr-72 min-h-screen">
+<!-- TopAppBar (Authority: JSON & Design System) -->
+<header class="fixed top-0 right-72 left-0 z-40 bg-[#131313]/60 backdrop-blur-xl flex justify-between items-center px-10 py-5">
+<div class="flex flex-col">
+<h2 class="font-headline font-bold text-2xl text-primary tracking-tight">سجل الرجالة</h2>
+<p class="text-on-surface-variant/60 text-sm font-arabic">مين شغال ومين مأنتخ</p>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative group">
+<span class="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant/40 material-symbols-outlined" data-icon="search">search</span>
+<input class="bg-surface-container-lowest border border-outline-variant/15 rounded-full px-12 py-2.5 w-64 text-sm focus:ring-1 focus:ring-primary/50 focus:border-primary/50 transition-all font-arabic" placeholder="دور على حد..." type="text"/>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2.5 rounded-full hover:bg-white/5 transition-colors text-white/70 active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2.5 rounded-full hover:bg-white/5 transition-colors text-white/70 active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+</div>
+<div class="h-10 w-px bg-white/10 mx-2"></div>
+<div class="flex items-center gap-3 bg-surface-container-high px-4 py-2 rounded-full border border-outline-variant/10">
+<div class="text-right">
+<p class="text-xs font-bold text-white leading-none">أحمد كشك</p>
+<p class="text-[10px] text-primary/70 font-arabic">المدير العام</p>
+</div>
+<img alt="صورة المدير" class="w-8 h-8 rounded-full object-cover border border-primary/20" data-alt="portrait of a professional middle-aged man in a dark tailored suit, luxury studio lighting, high-end atmosphere" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSyfGkmNrjmJ5DSSwohpn2gMaFeNvXVRgPSGvMIdgjCYX5viY1SgwdUh3v8FR0PQKftsG0Lnh2EGr7erxVjUNno9WZBQ2aFCrb7Xyw-34tWb0D0M2L8euhOltPsD58oZmfuDVo2zESQU9u2euYQsSEP6iTrsq8DAE86WySeYONMBgWKzo36ZiGPTSppCzmUOjy92zqXZsoizJE3s7RJr6RQ9bh0UO71-jMh33SXGTYTUUmU158q3ucm4jkD1VQmfXl_PSjLMDszLE"/>
+</div>
+</div>
+</header>
+<!-- Content Area -->
+<section class="pt-32 px-10 pb-12">
+<!-- Action Bar & Chips -->
+<div class="flex flex-wrap items-center justify-between gap-6 mb-10">
+<div class="flex items-center gap-3 overflow-x-auto pb-2 scrollbar-hide">
+<button class="bg-primary text-on-primary px-6 py-2.5 rounded-full font-bold font-arabic text-sm active:scale-95 transition-all">الكل</button>
+<button class="bg-surface-container-high text-on-surface-variant px-6 py-2.5 rounded-full font-medium font-arabic text-sm hover:bg-surface-container-highest transition-all">صنايعية</button>
+<button class="bg-surface-container-high text-on-surface-variant px-6 py-2.5 rounded-full font-medium font-arabic text-sm hover:bg-surface-container-highest transition-all">إداريين</button>
+<button class="bg-surface-container-high text-on-surface-variant px-6 py-2.5 rounded-full font-medium font-arabic text-sm hover:bg-surface-container-highest transition-all">مناديب</button>
+<div class="w-px h-6 bg-white/10 mx-2"></div>
+<button class="bg-surface-container-high text-on-surface-variant px-6 py-2.5 rounded-full font-medium font-arabic text-sm hover:bg-surface-container-highest transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="filter_list">filter_list</span>
+                        جاليري أ
+                    </button>
+<button class="bg-surface-container-high text-on-surface-variant px-6 py-2.5 rounded-full font-medium font-arabic text-sm hover:bg-surface-container-highest transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="filter_list">filter_list</span>
+                        المخزن
+                    </button>
+</div>
+<button class="bg-gradient-to-r from-primary to-primary-container text-on-primary px-8 py-4 rounded-2xl font-bold font-arabic text-base shadow-[0_10px_20px_-5px_rgba(232,196,106,0.3)] flex items-center gap-3 active:scale-95 transition-all">
+<span class="material-symbols-outlined" data-icon="person_add">person_add</span>
+                    إضافة حد جديد
+                </button>
+</div>
+<!-- Bento Table Layout -->
+<div class="bg-surface-container-low rounded-2xl overflow-hidden shadow-2xl border border-outline-variant/5">
+<div class="overflow-x-auto">
+<table class="w-full text-right border-collapse">
+<thead>
+<tr class="bg-surface-container-high/50 border-b border-white/5">
+<th class="px-8 py-5 text-on-surface-variant font-bold font-arabic text-sm">الاسم</th>
+<th class="px-8 py-5 text-on-surface-variant font-bold font-arabic text-sm">الشغلانة</th>
+<th class="px-8 py-5 text-on-surface-variant font-bold font-arabic text-sm">نوع التوظيف</th>
+<th class="px-8 py-5 text-on-surface-variant font-bold font-arabic text-sm">المكان</th>
+<th class="px-8 py-5 text-on-surface-variant font-bold font-arabic text-sm">طريقة القبض</th>
+<th class="px-8 py-5 text-on-surface-variant font-bold font-arabic text-sm text-left">ليه كام</th>
+<th class="px-8 py-5"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-white/5">
+<!-- Row 1 -->
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="px-8 py-6">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-2xl bg-surface-container-highest overflow-hidden relative">
+<img alt="رجل كشك" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" data-alt="middle eastern artisan worker, workshop background, authentic leather apron, dramatic warm lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA06ZL45SElh1DOEwYe7I3mf3MIlgUumhmqA_cPeVL5ulFuZLfcf3ZRCREZDaGtDGG1DqcEHcQWX6ukJ82ddOXcSK0q-BAynfbaYtDn81SL-avLpgmxIfo3daFZQiUAFvKPWaTGqE91hSw76kHg5gbUJauzIRtFMv4cEE14j8yJZLb4gcEGA0UGSOqeCxKeoiHm5u_cL1SF0BQvuvu4IF5c3iGZjhJBKXF6vRfM1hLW6HW8GjSEwGribd752G5neuZqBg9fYwNahes"/>
+</div>
+<div>
+<p class="font-bold text-white font-arabic">حمادة "الأوزعة" النجار</p>
+<div class="flex items-center gap-2 mt-1">
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+<span class="text-[10px] text-emerald-500 font-bold uppercase tracking-widest font-label">ACTIVE</span>
+</div>
+</div>
+</div>
+</td>
+<td class="px-8 py-6">
+<span class="bg-secondary/10 text-secondary px-3 py-1 rounded-lg text-xs font-bold font-arabic border border-secondary/20">كبير نجارين</span>
+</td>
+<td class="px-8 py-6 text-on-surface-variant text-sm font-arabic">شهري</td>
+<td class="px-8 py-6">
+<div class="flex items-center gap-2 text-on-surface-variant text-sm font-arabic">
+<span class="material-symbols-outlined text-primary text-base" data-icon="location_on">location_on</span>
+                                        جاليري أ
+                                    </div>
+</td>
+<td class="px-8 py-6 text-on-surface-variant text-sm font-arabic">كاش</td>
+<td class="px-8 py-6 text-left">
+<span class="text-primary font-bold font-label text-lg">1,250 <span class="text-[10px] text-primary/60">EGP</span></span>
+</td>
+<td class="px-8 py-6 text-left">
+<button class="text-white/20 hover:text-white transition-colors">
+<span class="material-symbols-outlined" data-icon="more_horiz">more_horiz</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="px-8 py-6">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-2xl bg-surface-container-highest overflow-hidden relative">
+<img alt="رجل كشك" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" data-alt="professional sales representative in a luxury furniture showroom, soft bokeh background of designer chairs" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAYsMPOE-gWywloPTDygKUvBx-LjEMXPJhaFx9dGaNwYUqYzLL618YXZkNBqkw7PuIZ_pPSD0ZWNrSswzZfX2J9OjCDg06G91uhd3izEhWDqWVKrvLN3qdVEkV0ccZSlp-mU-z8fiKBjcTb2cAKhgVdUWMi8oj9SzVEmLyEpfYNk0WL-Dw85KEwiIIx1vA9sKu7ykyNBD3e0ewvJhPo01xnf9YfHuJ09knOj6rZhdv7f3DSxxsPVHNGucdQawxSJTxQKhfZ-GP167g"/>
+</div>
+<div>
+<p class="font-bold text-white font-arabic">عمر الشاويش</p>
+<div class="flex items-center gap-2 mt-1">
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+<span class="text-[10px] text-emerald-500 font-bold uppercase tracking-widest font-label">ACTIVE</span>
+</div>
+</div>
+</div>
+</td>
+<td class="px-8 py-6">
+<span class="bg-tertiary/10 text-tertiary px-3 py-1 rounded-lg text-xs font-bold font-arabic border border-tertiary/20">مسؤول مبيعات</span>
+</td>
+<td class="px-8 py-6 text-on-surface-variant text-sm font-arabic">بالطلعة</td>
+<td class="px-8 py-6">
+<div class="flex items-center gap-2 text-on-surface-variant text-sm font-arabic">
+<span class="material-symbols-outlined text-primary text-base" data-icon="location_on">location_on</span>
+                                        جاليري ب
+                                    </div>
+</td>
+<td class="px-8 py-6 text-on-surface-variant text-sm font-arabic">تحويل بنكي</td>
+<td class="px-8 py-6 text-left">
+<span class="text-primary font-bold font-label text-lg">0 <span class="text-[10px] text-primary/60">EGP</span></span>
+</td>
+<td class="px-8 py-6 text-left">
+<button class="text-white/20 hover:text-white transition-colors">
+<span class="material-symbols-outlined" data-icon="more_horiz">more_horiz</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="px-8 py-6">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-2xl bg-surface-container-highest overflow-hidden relative">
+<img alt="رجل كشك" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" data-alt="man in warehouse setting, clipboard in hand, large storage racks blurred in background, moody lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsJgGJ5LEc5xKtu0So_reLHJDqZF_Pt-PtdR1GNDi_MUICJDPwVDLsM6aw8y8jDzMVH7xrC0YeZBlBhGqij_cWckAMSJQfhdH7oR0yHV9vVnbewayjE1pBdkHonXdJa4G-zB9pwIqu5JuN-FX8jdg6YzWkJHeaLsBAPpmSc59HrppB6Zjc8YvVS_-S5oalUw1F6VvQQRVBusMpvURl2czngg6c4yMuT3nTsJSQYV5OMAWYGr6_lF2fNJiJuThjd7rfC0kBx329clE"/>
+</div>
+<div>
+<p class="font-bold text-white font-arabic">سيد "الونش" بخيت</p>
+<div class="flex items-center gap-2 mt-1">
+<span class="w-2 h-2 rounded-full bg-error"></span>
+<span class="text-[10px] text-error font-bold uppercase tracking-widest font-label">INACTIVE</span>
+</div>
+</div>
+</div>
+</td>
+<td class="px-8 py-6">
+<span class="bg-surface-variant text-on-surface-variant px-3 py-1 rounded-lg text-xs font-bold font-arabic border border-outline-variant/20">عتال ومخازن</span>
+</td>
+<td class="px-8 py-6 text-on-surface-variant text-sm font-arabic">يومية</td>
+<td class="px-8 py-6">
+<div class="flex items-center gap-2 text-on-surface-variant text-sm font-arabic">
+<span class="material-symbols-outlined text-primary text-base" data-icon="location_on">location_on</span>
+                                        المخزن
+                                    </div>
+</td>
+<td class="px-8 py-6 text-on-surface-variant text-sm font-arabic">كاش</td>
+<td class="px-8 py-6 text-left">
+<span class="text-secondary font-bold font-label text-lg">4,800 <span class="text-[10px] text-secondary/60">EGP</span></span>
+</td>
+<td class="px-8 py-6 text-left">
+<button class="text-white/20 hover:text-white transition-colors">
+<span class="material-symbols-outlined" data-icon="more_horiz">more_horiz</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Stats Overlay (Editorial Bento) -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
+<div class="bg-surface-container-high p-8 rounded-2xl border border-white/5 relative overflow-hidden group">
+<div class="relative z-10">
+<p class="text-white/40 text-xs font-arabic mb-1">إجمالي الرواتب الشهرية</p>
+<h4 class="text-3xl font-black text-primary font-label tracking-tight">124,500 <span class="text-xs">EGP</span></h4>
+<div class="mt-4 flex items-center gap-2 text-emerald-500 text-xs">
+<span class="material-symbols-outlined text-sm" data-icon="trending_up">trending_up</span>
+<span>زيادة 4% عن الشهر اللي فات</span>
+</div>
+</div>
+<span class="absolute -right-4 -bottom-4 material-symbols-outlined text-8xl text-white/5 pointer-events-none" data-icon="payments">payments</span>
+</div>
+<div class="bg-surface-container-high p-8 rounded-2xl border border-white/5 relative overflow-hidden group">
+<div class="relative z-10">
+<p class="text-white/40 text-xs font-arabic mb-1">الرجالة "شغالة"</p>
+<h4 class="text-3xl font-black text-white font-label tracking-tight">42 <span class="text-xs text-white/40">صنايعي</span></h4>
+<div class="mt-4 flex items-center gap-2 text-primary text-xs">
+<span class="material-symbols-outlined text-sm" data-icon="group">group</span>
+<span>بكامل طاقتنا النهاردة</span>
+</div>
+</div>
+<span class="absolute -right-4 -bottom-4 material-symbols-outlined text-8xl text-white/5 pointer-events-none" data-icon="engineering">engineering</span>
+</div>
+<div class="bg-gradient-to-br from-secondary/20 to-transparent p-8 rounded-2xl border border-secondary/10 relative overflow-hidden group">
+<div class="relative z-10">
+<p class="text-white/40 text-xs font-arabic mb-1">ديون متأخرة للرجالة</p>
+<h4 class="text-3xl font-black text-secondary font-label tracking-tight">18,200 <span class="text-xs">EGP</span></h4>
+<div class="mt-4 flex items-center gap-2 text-secondary text-xs">
+<span class="material-symbols-outlined text-sm" data-icon="info">info</span>
+<span>محتاجين يتسددوا قبل الخميس</span>
+</div>
+</div>
+<span class="absolute -right-4 -bottom-4 material-symbols-outlined text-8xl text-white/5 pointer-events-none" data-icon="account_balance">account_balance</span>
+</div>
+</div>
+</section>
+</main>
+<!-- FAB Suppression logic: On list screens, usually the primary CTA is enough. 
+         But if we had one, it would go here. Suppressed for focus as per guidelines. -->
+</body></html>

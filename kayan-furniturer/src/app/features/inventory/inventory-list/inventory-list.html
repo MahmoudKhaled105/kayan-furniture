@@ -1,0 +1,196 @@
+<section class="mt-24 px-10 pb-20 max-w-7xl mx-auto">
+  <!-- Header & Stats Overview -->
+  <div class="grid grid-cols-12 gap-8 mb-16 items-end">
+    <div class="col-span-8">
+      <div class="flex items-center gap-4 mb-4">
+        <span class="px-3 py-1 bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-widest rounded-full border border-primary/20">المخازن والمعرض</span>
+      </div>
+      <h2 class="text-4xl font-black font-headline text-on-surface mb-2">إدارة المخزون (المنضرة)</h2>
+      <p class="text-outline-variant font-headline max-w-xl">تتبع قطع الأثاث الفردية والخامات الأساسية في جميع فروع كيان.</p>
+    </div>
+    
+    <div class="col-span-4 flex justify-end gap-4">
+      <button routerLink="/inventory/add" class="px-8 py-4 bg-gradient-to-r from-primary to-primary-container text-on-primary-fixed font-black rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-[0_10px_30px_rgba(232,196,106,0.15)] flex items-center gap-3">
+        <span>إضافة قطعة جديدة</span>
+        <span class="material-symbols-outlined">&#xe145;</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Filters & Location Selection -->
+  <div class="flex items-center justify-between mb-10 bg-surface-container-low p-2 rounded-2xl border border-white/5">
+    <div class="flex items-center gap-2">
+      <button (click)="setLocation(null)" 
+        [ngClass]="selectedLocation() === null ? 'bg-surface-container-highest text-primary shadow-lg' : 'text-outline-variant hover:text-on-surface'"
+        class="px-6 py-3 rounded-xl font-bold text-sm transition-all whitespace-nowrap">
+        الكل
+      </button>
+      @for (loc of locations(); track loc.id) {
+        <button (click)="setLocation(loc.id)"
+          [ngClass]="selectedLocation() === loc.id ? 'bg-surface-container-highest text-primary shadow-lg' : 'text-outline-variant hover:text-on-surface'"
+          class="px-6 py-3 rounded-xl font-bold text-sm transition-all whitespace-nowrap">
+          {{ loc.name }}
+        </button>
+      }
+    </div>
+    
+    <div class="flex bg-surface-container-lowest rounded-xl p-1 ml-2">
+      <button (click)="setTab('products')"
+        [ngClass]="activeTab() === 'products' ? 'bg-primary text-on-primary shadow-md' : 'text-outline-variant hover:text-on-surface'"
+        class="px-6 py-2 rounded-lg text-xs font-black transition-all">
+        قطع الأثاث
+      </button>
+      <button (click)="setTab('bulk')"
+        [ngClass]="activeTab() === 'bulk' ? 'bg-primary text-on-primary shadow-md' : 'text-outline-variant hover:text-on-surface'"
+        class="px-6 py-2 rounded-lg text-xs font-black transition-all">
+        الخامات والعدد
+      </button>
+    </div>
+  </div>
+
+  @if (isLoading()) {
+    <div class="py-32 flex flex-col items-center justify-center space-y-6">
+      <div class="w-16 h-16 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
+      <p class="font-headline text-outline-variant animate-pulse">جاري جرد المخازن...</p>
+    </div>
+  } @else if (error()) {
+    <div class="py-24 bg-error/5 rounded-3xl border border-error/10 text-center space-y-6">
+      <span class="material-symbols-outlined text-6xl text-error/40">&#xe000;</span>
+      <p class="text-error font-headline font-bold text-xl">{{ error() }}</p>
+      <button (click)="loadData()" class="px-8 py-3 bg-error/10 text-error rounded-xl hover:bg-error/20 transition-all font-bold">إعادة المحاولة</button>
+    </div>
+  } @else {
+    <!-- Stock Value Banner -->
+    @if (stockValueSummary()) {
+      <div class="grid grid-cols-3 gap-6 mb-12 animate-in fade-in slide-in-from-top-4 duration-700">
+        <div class="col-span-2 bg-surface-container-high p-8 rounded-3xl border border-white/5 relative overflow-hidden group">
+          <div class="relative z-10">
+            <h4 class="text-outline-variant text-[10px] font-bold uppercase tracking-widest mb-4">إجمالي قيمة البضاعة غير المباعة</h4>
+            <div class="flex items-baseline gap-3">
+              <span class="text-5xl font-black font-manrope text-primary">{{ (stockValueSummary()?.total_unsold_value || (stockValueSummary()?.total ?? 0)) | number:'1.0-0' }}</span>
+              <span class="text-xl font-bold font-headline text-outline-variant">جنيه مصري</span>
+            </div>
+          </div>
+          <span class="material-symbols-outlined text-9xl absolute -bottom-8 -right-8 text-on-surface/5 group-hover:rotate-12 transition-transform duration-700">&#xe850;</span>
+        </div>
+        <div class="bg-surface-container-high p-8 rounded-3xl border border-white/5 flex flex-col justify-center text-center">
+          <h4 class="text-outline-variant text-[10px] font-bold uppercase tracking-widest mb-4">عدد القطع الإجمالي</h4>
+          <span class="text-5xl font-black font-manrope text-on-surface">{{ products().length + bulkItems().length }}</span>
+        </div>
+      </div>
+    }
+
+    <!-- Main Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+      @if (activeTab() === 'products') {
+        @for (item of products(); track item.id) {
+          <div [routerLink]="['/inventory', item.id]" class="bg-surface-container-high rounded-[2rem] overflow-hidden group hover:ring-2 hover:ring-primary/40 transition-all cursor-pointer animate-in zoom-in-95 duration-500">
+            <div class="aspect-square bg-surface-container-low relative overflow-hidden">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                <span class="text-white font-bold bg-primary/80 px-6 py-2 rounded-full">عرض التفاصيل</span>
+              </div>
+              @if (item.thumbnail_url) {
+                <img [src]="item.thumbnail_url" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Product Thumbnail"/>
+              } @else {
+                <div class="w-full h-full flex items-center justify-center text-outline-variant/20">
+                  <span class="material-symbols-outlined text-8xl">&#xe16b;</span>
+                </div>
+              }
+              <div class="absolute top-4 right-4">
+                <span [class]="'px-4 py-1.5 rounded-full text-[10px] font-black border ' + getStatusClass(item.status)">
+                  {{ getStatusText(item.status) }}
+                </span>
+              </div>
+              <div class="absolute top-4 left-4 flex gap-2">
+                <button 
+                  [routerLink]="['/inventory/edit', item.id]"
+                  (click)="$event.stopPropagation()"
+                  class="w-10 h-10 rounded-full bg-black/40 text-white backdrop-blur-md flex items-center justify-center hover:bg-primary transition-all opacity-0 group-hover:opacity-100"
+                >
+                  <span class="material-symbols-outlined text-lg">edit</span>
+                </button>
+                <button 
+                  (click)="onDeleteProduct($event, item.id)"
+                  class="w-10 h-10 rounded-full bg-black/40 text-white backdrop-blur-md flex items-center justify-center hover:bg-error transition-all opacity-0 group-hover:opacity-100"
+                >
+                  <span class="material-symbols-outlined text-lg">delete</span>
+                </button>
+              </div>
+            </div>
+            <div class="p-8">
+              <div class="mb-6">
+                <span class="text-[10px] text-primary font-bold uppercase tracking-tighter mb-1 block">{{ item.category || 'أثاث عام' }}</span>
+                <h3 class="text-xl font-black font-headline text-on-surface leading-snug group-hover:text-primary transition-colors">{{ item.name }}</h3>
+              </div>
+              
+              <div class="flex items-center justify-between pt-6 border-t border-white/5">
+                <div>
+                  <p class="text-[10px] text-outline-variant font-bold uppercase mb-1">السعر المعروض</p>
+                  <p class="text-lg font-black font-manrope text-on-surface">{{ item.sale_price | number:'1.0-0' }} <span class="text-xs">ج.م</span></p>
+                </div>
+                <div class="text-left">
+                  <p class="text-[10px] text-outline-variant font-bold uppercase mb-1">الموقع</p>
+                  <div class="flex items-center gap-1 text-on-surface/80">
+                    <span class="material-symbols-outlined text-sm text-primary">&#xe0c8;</span>
+                    <span class="text-xs font-bold font-headline">{{ item.location_name }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        } @empty {
+          <div class="col-span-full py-20 text-center bg-surface-container-low rounded-3xl border border-dashed border-white/5">
+            <span class="material-symbols-outlined text-6xl text-on-surface/5 mb-4">&#xe1db;</span>
+            <p class="text-outline-variant font-headline font-bold text-lg">لا يوجد منتجات في هذا المخزن حالياً</p>
+          </div>
+        }
+      } @else {
+        @for (item of bulkItems(); track item.id) {
+          <div class="bg-surface-container-high p-8 rounded-3xl border border-white/5 hover:bg-surface-container-highest transition-all animate-in fade-in duration-500">
+            <div class="flex justify-between items-start mb-8">
+              <div class="flex gap-2">
+                <span class="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center material-symbols-outlined">
+                  &#xea5b;
+                </span>
+                <div class="flex flex-col gap-1">
+                  <button [routerLink]="['/inventory/edit', item.id]" class="text-[10px] text-primary/60 hover:text-primary transition-colors flex items-center gap-1 font-bold">
+                    <span class="material-symbols-outlined text-xs">edit</span> تعديل
+                  </button>
+                  <button (click)="onDeleteBulkItem(item.id)" class="text-[10px] text-error/60 hover:text-error transition-colors flex items-center gap-1 font-bold">
+                    <span class="material-symbols-outlined text-xs">delete</span> حذف
+                  </button>
+                </div>
+              </div>
+              <div class="text-left">
+                <p class="text-[10px] text-outline-variant font-bold uppercase mb-1">الكمية</p>
+                <p class="text-2xl font-black font-manrope text-on-surface">{{ item.quantity }}</p>
+              </div>
+            </div>
+            
+            <div class="mb-8">
+              <span class="text-[10px] text-primary font-bold uppercase mb-1 block">{{ item.category || 'خامات' }}</span>
+              <h3 class="text-lg font-black font-headline text-on-surface">{{ item.name }}</h3>
+              <p class="text-xs text-outline-variant mt-2">المخزن: {{ item.location_name }}</p>
+            </div>
+            
+            <div class="flex justify-between items-center pt-6 border-t border-white/5">
+              <div>
+                <p class="text-[10px] text-outline-variant font-bold uppercase mb-1">قيمة الوحدة</p>
+                <p class="font-bold font-manrope text-on-surface">{{ item.unit_price | number:'1.0-0' }} ج.م</p>
+              </div>
+              <div class="text-left">
+                <p class="text-[10px] text-outline-variant font-bold uppercase mb-1">الإجمالي</p>
+                <p class="font-bold font-manrope text-primary">{{ item.total_value | number:'1.0-0' }} ج.م</p>
+              </div>
+            </div>
+          </div>
+        } @empty {
+          <div class="col-span-full py-20 text-center bg-surface-container-low rounded-3xl border border-dashed border-white/5">
+            <span class="material-symbols-outlined text-6xl text-on-surface/5 mb-4">&#xea5b;</span>
+            <p class="text-outline-variant font-headline font-bold text-lg">لا يوجد خامات مضافة</p>
+          </div>
+        }
+      }
+    </div>
+  }
+</section>

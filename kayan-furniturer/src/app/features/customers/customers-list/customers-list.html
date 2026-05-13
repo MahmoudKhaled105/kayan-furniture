@@ -1,0 +1,137 @@
+<section class="mt-24 px-10 pb-20 max-w-7xl mx-auto">
+  <!-- Header Section -->
+  <div class="flex items-end justify-between mb-16">
+    <div class="space-y-4">
+      <div class="flex items-center gap-3">
+        <span class="px-3 py-1 bg-secondary/10 text-secondary text-[10px] font-bold uppercase tracking-widest rounded-full border border-secondary/20">قاعدة العملاء</span>
+      </div>
+      <h2 class="text-4xl font-black font-headline text-on-surface">شركاء النجاح (العملاء)</h2>
+      <p class="text-outline-variant font-headline max-w-lg">إدارة بيانات العملاء، تتبع المديونيات، وسجل الطلبات الخاص بكل عميل.</p>
+    </div>
+    
+    <div class="flex gap-4">
+      <button (click)="showAddModal.set(true)" class="px-8 py-4 bg-gradient-to-r from-primary to-primary-container text-on-primary-fixed font-black rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-xl flex items-center gap-3">
+        <span>إضافة عميل جديد</span>
+        <span class="material-symbols-outlined">&#xe7fe;</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  @if (isLoading() && customers().length === 0) {
+    <div class="py-32 flex flex-col items-center justify-center space-y-6">
+      <div class="w-16 h-16 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
+      <p class="font-headline text-outline-variant animate-pulse">جاري تحميل البيانات...</p>
+    </div>
+  } @else if (error()) {
+    <div class="py-24 bg-error/5 rounded-3xl border border-error/10 text-center space-y-6">
+      <span class="material-symbols-outlined text-6xl text-error/40">&#xe000;</span>
+      <p class="text-error font-headline font-bold text-xl">{{ error() }}</p>
+      <button (click)="loadCustomers()" class="px-8 py-3 bg-error/10 text-error rounded-xl hover:bg-error/20 transition-all font-bold">إعادة المحاولة</button>
+    </div>
+  } @else {
+    <div class="bg-surface-container-high rounded-[2.5rem] border border-white/5 overflow-hidden shadow-2xl animate-in fade-in slide-in-from-bottom-6 duration-700">
+      <table class="w-full text-right border-collapse">
+        <thead>
+          <tr class="bg-surface-container-highest/50 border-b border-white/5">
+            <th class="px-10 py-6 text-[10px] font-black text-primary uppercase tracking-widest">الاسم</th>
+            <th class="px-10 py-6 text-[10px] font-black text-primary uppercase tracking-widest">رقم الهاتف</th>
+            <th class="px-10 py-6 text-[10px] font-black text-primary uppercase tracking-widest">تاريخ الانضمام</th>
+            <th class="px-10 py-6 text-[10px] font-black text-primary uppercase tracking-widest text-left">الإجراءات</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (customer of customers(); track customer.id) {
+            <tr class="group hover:bg-white/5 transition-colors border-b border-white/5 last:border-none">
+              <td class="px-10 py-8">
+                <div class="flex items-center gap-4">
+                  <div class="w-12 h-12 rounded-2xl bg-secondary/10 text-secondary flex items-center justify-center font-black text-lg group-hover:scale-110 transition-transform">
+                    {{ customer.name.charAt(0) }}
+                  </div>
+                  <div>
+                    <h4 class="font-bold text-on-surface group-hover:text-primary transition-colors">{{ customer.name }}</h4>
+                    <p class="text-[10px] text-outline-variant">كود: #CST-{{ customer.id }}</p>
+                  </div>
+                </div>
+              </td>
+              <td class="px-10 py-8 font-manrope font-bold text-on-surface/80">
+                {{ customer.phone || '---' }}
+              </td>
+              <td class="px-10 py-8 text-xs text-outline-variant font-headline">
+                {{ customer.created_at | date:'mediumDate' }}
+              </td>
+              <td class="px-10 py-8 text-left">
+                <button [routerLink]="['/customers', customer.id]" class="px-6 py-2.5 bg-surface-container-highest text-on-surface rounded-xl hover:bg-primary hover:text-on-primary-fixed transition-all font-bold text-xs ring-1 ring-white/5 shadow-lg">
+                  كشف الحساب
+                </button>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="4" class="py-32 text-center">
+                <span class="material-symbols-outlined text-6xl text-on-surface/5 mb-4 block">&#xe7ef;</span>
+                <p class="text-outline-variant font-headline font-bold text-lg">لا يوجد عملاء مضافين حالياً</p>
+                <button (click)="showAddModal.set(true)" class="mt-6 text-primary font-bold hover:underline">أضف عميلك الأول الآن</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+  <!-- Add Customer Modal -->
+  @if (showAddModal()) {
+    <div class="fixed inset-0 bg-black/80 backdrop-blur-xl z-[100] flex items-center justify-center p-6 animate-in fade-in duration-300">
+      <div class="bg-surface-container-high w-full max-w-xl rounded-[3rem] p-12 border border-white/5 space-y-10 shadow-3xl scale-in-center">
+        <div class="flex justify-between items-center text-right">
+          <div class="space-y-1">
+            <h3 class="text-3xl font-black font-headline text-on-surface">إضافة عميل جديد</h3>
+            <p class="text-xs text-outline-variant">لبدء تسجيل المبيعات والطلبات الخاصة به</p>
+          </div>
+          <button (click)="showAddModal.set(false)" class="w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center text-outline-variant hover:text-error transition-colors">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+        
+        <form [formGroup]="customerForm" (submit)="onSubmit()" class="space-y-8">
+          <div class="space-y-2">
+            <label class="text-xs font-bold text-outline-variant mr-1">اسم العميل (بالكامل)</label>
+            <input formControlName="name" placeholder="مثلاً: محمد أحمد علي" 
+              class="w-full bg-surface-container-lowest border-none rounded-2xl px-6 py-5 text-on-surface focus:ring-1 focus:ring-primary/40 font-headline outline-none transition-all"/>
+            @if (customerForm.get('name')?.touched && customerForm.get('name')?.invalid) {
+              <p class="text-[10px] text-error mt-1 mr-2">الاسم مطلوب بشكل صحيح</p>
+            }
+          </div>
+          
+          <div class="space-y-2">
+            <label class="text-xs font-bold text-outline-variant mr-1">رقم الهاتف (الواتساب)</label>
+            <div class="relative">
+              <input formControlName="phone" placeholder="01xxxxxxxxx" 
+                class="w-full bg-surface-container-lowest border-none rounded-2xl pr-14 pl-6 py-5 text-on-surface focus:ring-1 focus:ring-primary/40 font-manrope outline-none transition-all"/>
+              <span class="material-symbols-outlined absolute right-6 top-1/2 -translate-y-1/2 text-outline-variant">call</span>
+            </div>
+            @if (customerForm.get('phone')?.touched && customerForm.get('phone')?.invalid) {
+              <p class="text-[10px] text-error mt-1 mr-2">يرجى إدخال رقم هاتف صحيح</p>
+            }
+          </div>
+          
+          <div class="space-y-2">
+            <label class="text-xs font-bold text-outline-variant mr-1">ملحوظات عن العميل (اختياري)</label>
+            <textarea formControlName="notes" class="w-full bg-surface-container-lowest border-none rounded-2xl px-6 py-5 text-on-surface focus:ring-1 focus:ring-primary/40 outline-none h-32 resize-none transition-all" placeholder="مثلاً: عميل دائم من فرع القاهرة"></textarea>
+          </div>
+          
+          <div class="pt-6">
+            <button type="submit" [disabled]="isLoading()" class="w-full py-5 bg-gradient-to-r from-primary to-primary-container text-on-primary-fixed font-black rounded-2xl hover:scale-[1.02] active:scale-95 transition-all shadow-xl flex items-center justify-center gap-3">
+              @if (isLoading()) {
+                <div class="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
+              }
+              <span>تأكيد الإضافة والقيد بالدفاتر</span>
+              <span class="material-symbols-outlined">&#xe163;</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+</section>

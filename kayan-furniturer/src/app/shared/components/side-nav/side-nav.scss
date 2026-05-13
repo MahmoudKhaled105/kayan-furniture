@@ -1,0 +1,154 @@
+.side-nav {
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 16rem;
+  height: 100vh;
+  background: var(--surface-container-lowest);
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  display: none;
+  flex-direction: column;
+  padding: 2rem 1.5rem;
+  z-index: 40;
+}
+
+@media (min-width: 768px) {
+  .side-nav {
+    display: flex;
+  }
+}
+
+.brand-section {
+  margin-bottom: 3rem;
+}
+
+.brand-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.75rem;
+}
+
+.brand-info h2 {
+  font-size: 1.25rem;
+  font-weight: 900;
+  font-family: 'IBM Plex Sans Arabic', sans-serif;
+  color: var(--primary);
+  margin-bottom: 0.25rem;
+}
+
+.brand-info p {
+  font-size: 0.625rem;
+  color: var(--gray-500);
+}
+
+.treasury-card {
+  background: linear-gradient(135deg, var(--surface-container-high), var(--surface-container));
+  border-radius: 1.25rem;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--primary);
+    margin-bottom: 0.75rem;
+    font-family: var(--label-font);
+    font-weight: 600;
+
+    .material-symbols-outlined { font-size: 1.25rem; }
+  }
+
+  .balance-value {
+    font-size: 1.5rem;
+    font-weight: 900;
+    font-family: 'IBM Plex Sans Arabic', sans-serif;
+    color: var(--on-surface);
+  }
+}
+
+.nav-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1.5rem;
+  color: var(--gray-400);
+  text-decoration: none;
+  border-radius: 0.5rem;
+  transition: all 0.2s;
+  font-family: var(--headline-font);
+  font-weight: 500;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--surface-container-high);
+    color: var(--white);
+  }
+
+  &.active {
+    background: linear-gradient(to left, rgba(232, 196, 106, 0.1), transparent);
+    color: var(--primary);
+    border-right: 4px solid var(--primary);
+  }
+}
+
+.nav-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.add-transaction-btn {
+  width: 100%;
+  border: none;
+  background: linear-gradient(to left, var(--primary), var(--primary-container));
+  color: var(--on-primary-container);
+  font-weight: 700;
+  padding: 0.75rem;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: 0 10px 30px rgba(232, 196, 106, 0.2);
+  transition: transform 0.15s;
+  cursor: pointer;
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+.divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  width: 100%;
+}
+
+.footer-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--gray-400);
+  text-decoration: none;
+  font-size: 0.875rem;
+  transition: color 0.2s;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--white);
+  }
+}

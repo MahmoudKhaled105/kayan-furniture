@@ -1,0 +1,120 @@
+<div class="pt-4 min-h-screen relative">
+  @if (isLoading()) {
+    <div class="absolute inset-0 bg-background/60 backdrop-blur-md flex flex-col items-center justify-center z-50">
+      <div class="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin mb-6"></div>
+      <p class="text-lg font-headline text-on-surface/80">جاري تحميل تفاصيل الشحنة...</p>
+    </div>
+  }
+
+  @if (error()) {
+    <div class="p-20 text-center">
+      <span class="material-symbols-outlined text-7xl text-error mb-6">error</span>
+      <h3 class="text-2xl font-headline text-on-surface mb-4">{{ error() }}</h3>
+      <button routerLink="/shipments" class="text-primary hover:underline font-bold text-lg">العودة لقائمة الشحنات</button>
+    </div>
+  } @else if (shipment()) {
+    @let data = shipment()!;
+    <!-- Header & Status -->
+    <section class="flex justify-between items-start mb-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <div class="space-y-3">
+        <nav class="flex items-center gap-2 text-outline-variant text-[10px] uppercase font-bold tracking-widest mb-4">
+          <a routerLink="/shipments" class="hover:text-primary transition-colors">الحاويات</a>
+          <span class="material-symbols-outlined text-[10px]">&#xe5cb;</span>
+          <span class="text-primary">{{ data.container_number || 'بدون رقم' }}</span>
+        </nav>
+        <div class="flex items-center gap-4">
+          <h2 class="text-5xl font-black font-headline text-on-surface">{{ data.container_number || 'بدون رقم' }}</h2>
+          <span class="px-4 py-1.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 text-xs font-bold font-headline mt-2">
+            {{ getLogisticStatus(data.status) }}
+          </span>
+        </div>
+        <p class="text-outline-variant font-headline flex items-center gap-2">
+          المورد: <span class="text-on-surface font-bold">{{ data.supplier_name }}</span>
+          <span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+          تاريخ الاستلام: <span class="text-on-surface font-bold">{{ data.date_received | date:'dd MMM yyyy' }}</span>
+        </p>
+      </div>
+      <div class="flex gap-4">
+        <button class="w-12 h-12 rounded-xl bg-surface-container-high text-outline-variant flex items-center justify-center hover:text-primary transition-all shadow-lg border border-white/5">
+          <span class="material-symbols-outlined">&#xe8ad;</span>
+        </button>
+        <button [routerLink]="['/shipments/edit', data.id]" class="bg-surface-container-high text-primary px-8 py-4 rounded-xl font-bold font-headline border border-primary/20 hover:bg-primary/10 transition-all shadow-xl active:scale-95 flex items-center gap-2">
+          <span class="material-symbols-outlined">&#xe3c9;</span>
+          تعديل البيانات
+        </button>
+      </div>
+    </section>
+
+    <!-- Summary Stats Grid -->
+    <section class="grid grid-cols-4 gap-6 mb-12 animate-in fade-in slide-in-from-bottom-6 duration-1000 delay-150">
+      <div class="bg-surface-container-low p-6 rounded-2xl border border-white/5 relative overflow-hidden group">
+        <p class="text-[10px] text-outline-variant font-bold uppercase tracking-widest mb-2">إجمالي الشحنة</p>
+        <h3 class="text-3xl font-black font-headline text-on-surface">{{ formatCurrency(data.declared_value) }} <span class="text-xs font-normal opacity-40">ج.م</span></h3>
+        <div class="absolute -right-4 -bottom-4 text-white/[0.02] group-hover:text-white/[0.04] transition-colors duration-500">
+          <span class="material-symbols-outlined text-8xl">&#xf1b0;</span>
+        </div>
+      </div>
+      <div class="bg-surface-container-low p-6 rounded-2xl border border-white/5">
+        <p class="text-[10px] text-outline-variant font-bold uppercase tracking-widest mb-2">المدفوع حتى الآن</p>
+        <h3 class="text-3xl font-black font-headline text-secondary">{{ formatCurrency(data.amount_paid) }} <span class="text-xs font-normal opacity-40">ج.م</span></h3>
+        <div class="w-full h-1 bg-surface-container-highest rounded-full mt-4 overflow-hidden">
+          <div class="bg-secondary h-full transition-all duration-1000" [style.width.%]="paidPercentage"></div>
+        </div>
+      </div>
+      <div class="bg-surface-container-low p-6 rounded-2xl border border-white/5">
+        <p class="text-[10px] text-outline-variant font-bold uppercase tracking-widest mb-2">متبقي للمورد</p>
+        <h3 class="text-3xl font-black font-headline text-error/80">{{ formatCurrency(data.declared_value - data.amount_paid) }} <span class="text-xs font-normal opacity-40">ج.م</span></h3>
+        <p class="text-[10px] text-error mt-2 font-bold font-headline">الحالة: {{ getStatusLabel(data.payment_status) }}</p>
+      </div>
+      <div class="bg-surface-container-low p-6 rounded-2xl border border-white/5">
+        <p class="text-[10px] text-outline-variant font-bold uppercase tracking-widest mb-2">معلومات إضافية</p>
+        <h3 class="text-xl font-bold font-headline text-on-surface">بيانات النقل</h3>
+        <div class="flex items-center gap-1 mt-3">
+          <p class="text-[10px] text-outline-variant">{{ data.estimated_arrival ? 'تاريخ الوصول: ' + (data.estimated_arrival | date:'dd/MM') : 'لا يوجد تاريخ وصول مسجل' }}</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="grid grid-cols-12 gap-8 mb-12 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300">
+      <!-- Left Column: Content -->
+      <div class="col-span-8">
+        <div class="bg-surface-container-low rounded-2xl overflow-hidden shadow-2xl border border-white/5">
+          <div class="px-8 py-6 bg-surface-container-high/50 flex justify-between items-center border-b border-white/5">
+            <h4 class="font-black font-headline text-lg">ملاحظات الشحنة</h4>
+          </div>
+          <div class="p-8">
+            @if (data.notes) {
+              <p class="text-on-surface-variant font-headline leading-relaxed">{{ data.notes }}</p>
+            } @else {
+              <p class="text-outline-variant italic font-headline">لا توجد ملاحظات مسجلة لهذه الشحنة</p>
+            }
+          </div>
+        </div>
+      </div>
+      
+      <!-- Right Column: Sidebar -->
+      <div class="col-span-4 space-y-6 text-right">
+        <div class="bg-gradient-to-br from-primary/10 to-surface-container-low p-8 rounded-2xl border border-primary/10">
+          <h5 class="font-bold font-headline text-lg mb-4 text-primary">العمليات اللوجستية</h5>
+          <div class="space-y-6 relative border-r-2 border-primary/20 pr-6 mr-2">
+            <div class="relative">
+              <div class="absolute -right-[31px] top-1 w-4 h-4 rounded-full bg-primary border-4 border-background shadow-[0_0_10px_rgba(232,196,106,0.5)]"></div>
+              <p class="text-xs font-bold text-on-surface mb-1">تسجيل الشحنة</p>
+              <p class="text-[10px] text-outline-variant">{{ data.date_received | date:'dd MMM yyyy' }}</p>
+            </div>
+            <div class="relative">
+              <div class="absolute -right-[31px] top-1 w-4 h-4 rounded-full" [class]="data.status !== 'PENDING' ? 'bg-primary shadow-[0_0_10px_rgba(232,196,106,0.5)]' : 'bg-surface-container-highest'"></div>
+              <p class="text-xs font-bold font-headline mb-1" [class]="data.status !== 'PENDING' ? 'text-on-surface' : 'text-outline-variant'">تحرك الحاوية</p>
+              <p class="text-[10px] text-outline-variant">في الطريق</p>
+            </div>
+            <div class="relative">
+              <div class="absolute -right-[31px] top-1 w-4 h-4 rounded-full" [class]="data.status === 'ARRIVED' ? 'bg-primary shadow-[0_0_10px_rgba(232,196,106,0.5)]' : 'bg-surface-container-highest'"></div>
+              <p class="text-xs font-bold font-headline mb-1" [class]="data.status === 'ARRIVED' ? 'text-on-surface' : 'text-outline-variant'">الوصول للميناء</p>
+              <p class="text-[10px] text-outline-variant">{{ data.estimated_arrival | date:'dd MMM yyyy' }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</div>

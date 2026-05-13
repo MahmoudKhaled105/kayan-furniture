@@ -1,0 +1,168 @@
+<section class="mt-24 px-10 pb-20 max-w-7xl mx-auto relative">
+  @if (isLoading()) {
+    <div class="absolute inset-0 bg-background/60 backdrop-blur-md flex flex-col items-center justify-center z-50 rounded-3xl">
+      <div class="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin mb-6"></div>
+      <p class="text-lg font-headline text-on-surface/80">جاري مراجعة الدفاتر للعميل...</p>
+    </div>
+  }
+
+  <!-- Header Section -->
+  <div class="flex items-center justify-between mb-16">
+    <div class="flex items-center gap-6">
+      <div class="w-24 h-24 rounded-[2rem] bg-secondary/10 text-secondary flex items-center justify-center text-4xl font-black border border-secondary/20 shadow-xl">
+        {{ customer()?.name?.charAt(0) }}
+      </div>
+      <div>
+        <div class="flex items-center gap-3 mb-2">
+          <button routerLink="/customers" class="text-outline-variant hover:text-primary transition-colors flex items-center gap-1 group">
+            <span class="material-symbols-outlined text-sm group-hover:-translate-x-1 transition-transform">&#xe5c8;</span>
+            <span class="text-[10px] font-bold uppercase tracking-widest">العودة للقائمة</span>
+          </button>
+          <span class="w-1.5 h-1.5 rounded-full bg-outline-variant/30"></span>
+          <span class="text-[10px] font-bold text-secondary uppercase tracking-widest">ملف العميل الضريبي</span>
+        </div>
+        <h2 class="text-4xl font-black font-headline text-on-surface mb-2">{{ customer()?.name }}</h2>
+        <div class="flex items-center gap-4 text-outline-variant font-headline">
+          <span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm text-primary">&#xe0b0;</span> {{ customer()?.phone }}</span>
+          <span class="w-1.5 h-1.5 rounded-full bg-outline-variant/30"></span>
+          <span>كود: #CST-{{ customer()?.id }}</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Actions -->
+    <div class="flex gap-4">
+      <button class="px-8 py-4 bg-surface-container-high text-on-surface font-black rounded-2xl border border-white/5 hover:bg-surface-container-highest transition-all flex items-center gap-2 shadow-lg">
+        <span>تعديل البيانات</span>
+        <span class="material-symbols-outlined">&#xe3c9;</span>
+      </button>
+      <button class="px-8 py-4 bg-gradient-to-r from-primary to-primary-container text-on-primary-fixed font-black rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-[0_10px_30px_rgba(232,196,106,0.15)] flex items-center gap-2">
+        <span>بيع جديد</span>
+        <span class="material-symbols-outlined">&#xe8cc;</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Financial Summary Banner -->
+  <div class="grid grid-cols-12 gap-8 mb-12">
+    <div class="col-span-8 bg-surface-container-high rounded-[2.5rem] p-10 border border-white/5 relative overflow-hidden group">
+      <div class="relative z-10 flex justify-between items-center">
+        <div>
+          <h4 class="text-[10px] text-outline-variant font-bold uppercase tracking-widest mb-4 italic">رصيد المديونية المستحق</h4>
+          <div class="flex items-baseline gap-3">
+            <span class="text-6xl font-black font-manrope" [class.text-error]="getRemainingTotal() > 0" [class.text-emerald-400]="getRemainingTotal() <= 0">
+              {{ getRemainingTotal() | number:'1.0-0' }}
+            </span>
+            <span class="text-xl font-bold font-headline text-outline-variant">جنيه مصري</span>
+          </div>
+        </div>
+        <div class="text-left space-y-4">
+          <div class="p-4 bg-white/5 rounded-2xl border border-white/5">
+            <p class="text-[10px] text-outline-variant font-bold mb-1">إجمالي المشتريات</p>
+            <p class="text-xl font-black font-manrope text-on-surface">٧٥,٠٠٠ <span class="text-xs">ج.م</span></p>
+          </div>
+        </div>
+      </div>
+      <span class="material-symbols-outlined text-[12rem] absolute -bottom-12 -right-12 text-on-surface/5 group-hover:-rotate-12 transition-transform duration-1000">&#xef63;</span>
+    </div>
+
+    <div class="col-span-4 space-y-8">
+      <div class="bg-surface-container-high p-8 rounded-3xl border border-white/5 flex flex-col justify-center items-center text-center">
+        <h4 class="text-[10px] text-outline-variant font-bold uppercase tracking-widest mb-2">إجمالي الطلبات</h4>
+        <span class="text-4xl font-black font-manrope text-primary">{{ orders().length }}</span>
+      </div>
+      <div class="bg-surface-container-high p-8 rounded-3xl border border-white/5 flex flex-col justify-center items-center text-center">
+        <h4 class="text-[10px] text-outline-variant font-bold uppercase tracking-widest mb-2">سجل المدفوعات</h4>
+        <span class="text-4xl font-black font-manrope text-secondary">{{ payments().length }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabs & Data -->
+  <div class="space-y-8">
+    <div class="flex items-center gap-2 bg-surface-container-low p-1.5 rounded-2xl w-fit border border-white/5">
+      <button (click)="setTab('orders')"
+        [ngClass]="activeTab() === 'orders' ? 'bg-primary text-on-primary shadow-lg' : 'text-outline-variant hover:text-on-surface'"
+        class="px-10 py-3.5 rounded-xl font-black text-sm transition-all flex items-center gap-2">
+        <span class="material-symbols-outlined text-lg">receipt_long</span>
+        سجل الطلبات
+      </button>
+      <button (click)="setTab('payments')"
+        [ngClass]="activeTab() === 'payments' ? 'bg-primary text-on-primary shadow-lg' : 'text-outline-variant hover:text-on-surface'"
+        class="px-10 py-3.5 rounded-xl font-black text-sm transition-all flex items-center gap-2">
+        <span class="material-symbols-outlined text-lg">account_balance_wallet</span>
+        حركة الخزنة
+      </button>
+    </div>
+
+    <div class="bg-surface-container-high rounded-[2.5rem] border border-white/5 overflow-hidden animate-in fade-in duration-500 shadow-2xl">
+      @if (activeTab() === 'orders') {
+        <table class="w-full text-right">
+          <thead class="bg-surface-container-highest/50 border-b border-white/5">
+            <th class="px-10 py-6 text-[10px] font-black text-primary uppercase">رقم الطلب / التاريخ</th>
+            <th class="px-10 py-6 text-[10px] font-black text-primary uppercase">الموقع</th>
+            <th class="px-10 py-6 text-[10px] font-black text-primary uppercase">القيمة المتفق عليها</th>
+            <th class="px-10 py-6 text-[10px] font-black text-primary uppercase">المسدد</th>
+            <th class="px-10 py-6 text-[10px] font-black text-primary uppercase">المتبقي</th>
+            <th class="px-10 py-6 text-[10px] font-black text-primary uppercase text-left">التفاصيل</th>
+          </thead>
+          <tbody>
+            @for (order of orders(); track order.id) {
+              <tr class="border-b border-white/5 group hover:bg-white/5 transition-colors last:border-none">
+                <td class="px-10 py-8">
+                  <p class="font-bold text-on-surface">#ORD-{{ order.id }}</p>
+                  <p class="text-[10px] text-outline-variant">{{ order.order_date | date }}</p>
+                </td>
+                <td class="px-10 py-8 text-xs font-bold text-on-surface/80">{{ order.location_name }}</td>
+                <td class="px-10 py-8 font-manrope font-bold">{{ order.agreed_price | number }} ج.م</td>
+                <td class="px-10 py-8 font-manrope font-bold text-emerald-400">{{ order.total_paid | number }} ج.م</td>
+                <td class="px-10 py-8 font-manrope font-bold" [class.text-error]="order.remaining_balance > 0">{{ order.remaining_balance | number }} ج.م</td>
+                <td class="px-10 py-8 text-left">
+                  <button class="material-symbols-outlined text-outline-variant hover:text-primary transition-colors">arrow_back_ios</button>
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="6" class="py-24 text-center">
+                  <p class="text-outline-variant font-headline italic opacity-50">لا يوجد طلبات مسجلة لهذا العميل</p>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      } @else {
+        <table class="w-full text-right">
+          <thead class="bg-surface-container-highest/50 border-b border-white/5">
+            <th class="px-10 py-6 text-[10px] font-black text-primary uppercase">تاريخ العملية</th>
+            <th class="px-10 py-6 text-[10px] font-black text-primary uppercase">مرجع الطلب</th>
+            <th class="px-10 py-6 text-[10px] font-black text-primary uppercase">طريقة الدفع</th>
+            <th class="px-10 py-6 text-[10px] font-black text-primary uppercase text-left">المبلغ المدفوع</th>
+          </thead>
+          <tbody>
+            @for (pay of payments(); track pay.id) {
+              <tr class="border-b border-white/5 group hover:bg-white/5 transition-colors last:border-none">
+                <td class="px-10 py-8 border-r-4 border-emerald-400/40">
+                  <p class="font-bold text-on-surface">{{ pay.payment_date | date:'mediumDate' }}</p>
+                  <p class="text-[10px] text-outline-variant">{{ pay.payment_date | date:'shortTime' }}</p>
+                </td>
+                <td class="px-10 py-8 text-xs font-headline font-bold text-primary">بالارتباط مع طلب #ORD-{{ pay.order_id }}</td>
+                <td class="px-10 py-8">
+                  <span class="px-3 py-1 bg-white/5 rounded-full text-[10px] font-black text-outline-variant uppercase">{{ pay.payment_method || 'نقدي' }}</span>
+                </td>
+                <td class="px-10 py-8 text-left font-manrope font-black text-emerald-400 text-lg">
+                  {{ pay.amount | number }} ج.م+
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="4" class="py-24 text-center">
+                  <p class="text-outline-variant font-headline italic opacity-50">لا يوجد عمليات سداد مسجلة</p>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+    </div>
+  </div>
+</section>

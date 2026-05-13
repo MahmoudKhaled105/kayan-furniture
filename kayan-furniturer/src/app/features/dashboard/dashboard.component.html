@@ -1,0 +1,170 @@
+@if (isLoading()) {
+  <div class="loading-container">
+    <div class="spinner"></div>
+    <p class="text-on-surface-variant">جاري تحميل البيانات...</p>
+  </div>
+} @else if (error()) {
+  <div class="error-container">
+    <span class="material-symbols-outlined text-6xl text-error">error</span>
+    <p class="text-error text-xl mb-4">{{ error() }}</p>
+    <button class="bg-primary text-on-primary px-6 py-3 rounded-xl font-bold" (click)="loadDashboardData()">
+      إعادة المحاولة
+    </button>
+  </div>
+} @else {
+  <div class="dashboard-content">
+    <div class="dashboard-header">
+      <div>
+        <span class="text-secondary font-bold text-sm tracking-widest uppercase">حركة الخزنة اليومية</span>
+        <h2 class="editorial-title">الزتونة المالية</h2>
+      </div>
+      <div class="date-filters">
+        <div class="filter-tabs">
+          <button class="filter-tab" [class.active]="selectedDateFilter() === 'today'" (click)="setDateFilter('today')">اليوم</button>
+          <button class="filter-tab" [class.active]="selectedDateFilter() === 'yesterday'" (click)="setDateFilter('yesterday')">أمس</button>
+          <button class="filter-tab" [class.active]="selectedDateFilter() === 'custom'" (click)="setDateFilter('custom')">تاريخ محدد</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="summary-cards">
+      <div class="summary-card total-in">
+        <div class="card-icon-wrapper">
+          <span class="material-symbols-outlined text-primary text-4xl filled">arrow_downward</span>
+          <span class="trend-badge bg-primary/10 text-primary">+١٢٪ عن أمس</span>
+        </div>
+        <div>
+          <p class="card-label">إجمالي الداخل</p>
+          <h3 class="card-value text-on-surface">
+            {{ formatAmount(overview()?.total_in || 0) }}
+            <span class="text-sm font-medium text-on-surface-variant">ج.م</span>
+          </h3>
+        </div>
+      </div>
+
+      <div class="summary-card total-out">
+        <div class="card-icon-wrapper">
+          <span class="material-symbols-outlined text-secondary text-4xl filled">arrow_upward</span>
+          <span class="trend-badge bg-secondary/10 text-secondary">-٥٪ عن أمس</span>
+        </div>
+        <div>
+          <p class="card-label">إجمالي الخارج</p>
+          <h3 class="card-value text-on-surface">
+            {{ formatAmount(overview()?.total_out || 0) }}
+            <span class="text-sm font-medium text-on-surface-variant">ج.م</span>
+          </h3>
+        </div>
+      </div>
+
+      <div class="summary-card net-profit">
+        <div class="card-icon-wrapper">
+          <span class="material-symbols-outlined text-on-primary text-4xl filled">account_balance_wallet</span>
+          <span class="trend-badge bg-on-primary/10 text-on-primary">صافي اليوم</span>
+        </div>
+        <div>
+          <p class="card-label text-on-primary/70">الصافي الفعلي</p>
+          <h3 class="card-value text-on-primary">
+            {{ formatAmount(overview()?.net_profit || 0) }}
+            <span class="text-sm font-medium text-on-primary/70">ج.م</span>
+          </h3>
+        </div>
+      </div>
+    </div>
+
+    <div class="transactions-grid">
+      <section class="transaction-section inflows">
+        <div class="section-header">
+          <div class="section-title">
+            <div class="title-indicator bg-primary"></div>
+            <h3 class="editorial-title">المتحصلات (الداخل)</h3>
+          </div>
+          <a class="view-all text-primary" routerLink="/sales">عرض الكل</a>
+        </div>
+        <div class="transaction-list">
+          @for (txn of inflows(); track txn.id) {
+            <div class="transaction-item">
+              <div class="txn-icon bg-surface-container-highest">
+                <span class="material-symbols-outlined text-on-surface-variant">{{ getTransactionIcon(txn.type) }}</span>
+              </div>
+              <div class="txn-details">
+                <h4 class="txn-title">{{ txn.notes || txn.type }}</h4>
+                <p class="txn-meta">{{ txn.location_name || '' }} • {{ formatTime(txn.transaction_date) }}</p>
+              </div>
+              <div class="txn-amount text-left">
+                <p class="amount-primary">+ {{ formatAmount(txn.amount) }} ج.م</p>
+                <p class="txn-time">{{ formatTime(txn.transaction_date) }}</p>
+              </div>
+            </div>
+          } @empty {
+            <div class="empty-state">
+              <span class="material-symbols-outlined text-4xl text-on-surface-variant">inbox</span>
+              <p class="text-on-surface-variant">لا توجد متحصلات اليوم</p>
+            </div>
+          }
+        </div>
+      </section>
+
+      <section class="transaction-section outflows">
+        <div class="section-header">
+          <div class="section-title">
+            <div class="title-indicator bg-secondary"></div>
+            <h3 class="editorial-title">المصروفات (الخارج)</h3>
+          </div>
+          <a class="view-all text-secondary" routerLink="/sales">عرض الكل</a>
+        </div>
+        <div class="transaction-list">
+          @for (txn of outflows(); track txn.id) {
+            <div class="transaction-item">
+              <div class="txn-icon bg-surface-container-highest">
+                <span class="material-symbols-outlined text-on-surface-variant">{{ getTransactionIcon(txn.type) }}</span>
+              </div>
+              <div class="txn-details">
+                <h4 class="txn-title">{{ txn.notes || txn.type }}</h4>
+                <p class="txn-meta">{{ txn.location_name || '' }} • {{ formatTime(txn.transaction_date) }}</p>
+              </div>
+              <div class="txn-amount text-left">
+                <p class="amount-secondary">- {{ formatAmount(txn.amount) }} ج.م</p>
+                <p class="txn-time">{{ formatTime(txn.transaction_date) }}</p>
+              </div>
+            </div>
+          } @empty {
+            <div class="empty-state">
+              <span class="material-symbols-outlined text-4xl text-on-surface-variant">inbox</span>
+              <p class="text-on-surface-variant">لا توجد مصروفات اليوم</p>
+            </div>
+          }
+        </div>
+      </section>
+    </div>
+
+    <div class="monthly-target">
+      <div class="progress-circle">
+        <svg class="progress-svg" viewBox="0 0 200 200">
+          <circle class="progress-bg" cx="100" cy="100" r="80"></circle>
+          <circle class="progress-fill" cx="100" cy="100" r="80"></circle>
+        </svg>
+        <div class="progress-text">
+          <span class="progress-value">٧٥٪</span>
+          <span class="progress-label">من الهدف</span>
+        </div>
+      </div>
+      <div class="target-info">
+        <h3 class="text-3xl editorial-title text-primary mb-4">الحصالة الشهرية</h3>
+        <p class="text-on-surface-variant max-w-lg mb-8">
+          إحنا وصلنا لـ ٤٥٠,٠٠٠ ج.م من أصل هدف مبيعات ٦٠٠,٠٠٠ ج.م لشهر أكتوبر.
+          عاش يا وحوش المندرة، فاضل "تكة" ونقفل التارجت!
+        </p>
+        <div class="target-stats">
+          <div class="stat-box bg-surface-container-lowest">
+            <p class="text-[10px] text-on-surface-variant mb-1">المتبقي</p>
+            <p class="text-xl font-bold">١٥٠,٠٠٠ ج.م</p>
+          </div>
+          <div class="stat-box bg-surface-container-lowest border border-primary/20">
+            <p class="text-[10px] text-on-surface-variant mb-1">متوسط اليوم</p>
+            <p class="text-xl font-bold text-primary">٢٥,٠٠٠ ج.م</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+}
