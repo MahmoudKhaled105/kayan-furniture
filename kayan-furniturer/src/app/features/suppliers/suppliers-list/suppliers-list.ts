@@ -80,6 +80,27 @@ export class SuppliersList implements OnInit {
     });
   }
 
+  deleteSupplier(id: number) {
+    if (confirm('هل أنت متأكد من حذف هذا المورد؟ لا يمكن التراجع عن هذا الإجراء.')) {
+      this.isLoading.set(true);
+      this.http.delete(`/suppliers/${id}`).subscribe({
+        next: () => {
+          this.suppliers.update(list => list.filter(s => s.id !== id));
+          this.isLoading.set(false);
+        },
+        error: (err) => {
+          console.error('Failed to delete supplier:', err);
+          if (err?.error?.error === 'conflict') {
+             this.error.set(err.error.message);
+          } else {
+             this.error.set('فشل في حذف المورد. تأكد من عدم وجود شحنات مرتبطة به.');
+          }
+          this.isLoading.set(false);
+        }
+      });
+    }
+  }
+
   private mapSupplier(data: any): Supplier {
     return {
       id: data.id,

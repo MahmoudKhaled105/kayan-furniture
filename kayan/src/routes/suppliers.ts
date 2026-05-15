@@ -214,4 +214,23 @@ export function registerSupplierRoutes(router: Router) {
 
 		return jsonResponse(history);
 	});
+
+	// DELETE /api/v1/suppliers/:id
+	router.delete('api/v1/suppliers/:id', async (_req, env, params) => {
+		const id = parseId(params.id);
+		if (!id) return errorResponse('validation_error', 'Invalid supplier ID', 400);
+
+		const supplier = await env.DB.prepare('SELECT id FROM supplier WHERE id = ?').bind(id).first();
+		if (!supplier) return errorResponse('not_found', `Supplier with id ${id} was not found.`, 404);
+
+		// Check if the supplier has shipments (cannot delete if they have related records)
+		const shipmentCount = await env.DB.prepare('SELECT COUNT(*) as count FROM shipment WHERE supplier_id = ?').bind(id).first<{count: number}>();
+		if (shipmentCount && shipmentCount.count > 0) {
+			return errorResponse('conflict', 'Cannot delete supplier with existing shipments. Please set the status to inactive instead.', 409);
+		}
+
+		await env.DB.prepare('DELETE FROM supplier WHERE id = ?').bind(id).run();
+
+		return jsonResponse({ success: true });
+	});
 }

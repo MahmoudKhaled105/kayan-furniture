@@ -37,12 +37,24 @@ export class AddShipment implements OnInit {
       notes: [''],
       supplier_id: [null, Validators.required],
       declared_value: [0, [Validators.required, Validators.min(1)]],
-      partial_delivery: [false]
+      partial_delivery: [false],
+      initial_payment: [0],
+      delivery_status: ['pending'],
+      image_url: [''],
+      account_notes: ['']
     });
   }
 
   ngOnInit() {
     this.loadSuppliers();
+    
+    // Check for query params first
+    this.route.queryParams.subscribe(params => {
+      if (params['supplierId']) {
+        this.shipmentForm.patchValue({ supplier_id: Number(params['supplierId']) });
+      }
+    });
+
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.isEditMode.set(true);
@@ -62,7 +74,10 @@ export class AddShipment implements OnInit {
           notes: data.notes,
           supplier_id: data.supplier_id,
           declared_value: data.declared_value,
-          partial_delivery: data.partial_delivery === 1
+          partial_delivery: data.partial_delivery === 1,
+          delivery_status: data.delivery_status || 'pending',
+          image_url: data.image_url || '',
+          account_notes: data.account_notes || ''
         });
         this.isLoading.set(false);
       },
@@ -109,7 +124,10 @@ export class AddShipment implements OnInit {
           partial_delivery: val.partial_delivery ? 1 : 0,
           notes: val.notes,
           container_number: val.container_number,
-          estimated_arrival: val.estimated_arrival
+          estimated_arrival: val.estimated_arrival,
+          delivery_status: val.delivery_status,
+          image_url: val.image_url,
+          account_notes: val.account_notes
         };
       } else {
         payload = {
@@ -117,6 +135,17 @@ export class AddShipment implements OnInit {
           partial_delivery: val.partial_delivery ? 1 : 0,
           status: 'PENDING'
         };
+
+        if (val.initial_payment > 0) {
+          payload.installments = [
+            { 
+              amount: val.initial_payment, 
+              due_date: val.date_received,
+              is_paid: true,
+              paid_date: val.date_received
+            }
+          ];
+        }
       }
 
       const obs = this.isEditMode() 
@@ -143,5 +172,44 @@ export class AddShipment implements OnInit {
   get selectedSupplier(): Supplier | undefined {
     const id = this.shipmentForm.get('supplier_id')?.value;
     return this.suppliers().find(s => s.id === Number(id));
+  }
+
+  get remainingAmount(): number {
+    const declared = this.shipmentForm.get('declared_value')?.value || 0;
+    const initial = this.shipmentForm.get('initial_payment')?.value || 0;
+    return Math.max(0, declared - initial);
+  }
+
+  setDeliveryStatus(status: string) {
+    this.shipmentForm.patchValue({ delivery_status: status });
+  }
+
+  resolveImageUrl(url?: string): string | null {
+    if (!url) return null;
+    if (url.startsWith('http')) return url;
+    return `http://localhost:8787${url}`;
+  }
+
+  isUploading = signal(false);
+  onFileSelected(event: any) {
+    const file: File = event.target.files[0];
+    if (file) {
+      this.isUploading.set(true);
+      const formData = new FormData();
+      formData.append('file', file);
+
+      this.shipmentService.uploadFile(formData).subscribe({
+        next: (res: any) => {
+          this.shipmentForm.patchValue({ image_url: res.url });
+          this.isUploading.set(false);
+          this.toast.success('تم رفع الصورة بنجاح');
+        },
+        error: (err) => {
+          console.error('Upload failed:', err);
+          this.isUploading.set(false);
+          this.toast.error('فشل رفع الصورة');
+        }
+      });
+    }
   }
 }

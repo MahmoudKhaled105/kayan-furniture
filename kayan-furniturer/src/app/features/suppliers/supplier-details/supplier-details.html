@@ -40,7 +40,7 @@
           <span class="material-symbols-outlined">payments</span>
           <span>سدد دفعة</span>
         </button>
-        <button routerLink="/shipments/add" class="action-btn shipment-btn">
+        <button [routerLink]="['/shipments/add']" [queryParams]="{supplierId: supplier()?.id}" class="action-btn shipment-btn">
           <span class="material-symbols-outlined">add_circle</span>
           <span>شحنة جديدة</span>
         </button>

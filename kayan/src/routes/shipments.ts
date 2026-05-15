@@ -76,7 +76,7 @@ export function registerShipmentRoutes(router: Router) {
 		if (!supplier) return errorResponse('not_found', `Supplier with id ${body.supplier_id} was not found.`, 404);
 
 		const result = await env.DB.prepare(
-			'INSERT INTO shipment (supplier_id, date_received, declared_value, partial_delivery, notes, container_number, estimated_arrival) VALUES (?, ?, ?, ?, ?, ?, ?)'
+			'INSERT INTO shipment (supplier_id, date_received, declared_value, partial_delivery, notes, container_number, estimated_arrival, delivery_status, shipping_status, image_url, account_notes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
 		).bind(
 			body.supplier_id,
 			body.date_received,
@@ -84,7 +84,11 @@ export function registerShipmentRoutes(router: Router) {
 			body.partial_delivery ? 1 : 0,
 			body.notes || null,
 			body.container_number || null,
-			body.estimated_arrival || null
+			body.estimated_arrival || null,
+			body.delivery_status || 'pending',
+			body.delivery_status || 'pending', // Also set shipping_status
+			body.image_url || null,
+			body.account_notes || null
 		).run();
 
 		const shipmentId = result.meta.last_row_id;
@@ -93,14 +97,24 @@ export function registerShipmentRoutes(router: Router) {
 		const installments: any[] = [];
 		if (Array.isArray(body.installments)) {
 			for (const inst of body.installments) {
+				const isPaidValue = (inst.is_paid === true || inst.is_paid === 1 || inst.is_paid === 'true') ? 1 : 0;
 				const instResult = await env.DB.prepare(
-					'INSERT INTO shipment_installment (shipment_id, amount, due_date) VALUES (?, ?, ?)'
-				).bind(shipmentId, inst.amount, inst.due_date).run();
+					'INSERT INTO shipment_installment (shipment_id, amount, due_date, is_paid, paid_date) VALUES (?, ?, ?, ?, ?)'
+				).bind(
+					shipmentId, 
+					inst.amount, 
+					inst.due_date, 
+					isPaidValue, 
+					inst.paid_date || (isPaidValue ? body.date_received : null)
+				).run();
 				const created = await env.DB.prepare('SELECT * FROM shipment_installment WHERE id = ?')
 					.bind(instResult.meta.last_row_id).first();
 				installments.push(created);
 			}
 		}
+
+		// Recalculate payment status for the shipment
+		await recalcPaymentStatus(env.DB, shipmentId);
 
 		const shipment = await env.DB.prepare('SELECT * FROM shipment WHERE id = ?').bind(shipmentId).first();
 		return jsonResponse({ ...shipment, installments }, 201);
@@ -145,7 +159,7 @@ export function registerShipmentRoutes(router: Router) {
 		const body = await readBody(req) as any;
 		const fields: string[] = [];
 		const values: unknown[] = [];
-		const allowed = ['date_received', 'declared_value', 'partial_delivery', 'notes', 'container_number', 'estimated_arrival'];
+		const allowed = ['date_received', 'declared_value', 'partial_delivery', 'notes', 'container_number', 'estimated_arrival', 'delivery_status', 'image_url', 'account_notes'];
 
 		for (const key of allowed) {
 			if (key in body) {

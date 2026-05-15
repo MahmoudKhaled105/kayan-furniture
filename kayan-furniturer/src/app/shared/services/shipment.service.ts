@@ -14,7 +14,10 @@ export interface Shipment {
   payment_status: 'unpaid' | 'partial' | 'settled';
   partial_delivery: 0 | 1;
   status: 'PENDING' | 'IN_TRANSIT' | 'ARRIVED';
+  delivery_status?: 'pending' | 'in_transit' | 'received';
+  image_url?: string;
   notes?: string;
+  account_notes?: string;
   supplier_name?: string;
   installments?: any[];
 }
@@ -56,5 +59,9 @@ export class ShipmentService {
 
   deleteShipment(id: number): Observable<any> {
     return this.http.delete<any>(`/shipments/${id}`);
+  }
+
+  uploadFile(formData: FormData): Observable<any> {
+    return this.http.post<any>('/upload', formData);
   }
 }

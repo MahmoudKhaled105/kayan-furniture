@@ -127,7 +127,7 @@
                   <button class="action-btn edit-btn" [routerLink]="['/suppliers', supplier.id, 'edit']">
                     <span class="material-symbols-outlined">edit</span>
                   </button>
-                  <button class="action-btn delete-btn">
+                  <button class="action-btn delete-btn" (click)="deleteSupplier(supplier.id)">
                     <span class="material-symbols-outlined">delete</span>
                   </button>
                 </div>

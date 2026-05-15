@@ -11,17 +11,19 @@ export class HttpClientService {
   private readonly router = inject(Router);
   private readonly baseUrl = 'http://localhost:8787/api/v1';
 
-  private getAuthHeaders(): HttpHeaders {
+  private getAuthHeaders(isFormData: boolean = false): HttpHeaders {
     const token = localStorage.getItem('accessToken');
-    if (token) {
-      return new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      });
+    const headersConfig: any = {};
+    
+    if (!isFormData) {
+      headersConfig['Content-Type'] = 'application/json';
     }
-    return new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
+    
+    if (token) {
+      headersConfig['Authorization'] = `Bearer ${token}`;
+    }
+    
+    return new HttpHeaders(headersConfig);
   }
 
   get<T>(url: string, params?: any): Observable<T> {
@@ -39,8 +41,9 @@ export class HttpClientService {
   }
 
   post<T>(url: string, body: any): Observable<T> {
+    const isFormData = body instanceof FormData;
     return this.http.post<T>(`${this.baseUrl}${url}`, body, {
-      headers: this.getAuthHeaders()
+      headers: this.getAuthHeaders(isFormData)
     }).pipe(
       catchError((error: any) => {
         if (error.status === 401) {

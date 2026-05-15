@@ -11,6 +11,7 @@ import { registerFinanceRoutes } from './routes/finance';
 import { registerAuthRoutes } from './routes/auth';
 import { registerDashboardRoutes } from './routes/dashboard';
 import { registerInventoryRoutes } from './routes/inventory';
+import { registerUploadRoutes } from './routes/upload';
 
 const router = new Router();
 
@@ -36,6 +37,7 @@ registerFinanceRoutes(router);
 registerAuthRoutes(router);
 registerDashboardRoutes(router);
 registerInventoryRoutes(router);
+registerUploadRoutes(router);
 
 
 export default {

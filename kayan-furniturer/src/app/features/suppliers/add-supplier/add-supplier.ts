@@ -1,6 +1,6 @@
-import { Component, signal, inject } from '@angular/core';
+import { Component, signal, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { HttpClientService } from '../../../shared/services/http-client.service';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 
@@ -11,13 +11,16 @@ import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angula
   templateUrl: './add-supplier.html',
   styleUrls: ['./add-supplier.scss']
 })
-export class AddSupplier {
+export class AddSupplier implements OnInit {
   private http = inject(HttpClientService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
   isLoading = signal(false);
   error = signal<string | null>(null);
   success = signal(false);
+  isEditMode = signal(false);
+  editId = signal<number | null>(null);
 
   supplierForm = new FormGroup({
     name: new FormControl('', [
@@ -48,6 +51,37 @@ export class AddSupplier {
     this.status?.setValue(newStatus);
   }
 
+  ngOnInit() {
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.isEditMode.set(true);
+      this.editId.set(Number(id));
+      this.loadSupplier(Number(id));
+    }
+  }
+
+  loadSupplier(id: number) {
+    this.isLoading.set(true);
+    this.http.get<any>(`/suppliers/${id}`).subscribe({
+      next: (data) => {
+        this.supplierForm.patchValue({
+          name: data.name,
+          phone: data.phone,
+          address: data.address,
+          notes: data.notes,
+          status: data.status
+        });
+        this.isLoading.set(false);
+      },
+      error: (err) => {
+        console.error('Failed to load supplier:', err);
+        this.error.set('فشل في تحميل بيانات المورد');
+        this.isLoading.set(false);
+        this.router.navigate(['/suppliers']);
+      }
+    });
+  }
+
   onSubmit() {
     if (this.supplierForm.invalid) {
       this.markFormGroupTouched(this.supplierForm);
@@ -66,18 +100,22 @@ export class AddSupplier {
       status: this.status?.value || 'active'
     };
 
-    this.http.post('/suppliers', formData).subscribe({
+    const request$ = this.isEditMode()
+      ? this.http.patch(`/suppliers/${this.editId()}`, formData)
+      : this.http.post('/suppliers', formData);
+
+    request$.subscribe({
       next: (response: any) => {
         this.success.set(true);
         this.isLoading.set(false);
 
         setTimeout(() => {
-          this.router.navigate(['/suppliers', response.id]);
+          this.router.navigate(['/suppliers', response.id || this.editId()]);
         }, 1500);
       },
       error: (err) => {
-        console.error('Failed to create supplier:', err);
-        this.error.set('فشل في إنشاء المورد. يرجى المحاولة مرة أخرى.');
+        console.error('Failed to save supplier:', err);
+        this.error.set('فشل في حفظ بيانات المورد. يرجى المحاولة مرة أخرى.');
         this.isLoading.set(false);
       }
     });

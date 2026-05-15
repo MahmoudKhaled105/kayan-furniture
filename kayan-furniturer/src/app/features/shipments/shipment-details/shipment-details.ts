@@ -59,12 +59,27 @@ export class ShipmentDetails implements OnInit {
     }
   }
 
+  resolveImageUrl(url?: string): string | null {
+    if (!url) return null;
+    if (url.startsWith('http')) return url;
+    return `http://localhost:8787${url}`;
+  }
+
   getLogisticStatus(status?: string): string {
     switch (status) {
-      case 'ARRIVED': return 'وصلت بالسلامة';
-      case 'IN_TRANSIT': return 'في الطريق (البحر)';
-      case 'PENDING': return 'قيد التجهيز';
+      case 'received': return 'تم الاستلام';
+      case 'in_transit': return 'في الطريق';
+      case 'pending': return 'قيد الانتظار';
       default: return 'غير معروف';
+    }
+  }
+
+  getDeliveryStatusClass(status?: string): string {
+    switch (status) {
+      case 'received': return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
+      case 'in_transit': return 'bg-blue-500/10 text-blue-400 border-blue-500/20';
+      case 'pending': return 'bg-outline-variant/10 text-outline-variant border-outline-variant/20';
+      default: return 'bg-surface-container-highest text-outline-variant';
     }
   }
 }

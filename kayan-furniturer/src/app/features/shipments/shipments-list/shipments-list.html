@@ -73,7 +73,7 @@
             <th class="px-6 py-5 font-headline font-bold text-xs text-left">القيمة</th>
             <th class="px-6 py-5 font-headline font-bold text-xs text-left">المدفوع</th>
             <th class="px-6 py-5 font-headline font-bold text-xs text-left">الباقي</th>
-            <th class="px-6 py-5 font-headline font-bold text-xs text-center">الحالة</th>
+            <th class="px-6 py-5 font-headline font-bold text-xs text-center">الخلاصة</th>
             <th class="px-8 py-5"></th>
           </tr>
         </thead>
@@ -115,14 +115,24 @@
                 {{ formatCurrency(shipment.declared_value - shipment.amount_paid) }}
               </td>
               <td class="px-6 py-6 text-center">
-                <span class="text-[10px] font-bold font-headline px-3 py-1 rounded-full border"
-                      [ngClass]="{
-                        'bg-emerald-500/10 text-emerald-400 border-emerald-500/20': shipment.payment_status === 'settled',
-                        'bg-amber-500/10 text-amber-400 border-amber-500/20': shipment.payment_status === 'partial',
-                        'bg-error/10 text-error border-error/20': shipment.payment_status === 'unpaid'
-                      }">
-                  {{ getStatusLabel(shipment.payment_status) }}
-                </span>
+                <div class="flex flex-col gap-2 items-center">
+                  <span class="text-[10px] font-bold font-headline px-3 py-1 rounded-full border w-fit"
+                        [ngClass]="{
+                          'bg-emerald-500/10 text-emerald-400 border-emerald-500/20': shipment.payment_status === 'settled',
+                          'bg-amber-500/10 text-amber-400 border-amber-500/20': shipment.payment_status === 'partial',
+                          'bg-error/10 text-error border-error/20': shipment.payment_status === 'unpaid'
+                        }">
+                    {{ getStatusLabel(shipment.payment_status) }}
+                  </span>
+                  <span class="text-[10px] font-bold font-headline px-3 py-1 rounded-full border w-fit"
+                        [ngClass]="{
+                          'bg-blue-500/10 text-blue-400 border-blue-500/20': shipment.delivery_status === 'in_transit',
+                          'bg-emerald-500/10 text-emerald-400 border-emerald-500/20': shipment.delivery_status === 'received',
+                          'bg-outline-variant/10 text-outline-variant border-outline-variant/20': shipment.delivery_status === 'pending' || !shipment.delivery_status
+                        }">
+                    {{ getDeliveryStatusLabel(shipment.delivery_status) }}
+                  </span>
+                </div>
               </td>
               <td class="px-8 py-6 text-left">
                 <button class="p-2 text-outline-variant hover:text-primary transition-colors">

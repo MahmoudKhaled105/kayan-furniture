@@ -24,8 +24,9 @@
         </nav>
         <div class="flex items-center gap-4">
           <h2 class="text-5xl font-black font-headline text-on-surface">{{ data.container_number || 'بدون رقم' }}</h2>
-          <span class="px-4 py-1.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 text-xs font-bold font-headline mt-2">
-            {{ getLogisticStatus(data.status) }}
+          <span class="px-4 py-1.5 rounded-full text-xs font-bold font-headline mt-2 border"
+                [ngClass]="getDeliveryStatusClass(data.delivery_status)">
+            {{ getLogisticStatus(data.delivery_status) }}
           </span>
         </div>
         <p class="text-outline-variant font-headline flex items-center gap-2">
@@ -62,9 +63,16 @@
         </div>
       </div>
       <div class="bg-surface-container-low p-6 rounded-2xl border border-white/5">
-        <p class="text-[10px] text-outline-variant font-bold uppercase tracking-widest mb-2">متبقي للمورد</p>
+        <p class="text-[10px] text-outline-variant font-bold uppercase tracking-widest mb-2">متبقي للمورد (المديونية)</p>
         <h3 class="text-3xl font-black font-headline text-error/80">{{ formatCurrency(data.declared_value - data.amount_paid) }} <span class="text-xs font-normal opacity-40">ج.م</span></h3>
-        <p class="text-[10px] text-error mt-2 font-bold font-headline">الحالة: {{ getStatusLabel(data.payment_status) }}</p>
+        <span class="text-[10px] font-bold font-headline px-3 py-1 rounded-full border mt-2 block w-fit"
+              [ngClass]="{
+                'bg-emerald-500/10 text-emerald-400 border-emerald-500/20': data.payment_status === 'settled',
+                'bg-amber-500/10 text-amber-400 border-amber-500/20': data.payment_status === 'partial',
+                'bg-error/10 text-error border-error/20': data.payment_status === 'unpaid'
+              }">
+          {{ getStatusLabel(data.payment_status) }}
+        </span>
       </div>
       <div class="bg-surface-container-low p-6 rounded-2xl border border-white/5">
         <p class="text-[10px] text-outline-variant font-bold uppercase tracking-widest mb-2">معلومات إضافية</p>
@@ -77,17 +85,103 @@
 
     <div class="grid grid-cols-12 gap-8 mb-12 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300">
       <!-- Left Column: Content -->
-      <div class="col-span-8">
-        <div class="bg-surface-container-low rounded-2xl overflow-hidden shadow-2xl border border-white/5">
+      <div class="col-span-8 space-y-8">
+        <!-- Notes Section -->
+        <div class="grid grid-cols-2 gap-8">
+          <div class="bg-surface-container-low rounded-2xl overflow-hidden shadow-2xl border border-white/5">
+            <div class="px-8 py-6 bg-surface-container-high/50 flex items-center gap-2 border-b border-white/5">
+              <span class="material-symbols-outlined text-primary">notes</span>
+              <h4 class="font-black font-headline text-lg">ملاحظات عامة</h4>
+            </div>
+            <div class="p-8">
+              @if (data.notes) {
+                <p class="text-on-surface-variant font-headline leading-relaxed">{{ data.notes }}</p>
+              } @else {
+                <p class="text-outline-variant italic font-headline opacity-50">لا توجد ملاحظات مسجلة</p>
+              }
+            </div>
+          </div>
+
+          <div class="bg-surface-container-low rounded-2xl overflow-hidden shadow-2xl border border-white/5">
+            <div class="px-8 py-6 bg-surface-container-high/50 flex items-center gap-2 border-b border-white/5">
+              <span class="material-symbols-outlined text-emerald-400">payments</span>
+              <h4 class="font-black font-headline text-lg">ملاحظات الحسابات</h4>
+            </div>
+            <div class="p-8">
+              @if (data.account_notes) {
+                <p class="text-on-surface-variant font-headline leading-relaxed">{{ data.account_notes }}</p>
+              } @else {
+                <p class="text-outline-variant italic font-headline opacity-50">لا توجد ملاحظات حسابات مسجلة</p>
+              }
+            </div>
+          </div>
+        </div>
+
+        <!-- Receipt Section -->
+        <div class="bg-surface-container-low rounded-3xl overflow-hidden border border-white/5 shadow-2xl">
           <div class="px-8 py-6 bg-surface-container-high/50 flex justify-between items-center border-b border-white/5">
-            <h4 class="font-black font-headline text-lg">ملاحظات الشحنة</h4>
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary">receipt_long</span>
+              <h4 class="font-black font-headline text-lg">بوليصة الشحن / الفاتورة المرفقة</h4>
+            </div>
+            @if (data.image_url) {
+              <a [href]="resolveImageUrl(data.image_url)" target="_blank" class="text-primary text-xs font-bold hover:underline flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm">open_in_new</span>
+                عرض الحجم الكامل
+              </a>
+            }
           </div>
           <div class="p-8">
-            @if (data.notes) {
-              <p class="text-on-surface-variant font-headline leading-relaxed">{{ data.notes }}</p>
+            @if (data.image_url) {
+              <div class="relative group cursor-pointer rounded-2xl overflow-hidden bg-surface-container-highest border border-white/10 aspect-video flex items-center justify-center">
+                <img [src]="resolveImageUrl(data.image_url)" class="max-w-full max-h-full object-contain" />
+                <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                   <p class="text-white font-bold font-headline">اضغط للعرض المكبر</p>
+                </div>
+              </div>
             } @else {
-              <p class="text-outline-variant italic font-headline">لا توجد ملاحظات مسجلة لهذه الشحنة</p>
+              <div class="py-20 text-center bg-surface-container-highest/30 rounded-2xl border-2 border-dashed border-white/5 flex flex-col items-center gap-4">
+                <span class="material-symbols-outlined text-5xl opacity-20">image_not_supported</span>
+                <p class="text-outline-variant font-headline">لم يتم إرفاق أي صور لهذه الشحنة</p>
+              </div>
             }
+          </div>
+        </div>
+
+        <!-- Installments Breakdown -->
+        <div class="bg-surface-container-low rounded-3xl overflow-hidden border border-white/5 shadow-2xl">
+          <div class="px-8 py-6 bg-surface-container-high/50 flex items-center gap-2 border-b border-white/5">
+            <span class="material-symbols-outlined text-secondary">history</span>
+            <h4 class="font-black font-headline text-lg">سجل المدفوعات والأقساط</h4>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-right border-collapse">
+              <thead>
+                <tr class="text-outline-variant text-[10px] uppercase tracking-widest font-bold">
+                  <th class="px-8 py-5">التاريخ</th>
+                  <th class="px-6 py-5">المبلغ</th>
+                  <th class="px-6 py-5 text-center">الحالة</th>
+                  <th class="px-8 py-5">تاريخ الدفع الفعلي</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-white/5">
+                @for (inst of data.installments; track inst.id) {
+                  <tr class="hover:bg-white/[0.02] transition-colors">
+                    <td class="px-8 py-5 font-manrope font-bold text-sm text-on-surface">{{ inst.due_date | date:'dd/MM/yyyy' }}</td>
+                    <td class="px-6 py-5 font-manrope font-black text-sm text-primary">{{ formatCurrency(inst.amount) }} ج.م</td>
+                    <td class="px-6 py-5 text-center">
+                      <span class="px-3 py-1 rounded-full text-[10px] font-bold" 
+                            [ngClass]="inst.is_paid ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-error/10 text-error border border-error/20'">
+                        {{ inst.is_paid ? 'تم الدفع' : 'مستحق' }}
+                      </span>
+                    </td>
+                    <td class="px-8 py-5 text-xs text-outline-variant">
+                      {{ inst.paid_date ? (inst.paid_date | date:'dd/MM/yyyy') : '---' }}
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -98,19 +192,19 @@
           <h5 class="font-bold font-headline text-lg mb-4 text-primary">العمليات اللوجستية</h5>
           <div class="space-y-6 relative border-r-2 border-primary/20 pr-6 mr-2">
             <div class="relative">
-              <div class="absolute -right-[31px] top-1 w-4 h-4 rounded-full bg-primary border-4 border-background shadow-[0_0_10px_rgba(232,196,106,0.5)]"></div>
+              <div class="absolute -right-[31px] top-1 w-4 h-4 rounded-full bg-primary shadow-[0_0_10px_rgba(232,196,106,0.5)]"></div>
               <p class="text-xs font-bold text-on-surface mb-1">تسجيل الشحنة</p>
               <p class="text-[10px] text-outline-variant">{{ data.date_received | date:'dd MMM yyyy' }}</p>
             </div>
             <div class="relative">
-              <div class="absolute -right-[31px] top-1 w-4 h-4 rounded-full" [class]="data.status !== 'PENDING' ? 'bg-primary shadow-[0_0_10px_rgba(232,196,106,0.5)]' : 'bg-surface-container-highest'"></div>
-              <p class="text-xs font-bold font-headline mb-1" [class]="data.status !== 'PENDING' ? 'text-on-surface' : 'text-outline-variant'">تحرك الحاوية</p>
+              <div class="absolute -right-[31px] top-1 w-4 h-4 rounded-full" [class]="data.delivery_status === 'in_transit' || data.delivery_status === 'received' ? 'bg-primary shadow-[0_0_10px_rgba(232,196,106,0.5)]' : 'bg-surface-container-highest'"></div>
+              <p class="text-xs font-bold font-headline mb-1" [class]="data.delivery_status === 'in_transit' || data.delivery_status === 'received' ? 'text-on-surface' : 'text-outline-variant'">تحرك الحاوية</p>
               <p class="text-[10px] text-outline-variant">في الطريق</p>
             </div>
             <div class="relative">
-              <div class="absolute -right-[31px] top-1 w-4 h-4 rounded-full" [class]="data.status === 'ARRIVED' ? 'bg-primary shadow-[0_0_10px_rgba(232,196,106,0.5)]' : 'bg-surface-container-highest'"></div>
-              <p class="text-xs font-bold font-headline mb-1" [class]="data.status === 'ARRIVED' ? 'text-on-surface' : 'text-outline-variant'">الوصول للميناء</p>
-              <p class="text-[10px] text-outline-variant">{{ data.estimated_arrival | date:'dd MMM yyyy' }}</p>
+              <div class="absolute -right-[31px] top-1 w-4 h-4 rounded-full" [class]="data.delivery_status === 'received' ? 'bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]' : 'bg-surface-container-highest'"></div>
+              <p class="text-xs font-bold font-headline mb-1" [class]="data.delivery_status === 'received' ? 'text-on-surface' : 'text-outline-variant'">الوصول للميناء</p>
+              <p class="text-[10px] text-outline-variant">{{ data.delivery_status === 'received' ? 'تم الوصول' : 'مترقب وصوله' }}</p>
             </div>
           </div>
         </div>

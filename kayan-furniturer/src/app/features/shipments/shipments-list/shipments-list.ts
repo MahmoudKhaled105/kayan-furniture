@@ -66,4 +66,13 @@ export class ShipmentsList implements OnInit {
       default: return 'غير معروف';
     }
   }
+
+  getDeliveryStatusLabel(status: string | undefined): string {
+    switch (status) {
+      case 'pending': return 'قيد الانتظار';
+      case 'in_transit': return 'في الطريق';
+      case 'received': return 'تم الاستلام';
+      default: return 'قيد الانتظار';
+    }
+  }
 }

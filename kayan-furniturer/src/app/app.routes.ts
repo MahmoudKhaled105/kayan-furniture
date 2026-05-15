@@ -26,6 +26,7 @@ export const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
   { path: 'suppliers', component: SuppliersList, canActivate: [AuthGuard] },
   { path: 'suppliers/add', component: AddSupplier, canActivate: [AuthGuard] },
+  { path: 'suppliers/:id/edit', component: AddSupplier, canActivate: [AuthGuard] },
   { path: 'suppliers/:id', component: SupplierDetails, canActivate: [AuthGuard] },
   { path: 'shipments', component: ShipmentsList, canActivate: [AuthGuard] },
   { path: 'shipments/add', component: AddShipment, canActivate: [AuthGuard] },
